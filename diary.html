@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🌙 My Diary</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<style>
+:root{--ink:#4a3f6b;--soft:#8f84b3;--pri:#a78bfa;--pk:#ffc8dd;--lil:#d9c8ff;--sky:#bde0fe;--mint:#c4f5d0;--pch:#ffe0b8;--glass:rgba(255,255,255,.66)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Quicksand','Hind',sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(165deg,#fde2f3,#e4d9ff 48%,#d3eaff) fixed}
+button,input,textarea{font:inherit;color:inherit}
+.blob{position:fixed;border-radius:50%;filter:blur(55px);opacity:.6;z-index:0;pointer-events:none;animation:fl 16s ease-in-out infinite alternate}
+.b1{width:260px;height:260px;background:var(--pk);top:-60px;left:-60px}.b2{width:300px;height:300px;background:var(--sky);bottom:5%;right:-90px;animation-delay:-5s}.b3{width:200px;height:200px;background:var(--pch);top:40%;left:-70px;animation-delay:-9s}
+@keyframes fl{to{transform:translate(30px,-40px) scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.blob{animation:none}}
+#loader,#auth,#lock{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:50;background:linear-gradient(165deg,#fde2f3,#e4d9ff 48%,#d3eaff)}
+#loader{z-index:70;font-size:54px}#loader span{animation:pu 1.2s ease-in-out infinite}@keyframes pu{50%{transform:scale(1.15);opacity:.6}}
+#auth{display:none;z-index:40}#lock{display:none;z-index:60;flex-direction:column;gap:14px}
+.glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.85);border-radius:26px;box-shadow:0 10px 34px rgba(150,120,200,.16)}
+.login{width:min(380px,90%);padding:28px 24px;text-align:center}
+.hand{font-family:'Caveat',cursive;font-weight:700}
+.login h1{font-size:44px;margin:4px 0 14px;line-height:1}
+.in{width:100%;padding:13px 14px;border-radius:16px;border:1.5px solid #e7def8;background:#fff;margin-bottom:10px;outline:none}
+.in:focus{border-color:var(--pri)}
+.btn{border:none;cursor:pointer;border-radius:16px;padding:13px 18px;font-weight:700;background:linear-gradient(135deg,#c4b5fd,#f9a8d4);color:#fff;width:100%;box-shadow:0 6px 16px rgba(167,139,250,.35)}
+.btn.alt{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.06);border:1.5px solid #e7def8}
+.btn.red{background:#fff;color:#d9486b;border:1.5px solid #ffd1dc;box-shadow:none}
+#app{display:none;position:relative;z-index:1;max-width:640px;margin:0 auto;padding:18px 14px 120px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;margin:4px 4px 14px}
+.top h1{margin:0;font-size:38px;line-height:1}.top small{color:var(--soft);font-weight:600}
+.hero{padding:18px 18px 16px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero .hi{font-size:30px;line-height:1.1}.hero p{margin:6px 0 0;color:var(--soft);font-size:14.5px;line-height:1.5}
+.stk{position:absolute;right:14px;top:12px;text-align:center;background:linear-gradient(135deg,var(--pch),var(--pk));border-radius:20px;padding:8px 12px;font-weight:700}
+.stk b{font-size:22px;display:block;line-height:1}.stk small{font-size:11px}
+.srch{margin-bottom:10px}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;border:1.5px solid #e7def8;background:#ffffffaa;border-radius:20px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.en{display:flex;gap:12px;padding:14px 14px 14px 0;margin-bottom:12px;cursor:pointer;overflow:hidden;align-items:stretch}
+.en .tab{width:9px;border-radius:0 8px 8px 0;flex-shrink:0}
+.dt{text-align:center;min-width:44px;line-height:1}.dt b{font-size:28px;font-family:'Caveat',cursive}.dt small{display:block;font-size:12px;color:var(--soft);margin-top:2px}
+.bd{flex:1;min-width:0}.tt{font-weight:700;font-size:16px}.sn{color:#6c628f;font-size:14px;margin:3px 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tg span{display:inline-block;font-size:11.5px;background:#ffffffcc;border-radius:10px;padding:2px 8px;margin:0 4px 3px 0;color:var(--soft);font-weight:600}
+.en img{width:62px;height:62px;object-fit:cover;border-radius:16px;align-self:center;transform:rotate(3deg);border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.empty{text-align:center;color:var(--soft);padding:34px 10px;line-height:1.7}.empty .big{font-size:46px}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(420px,92%);z-index:20;display:flex;justify-content:space-around;align-items:center;padding:8px 10px}
+nav button{border:none;background:none;font-size:23px;padding:8px 12px;border-radius:16px;cursor:pointer;opacity:.5}nav button.on{opacity:1;background:#ffffffb0}
+nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26px;opacity:1;background:linear-gradient(135deg,#c4b5fd,#f9a8d4);box-shadow:0 8px 20px rgba(167,139,250,.5);color:#fff}
+.cn{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.cn b{font-size:17px}
+.cn button{border:none;background:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.cg small{color:var(--soft);font-size:11.5px;font-weight:600;padding:4px 0}
+.cd{border:none;background:#ffffff80;border-radius:14px;aspect-ratio:1;font-size:13px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.cd span{font-size:15px;min-height:16px}.cd.has{background:#fff}.cd.today{outline:2px solid var(--pri)}.cd.sel{background:var(--lil)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.sc{padding:16px;text-align:center}.sc b{font-family:'Caveat',cursive;font-size:38px;display:block;line-height:1}.sc small{color:var(--soft);font-weight:600}
+.bar{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13.5px;font-weight:600}.bar i{display:block;height:12px;border-radius:8px;min-width:6px}
+.set{padding:16px;margin-bottom:12px}.set h3{margin:0 0 10px}.set .btn{margin-top:8px}
+#ed{position:fixed;inset:0;z-index:45;background:linear-gradient(165deg,#fff1f8,#efe8ff 50%,#e6f3ff);display:none;flex-direction:column}
+.edh{display:flex;justify-content:space-between;align-items:center;padding:12px 14px}.edh button{border:none;background:#fff;border-radius:50%;width:38px;height:38px;font-size:17px;cursor:pointer}
+.edb{flex:1;overflow-y:auto;padding:0 16px 16px;max-width:640px;width:100%;margin:0 auto}
+.dti{border:none;background:#fff;border-radius:14px;padding:8px 12px;font-weight:700}
+.moods{display:flex;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.mb{flex-shrink:0;border:2px solid transparent;border-radius:18px;padding:7px 10px;background:#ffffffaa;text-align:center;cursor:pointer;font-size:11px;font-weight:600}.mb span{display:block;font-size:24px}.mb.on{border-color:var(--pri);background:#fff}
+.ttl{width:100%;border:none;background:transparent;font-family:'Caveat',cursive;font-weight:700;font-size:34px;outline:none;padding:4px 0;color:var(--ink)}
+.txt{width:100%;min-height:42vh;border:none;outline:none;resize:none;background:repeating-linear-gradient(transparent 0 31px,#d9cdf3 31px 32px);line-height:32px;font-size:17px;padding:0;color:var(--ink)}
+.ph{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.ph div{position:relative}.ph img{width:84px;height:84px;object-fit:cover;border-radius:16px;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.ph button{position:absolute;top:-6px;right:-6px;border:none;background:#d9486b;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer}
+.addp{width:84px;height:84px;border-radius:16px;border:2px dashed var(--pri);background:#fff8;font-size:26px;cursor:pointer}
+.edf{display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));max-width:640px;width:100%;margin:0 auto}
+.edf .btn.alt{width:auto}
+.dots{display:flex;gap:14px}.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--pri)}.dots i.on{background:var(--pri)}
+.pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px}.pad button{height:72px;border-radius:50%;border:none;background:#ffffffcc;font-size:24px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(150,120,200,.15)}
+.sh{animation:sk .35s}@keyframes sk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.link{background:none;border:none;color:var(--soft);cursor:pointer;font-weight:600;text-decoration:underline}
+#toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-90px);background:#4a3f6b;color:#fff;padding:10px 18px;border-radius:20px;z-index:99;transition:.35s;font-size:14px;font-weight:600}#toast.on{transform:translateX(-50%) translateY(0)}
+#print{display:none}
+@media print{body{background:#fff}#app,.blob,nav,#ed,#toast{display:none!important}#print{display:block;color:#000;font-family:'Hind',sans-serif}.pe{page-break-inside:avoid;margin-bottom:22px;border-bottom:1px solid #ccc;padding-bottom:12px}.pe img{max-width:220px;margin:6px 6px 0 0;border-radius:8px}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div id="loader"><span>🌙</span></div>
+
+<div id="auth"><div class="login glass">
+  <div style="font-size:46px">🌙</div><h1 class="hand">My Diary</h1>
+  <button class="btn" onclick="googleLogin()">Continue with Google</button>
+</div></div>
+
+<div id="lock">
+  <div style="font-size:44px">🔒</div><div id="lockT" class="hand" style="font-size:30px">PIN daalein</div>
+  <div class="dots" id="dots"></div>
+  <div class="pad" id="pad"></div>
+  <button id="lockX" class="link" onclick="closeLock()" style="display:none">Cancel</button>
+  <button id="lockF" class="link" onclick="forgotPin()">PIN bhool gaye?</button>
+</div>
+
+<div id="app">
+  <div class="top"><div><h1 class="hand">My Diary</h1><small id="today"></small></div></div>
+  <div id="main"></div>
+</div>
+
+<nav class="glass" id="nav" style="display:none">
+  <button data-v="home" onclick="go('home')">🏠</button>
+  <button data-v="cal" onclick="go('cal')">📅</button>
+  <button class="fab" onclick="openEd()">✍️</button>
+  <button data-v="stats" onclick="go('stats')">📊</button>
+  <button data-v="set" onclick="go('set')">⚙️</button>
+</nav>
+
+<div id="ed">
+  <div class="edh"><button onclick="closeEd()">✕</button><input id="edDate" class="dti" type="date"><button onclick="delEntry()" id="edDel" style="display:none">🗑️</button></div>
+  <div class="edb">
+    <div class="moods" id="moods"></div>
+    <input id="edTitle" class="ttl" placeholder="आज का शीर्षक...">
+    <textarea id="edText" class="txt" placeholder="आज दिल में क्या है? यहाँ लिखिए..."></textarea>
+    <div class="ph" id="ph"></div>
+    <input id="edTags" class="in" placeholder="Tags (comma se alag): family, dost, kaam">
+  </div>
+  <div class="edf"><button class="btn alt" onclick="document.getElementById('phIn').click()">📷</button><button class="btn" onclick="saveEntry()">💾 Save karein</button></div>
+  <input id="phIn" type="file" accept="image/*" multiple style="display:none" onchange="addPh(this)">
+</div>
+<div id="toast"></div>
+<div id="print"></div>
+
+<script>
+firebase.initializeApp({apiKey:"AIzaSyB2DOFle2acosBfn-cSFbzEkbRWL1ld-3I",authDomain:"mydiary-07.firebaseapp.com",databaseURL:"https://mydiary-07-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"mydiary-07",storageBucket:"mydiary-07.firebasestorage.app",messagingSenderId:"497367240656",appId:"1:497367240656:web:770bd253222aa3a9b0f3d5"});
+const auth=firebase.auth(),db=firebase.database();
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MOODS=[['😊','खुश','#ffe9a8'],['😌','शांत','#c4f5d0'],['🥰','प्यार','#ffc8dd'],['🤩','जोश','#ffd6a5'],['😴','थका','#d9c8ff'],['😔','उदास','#bde0fe'],['😰','चिंता','#e2e2ea'],['😡','गुस्सा','#ffb8b8']];
+const PROMPTS=['आज किस बात ने मुस्कुराने पर मजबूर किया?','आज तुमने खुद के लिए क्या किया?','किस इंसान की याद आज आई?','आज की सबसे छोटी लेकिन खास बात क्या थी?','अगर आज को एक नाम दो तो क्या होगा?','कल के लिए तुम्हारी एक उम्मीद क्या है?'];
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+let uid,entries={},pinHash=null,view='home',calM=new Date(),selDay=null,tagF=null,q='',cur=null,photos=[],mood='';
+let pinBuf='',lockMode='unlock',lockCb=null,tmpPin='',hiddenAt=0;
+const base=()=>'users/'+uid+'/diary';
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ---------- AUTH ---------- */
+function googleLogin(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert('Login Failed: '+e.message))}
+function emailLogin(){const e=$('em').value,p=$('pw').value;if(!e||!p)return alert('Email aur Password dono bhariye');
+  auth.signInWithEmailAndPassword(e,p).catch(er=>{if(['auth/user-not-found','auth/invalid-credential'].includes(er.code)||er.message.includes('INVALID_LOGIN'))auth.createUserWithEmailAndPassword(e,p).then(()=>alert('Account ban gaya! Yehi aapka password hai.')).catch(x=>alert(x.message));else alert(er.message)})}
+function forgotPw(){const e=$('em').value;if(!e)return alert('Pehle Gmail ID likhein.');auth.sendPasswordResetEmail(e).then(()=>alert('Reset link bhej diya gaya.')).catch(x=>alert(x.message))}
+auth.onAuthStateChanged(u=>{$('loader').style.display='none';
+  if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';return}
+  if(uid===u.uid)return;uid=u.uid;
+  db.ref(base()).once('value').then(s=>{const v=s.val()||{};entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;
+    $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
+    $('today').textContent=new Date().toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'});
+    go('home');if(pinHash)openLock('unlock',null,'PIN daalein',false)}).catch(e=>{alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
+
+/* ---------- PIN LOCK ---------- */
+$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':`<button onclick="key('${k==='⌫'?'b':k}')">${k}</button>`).join('');
+function dots(){$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<pinBuf.length?'on':''}"></i>`).join('')}
+function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';$('lockT').textContent=title;$('lockX').style.display=cancel?'block':'none';$('lockF').style.display=mode==='unlock'?'block':'none';$('lock').style.display='flex';dots()}
+function closeLock(){$('lock').style.display='none';pinBuf=''}
+function key(k){if(k==='b')pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;dots();if(pinBuf.length===4)setTimeout(pinDone,140)}
+async function sha(p){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p+uid));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function shake(){$('dots').classList.add('sh');setTimeout(()=>$('dots').classList.remove('sh'),400)}
+async function pinDone(){const p=pinBuf;pinBuf='';dots();
+  if(lockMode==='set1'){tmpPin=p;lockMode='set2';$('lockT').textContent='PIN dobara daalein';return}
+  if(lockMode==='set2'){if(p!==tmpPin){shake();lockMode='set1';$('lockT').textContent='Match nahi hua, naya PIN daalein';return}
+    pinHash=await sha(p);db.ref(base()+'/pin').set(pinHash);closeLock();toast('PIN set ho gaya 🔒');if(view==='set')render();return}
+  if(await sha(p)===pinHash){const cb=lockCb;closeLock();if(cb)cb()}else shake()}
+async function forgotPin(){try{const u=auth.currentUser;
+  if(u.providerData[0].providerId==='password'){const p=prompt('PIN reset ke liye account ka password likhein:');if(!p)return;await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,p))}
+  else await u.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider());
+  pinHash=null;db.ref(base()+'/pin').remove();closeLock();toast('PIN hata diya, Settings se naya set karein')}catch(e){alert('Verify nahi hua: '+e.message)}}
+function setPin(){openLock('set1',null,'Naya 4-digit PIN daalein',true)}
+function changePin(){openLock('verify',()=>setPin(),'Purana PIN daalein',true)}
+function removePin(){openLock('verify',()=>{pinHash=null;db.ref(base()+'/pin').remove();toast('PIN hata diya');render()},'PIN daalein',true)}
+
+/* ---------- VIEWS ---------- */
+function go(v){view=v;document.querySelectorAll('nav button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));render();window.scrollTo(0,0)}
+function render(){({home:renderHome,cal:renderCal,stats:renderStats,set:renderSet})[view]()}
+const sorted=()=>Object.values(entries).sort((a,b)=>b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0));
+function streaks(){const ds=new Set(Object.values(entries).map(e=>e.date));let c=0,d=new Date();if(!ds.has(iso(d)))d.setDate(d.getDate()-1);while(ds.has(iso(d))){c++;d.setDate(d.getDate()-1)}
+  let best=0,run=0,prev=null;[...ds].sort().forEach(x=>{run=prev&&new Date(x)-new Date(prev)===864e5?run+1:1;best=Math.max(best,run);prev=x});return{cur:c,best}}
+function card(e){const m=MOODS.find(x=>x[0]===e.mood),d=new Date(e.date+'T00:00');
+  return `<div class="glass en" onclick="openEd('${e.id}')"><div class="tab" style="background:${m?m[2]:'#e7def8'}"></div><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString('hi-IN',{month:'short'})}</small></div><div class="bd"><div class="tt">${e.mood||''} ${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div><div class="tg">${(e.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join('')}</div></div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}</div>`}
+function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ रात्रि':h<12?'सुप्रभात':h<17?'नमस्ते':h<21?'शुभ संध्या':'शुभ रात्रि';
+  const name=(auth.currentUser.displayName||auth.currentUser.email.split('@')[0]).split(' ')[0];
+  const tags=[...new Set(Object.values(entries).flatMap(e=>e.tags||[]))];
+  $('main').innerHTML=`<div class="glass hero"><div class="hand hi">${g}, ${esc(name)} ✨</div><p>${PROMPTS[new Date().getDate()%PROMPTS.length]}</p>${s.cur?`<div class="stk"><b>🔥${s.cur}</b><small>दिन</small></div>`:''}</div>
+  <input class="in srch" placeholder="🔍 diary mein khojein..." value="${esc(q)}" oninput="q=this.value.toLowerCase();renderList()">
+  ${tags.length?`<div class="chips">${tags.map(t=>`<button class="chip ${tagF===t?'on':''}" onclick="tagF=tagF==='${esc(t).replace(/'/g,"\\'")}'?null:'${esc(t).replace(/'/g,"\\'")}';renderHome()">#${esc(t)}</button>`).join('')}</div>`:''}
+  <div id="list"></div>`;renderList()}
+function renderList(){const l=sorted().filter(e=>(!tagF||(e.tags||[]).includes(tagF))&&(!q||(e.title+' '+e.text+' '+(e.tags||[]).join(' ')).toLowerCase().includes(q)));
+  $('list').innerHTML=l.length?l.map(card).join(''):`<div class="empty"><div class="big">🌸</div>${Object.keys(entries).length?'Kuch nahi mila.':'Diary abhi khali hai.<br>Neeche ✍️ dabakar pehla page likhein.'}</div>`}
+function calGo(n){calM=new Date(calM.getFullYear(),calM.getMonth()+n,1);selDay=null;renderCal()}
+function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={};
+  Object.values(entries).forEach(e=>(by[e.date]=by[e.date]||[]).push(e));
+  let h=`<div class="glass set"><div class="cn"><button onclick="calGo(-1)">‹</button><b>${calM.toLocaleDateString('hi-IN',{month:'long',year:'numeric'})}</b><button onclick="calGo(1)">›</button></div><div class="cg">`+'रवि सोम मंगल बुध गुरु शुक्र शनि'.split(' ').map(x=>`<small>${x}</small>`).join('');
+  for(let i=0;i<first;i++)h+='<i></i>';
+  for(let d=1;d<=dim;d++){const k=iso(new Date(y,m,d)),es=by[k];h+=`<button class="cd ${es?'has':''} ${k===iso(new Date())?'today':''} ${k===selDay?'sel':''}" onclick="selDay='${k}';renderCal()">${d}<span>${es?(es[0].mood||'•'):''}</span></button>`}
+  h+='</div></div>';
+  if(selDay){const es=by[selDay]||[];h+=`<div style="margin:0 4px 10px;font-weight:700">${new Date(selDay+'T00:00').toLocaleDateString('hi-IN',{day:'numeric',month:'long'})}</div>`+es.map(card).join('')+`<button class="btn alt" onclick="openEd(null,'${selDay}')">✍️ Is din ke liye likhein</button>`}
+  $('main').innerHTML=h}
+function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce((n,e)=>n+(e.text.trim()?e.text.trim().split(/\s+/).length:0),0);
+  const mc={},tc={};a.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1;(e.tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1)});
+  const mx=Math.max(1,...Object.values(mc)),top=Object.entries(tc).sort((x,y)=>y[1]-x[1]).slice(0,8);
+  $('main').innerHTML=`<div class="sg"><div class="glass sc"><b>${a.length}</b><small>कुल पन्ने</small></div><div class="glass sc"><b>${words}</b><small>कुल शब्द</small></div><div class="glass sc"><b>🔥 ${s.cur}</b><small>अभी की streak</small></div><div class="glass sc"><b>${s.best}</b><small>सबसे लंबी streak</small></div></div>
+  <div class="glass set"><h3 class="hand" style="font-size:26px">Mood ka safar</h3>${Object.keys(mc).length?MOODS.filter(m=>mc[m[0]]).map(m=>`<div class="bar"><span style="width:62px">${m[0]} ${m[1]}</span><i style="width:${mc[m[0]]/mx*55}%;background:${m[2]}"></i>${mc[m[0]]}</div>`).join(''):'<div class="empty">Entry mein mood chunein, yahan dikhega.</div>'}</div>
+  <div class="glass set"><h3 class="hand" style="font-size:26px">Aapke tags</h3>${top.length?`<div class="tg">${top.map(t=>`<span>#${esc(t[0])} · ${t[1]}</span>`).join('')}</div>`:'<div class="empty">Abhi koi tag nahi.</div>'}</div>`}
+function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN laga hua hai. Diary 1 minute baad band hone par dobara lock hogi.':'Abhi PIN nahi hai. 4-digit PIN lagakar diary ko private rakhein.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">PIN badlein</button><button class="btn red" onclick="removePin()">PIN hatayein</button>':'<button class="btn" onclick="setPin()">PIN set karein</button>'}</div>
+  <div class="glass set"><h3>💾 Backup & PDF</h3><button class="btn" onclick="printAll()">📄 Poori diary PDF banayein</button><button class="btn alt" onclick="exportJson()">📤 Backup download</button><button class="btn alt" onclick="document.getElementById('imp').click()">📥 Backup restore</button><input id="imp" type="file" accept=".json" style="display:none" onchange="importJson(event)"></div>
+  <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
+
+/* ---------- EDITOR ---------- */
+function renderMoods(){$('moods').innerHTML=MOODS.map(m=>`<button class="mb ${mood===m[0]?'on':''}" onclick="mood=mood==='${m[0]}'?'':'${m[0]}';renderMoods()"><span>${m[0]}</span>${m[1]}</button>`).join('')}
+function renderPh(){$('ph').innerHTML=photos.map((p,i)=>`<div><img src="${p}"><button onclick="photos.splice(${i},1);renderPh()">✕</button></div>`).join('')+(photos.length<5?'<button class="addp" onclick="document.getElementById(\'phIn\').click()">＋</button>':'')}
+function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];
+  $('edDate').value=cur?cur.date:(date||iso(new Date()));$('edTitle').value=cur?cur.title||'':'';$('edText').value=cur?cur.text||'':'';$('edTags').value=cur?(cur.tags||[]).join(', '):'';
+  $('edDel').style.display=cur?'block':'none';renderMoods();renderPh();$('ed').style.display='flex';history.pushState({ed:1},'');if(!cur)setTimeout(()=>$('edText').focus(),100)}
+function closeEd(quiet){if($('ed').style.display!=='flex')return;$('ed').style.display='none';if(!quiet&&history.state&&history.state.ed)history.back()}
+window.onpopstate=()=>{$('ed').style.display='none'};
+function addPh(inp){[...inp.files].slice(0,5-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photos.push(c.toDataURL('image/jpeg',.65));renderPh()};im.src=r.result};r.readAsDataURL(f)});inp.value=''}
+function saveEntry(){const title=$('edTitle').value.trim(),text=$('edText').value.trim();if(!title&&!text&&!photos.length)return toast('Kuch likhein pehle ✍️');
+  const id=cur?cur.id:db.ref(base()+'/entries').push().key;
+  const tags=[...new Set($('edTags').value.split(/[,\s]+/).map(t=>t.replace(/^#/,'').trim()).filter(Boolean))];
+  const e={id,date:$('edDate').value||iso(new Date()),title,text,mood,tags,photos,ts:cur?cur.ts||Date.now():Date.now()};
+  entries[id]=e;db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));
+  closeEd();selDay=e.date;toast('Page save ho gaya 🌸');render()}
+function delEntry(){if(!cur||!confirm('Ye page hamesha ke liye hata dein?'))return;const id=cur.id;delete entries[id];db.ref(base()+'/entries/'+id).remove();closeEd();toast('Page hata diya');render()}
+
+/* ---------- BACKUP / PDF ---------- */
+function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({entries})],{type:'application/json'}));a.download='my_diary_backup.json';a.click()}
+function importJson(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result).entries||{};Object.keys(d).forEach(k=>{d[k].id=k;d[k].text=d[k].text||'';d[k].date=d[k].date||iso(new Date())});Object.assign(entries,d);db.ref(base()+'/entries').update(d);toast('Backup restore ho gaya ✨');render()}catch(e){alert('Galat file!')}};r.readAsText(f)}
+function printAll(){const a=sorted().reverse();if(!a.length)return toast('Diary abhi khali hai');
+  $('print').innerHTML='<h1>My Diary</h1>'+a.map(e=>`<div class="pe"><h3>${e.date} ${e.mood||''} ${esc(e.title)}</h3><p>${esc(e.text).replace(/\n/g,'<br>')}</p><div>${(e.tags||[]).map(t=>'#'+esc(t)).join(' ')}</div>${(e.photos||[]).map(p=>`<img src="${p}">`).join('')}</div>`).join('');
+  toast('Print screen mein "Save as PDF" chunein');setTimeout(()=>window.print(),600)}
+</script>
+</body>
+</html>
