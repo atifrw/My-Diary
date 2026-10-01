@@ -58,19 +58,42 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.sc{padding:16px;text-align:center}.sc b{font-family:'Caveat',cursive;font-size:38px;display:block;line-height:1}.sc small{color:var(--soft);font-weight:600}
 .bar{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13.5px;font-weight:600}.bar i{display:block;height:12px;border-radius:8px;min-width:6px}
 .set{padding:16px;margin-bottom:12px}.set h3{margin:0 0 10px}.set .btn{margin-top:8px}
-#ed{position:fixed;inset:0;z-index:45;background:linear-gradient(165deg,#fff1f8,#efe8ff 50%,#e6f3ff);display:none;flex-direction:column}
-.edh{display:flex;justify-content:space-between;align-items:center;padding:12px 14px}.edh button{border:none;background:#fff;border-radius:50%;width:38px;height:38px;font-size:17px;cursor:pointer}
+
+/* ---------- NEW EDITOR ---------- */
+#ed{position:fixed;inset:0;z-index:45;background:#f9f9fc;display:none;flex-direction:column}
 .edb{flex:1;overflow-y:auto;padding:0 16px 16px;max-width:640px;width:100%;margin:0 auto}
-.dti{border:none;background:#fff;border-radius:14px;padding:8px 12px;font-weight:700}
-.moods{display:flex;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.nh{display:flex;align-items:center;gap:10px;padding:12px 14px;max-width:640px;width:100%;margin:0 auto}
+.ib{border:none;background:#e9e7fb;width:42px;height:42px;border-radius:50%;font-size:18px;font-weight:700;cursor:pointer;color:var(--ink)}
+.sv{border:none;background:#2f7be8;color:#fff;font-weight:700;border-radius:18px;padding:12px 18px;cursor:pointer;box-shadow:0 4px 12px rgba(47,123,232,.3)}
+.nh .gap{margin-left:auto}
+#nm{display:none;position:absolute;right:0;top:48px;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:5;padding:4px}
+#nm.on{display:block}#nm button{border:none;background:none;padding:10px 14px;white-space:nowrap;font-weight:600;color:#d9486b;cursor:pointer}
+.hd{display:flex;gap:8px;align-items:flex-start;position:relative}
+.hl{flex:1;min-width:0}.hr{width:128px;text-align:center;flex-shrink:0;position:relative}
+.dp{position:relative;display:inline-flex;align-items:center;gap:8px;background:#dcd3ff;padding:6px 16px;border-radius:10px 22px 12px 20px;font-weight:700}
+.dp b{font-size:34px;line-height:1}.dp input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+.tw{display:flex;align-items:center;gap:6px;margin-top:10px}
+.ttl{width:100%;min-width:0;border:none;border-bottom:3px solid #c9bdf5;background:transparent;font-family:'Caveat',cursive;font-weight:700;font-size:34px;outline:none;padding:4px 0;color:var(--ink)}
+.sub{border:none;background:transparent;outline:none;width:100%;font-family:'Caveat',cursive;font-size:22px;color:#7d7aa0;padding:6px 0}
+#sun{border:none;background:#ffd36b;width:46px;height:46px;border-radius:50%;font-size:26px;cursor:pointer;position:absolute;right:0;top:-6px;box-shadow:0 0 0 6px #ffe9a855}
+.slg{font-family:'Caveat',cursive;font-weight:700;font-size:20px;line-height:1.05;color:#2b2a63;margin-top:2px}
+.nc{background:#fff;border:2px solid #d9e2fb;border-radius:26px;padding:10px 16px 10px 0;margin-top:12px;box-shadow:0 6px 20px rgba(120,140,220,.12)}
+.txt{width:100%;border:none;outline:none;resize:none;color:var(--ink);padding:0 0 0 58px;min-height:44vh;font-size:17px;line-height:32px;background:radial-gradient(circle,#b7c6f6 8px,transparent 9px) 0 0/58px 32px repeat-y local,linear-gradient(transparent 31px,#dfe5f8 31px) 58px 0/calc(100% - 58px) 32px repeat-y local}
+.moods{display:none;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:none}.moods.on{display:flex}
 .mb{flex-shrink:0;border:2px solid transparent;border-radius:18px;padding:7px 10px;background:#ffffffaa;text-align:center;cursor:pointer;font-size:11px;font-weight:600}.mb span{display:block;font-size:24px}.mb.on{border-color:var(--pri);background:#fff}
-.ttl{width:100%;border:none;background:transparent;font-family:'Caveat',cursive;font-weight:700;font-size:34px;outline:none;padding:4px 0;color:var(--ink)}
-.txt{width:100%;min-height:42vh;border:none;outline:none;resize:none;background:repeating-linear-gradient(transparent 0 31px,#d9cdf3 31px 32px);line-height:32px;font-size:17px;padding:0;color:var(--ink)}
-.ph{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.ph div{position:relative}.ph img{width:84px;height:84px;object-fit:cover;border-radius:16px;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.ph{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;padding-left:20px}.ph div{position:relative}.ph img{width:84px;height:84px;object-fit:cover;border-radius:16px;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.1)}
 .ph button{position:absolute;top:-6px;right:-6px;border:none;background:#d9486b;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer}
 .addp{width:84px;height:84px;border-radius:16px;border:2px dashed var(--pri);background:#fff8;font-size:26px;cursor:pointer}
-.edf{display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));max-width:640px;width:100%;margin:0 auto}
-.edf .btn.alt{width:auto}
+.tb{display:flex;gap:2px;overflow-x:auto;background:#e5e3fb;border-radius:22px;margin:8px 12px calc(12px + env(safe-area-inset-bottom,0px));padding:8px 6px;max-width:616px;align-self:center;width:calc(100% - 24px);scrollbar-width:none}
+.tb::-webkit-scrollbar{display:none}
+.tb button{border:none;background:none;flex:1;min-width:46px;font-size:11px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tb button span{font-size:21px}.tb button.rec{background:#ffd1dc;border-radius:12px}
+#em{display:none;flex-wrap:wrap;gap:4px;background:#fff;border-radius:16px;padding:8px;margin:0 12px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+#em.on{display:flex}#em button{border:none;background:none;font-size:26px;cursor:pointer}
+#dr{position:fixed;inset:0;z-index:48;background:#fff;display:none;flex-direction:column}
+#cv{flex:1;touch-action:none;width:100%}
+.drt{display:flex;gap:14px;align-items:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+
 .dots{display:flex;gap:14px}.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--pri)}.dots i.on{background:var(--pri)}
 .pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px}.pad button{height:72px;border-radius:50%;border:none;background:#ffffffcc;font-size:24px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(150,120,200,.15)}
 .sh{animation:sk .35s}@keyframes sk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -110,17 +133,53 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
   <button data-v="set" onclick="go('set')">⚙️</button>
 </nav>
 
+<!-- ===== NEW EDITOR ===== -->
 <div id="ed">
-  <div class="edh"><button onclick="closeEd()">✕</button><input id="edDate" class="dti" type="date"><button onclick="delEntry()" id="edDel" style="display:none">🗑️</button></div>
-  <div class="edb">
-    <div class="moods" id="moods"></div>
-    <input id="edTitle" class="ttl" placeholder="आज का शीर्षक...">
-    <textarea id="edText" class="txt" placeholder="आज दिल में क्या है? यहाँ लिखिए..."></textarea>
-    <div class="ph" id="ph"></div>
-    <input id="edTags" class="in" placeholder="Tags (comma se alag): family, dost, kaam">
+  <div class="nh">
+    <button class="ib" onclick="closeEd()">←</button>
+    <div class="gap" style="position:relative"><button class="ib" onclick="document.getElementById('nm').classList.toggle('on')">•••</button>
+      <div id="nm"><button id="edDel" onclick="document.getElementById('nm').classList.remove('on');delEntry()">🗑️ Delete</button></div></div>
+    <button class="sv" onclick="saveEntry()">💾 SAVE</button>
   </div>
-  <div class="edf"><button class="btn alt" onclick="document.getElementById('phIn').click()">📷</button><button class="btn" onclick="saveEntry()">💾 Save karein</button></div>
+  <div class="edb">
+    <div class="hd">
+      <div class="hl">
+        <label class="dp"><b id="dd">01</b><span id="dm">Oct 2026</span>📅<input id="edDate" type="date" onchange="updDate()"></label>
+        <div class="tw"><input id="edTitle" class="ttl" placeholder="Title"><span>✏️</span></div>
+        <input id="edTags" class="sub" placeholder="Write more here... (tags: family, dost)">
+      </div>
+      <div class="hr">
+        <button id="sun" onclick="document.getElementById('moods').classList.toggle('on')">😊</button>
+        <svg viewBox="0 0 140 110" width="112" style="margin-top:26px"><ellipse cx="70" cy="102" rx="64" ry="7" fill="#e4dcff"/><rect x="12" y="68" width="106" height="28" rx="5" fill="#8b6fd6"/><rect x="22" y="44" width="94" height="26" rx="5" fill="#3f7be0"/><rect x="30" y="52" width="80" height="6" rx="2" fill="#fff8e8"/><rect x="46" y="18" width="46" height="28" rx="12" fill="#f4efff" stroke="#8b6fd6" stroke-width="2"/><text x="69" y="38" font-size="14" text-anchor="middle" fill="#8b6fd6">♥</text><path d="M69 18C62 6 56 6 52 2 60 0 68 6 69 18ZM69 18C72 8 80 4 86 4 82 12 76 16 69 18Z" fill="#7aa86a"/></svg>
+        <div class="slg">Better Notes<br>Bigger Dreams</div>
+      </div>
+    </div>
+    <div class="moods" id="moods"></div>
+    <div class="nc">
+      <textarea id="edText" class="txt" placeholder=""></textarea>
+      <div class="ph" id="ph"></div>
+    </div>
+    <div class="slg" style="text-align:right;margin:10px 4px 0">🌿 Small Steps, Big Goals ♡</div>
+  </div>
+  <div id="em"></div>
+  <div class="tb">
+    <button onclick="drOpen()"><span>✏️</span>Draw</button>
+    <button onclick="document.getElementById('phIn').click()"><span>🖼️</span>Image</button>
+    <button id="bs" onclick="toggleStar()"><span>☆</span>Star</button>
+    <button onclick="document.getElementById('em').classList.toggle('on')"><span>😊</span>Emoji</button>
+    <button onclick="textSize()"><span>Tт</span>Text</button>
+    <button onclick="lst()"><span>☰</span>List</button>
+    <button onclick="document.getElementById('camIn').click()"><span>📎</span>Attach</button>
+    <button id="bv" onclick="voice()"><span>🎤</span>Voice</button>
+    <button onclick="if(confirm('Poora text saaf karein?')){document.getElementById('edText').value=''}"><span>🧽</span>Erase</button>
+  </div>
   <input id="phIn" type="file" accept="image/*" multiple style="display:none" onchange="addPh(this)">
+  <input id="camIn" type="file" accept="image/*" capture="environment" style="display:none" onchange="addPh(this)">
+</div>
+<div id="dr">
+  <div class="nh"><button class="ib" onclick="document.getElementById('dr').style.display='none'">✕</button><span class="hand" style="font-size:28px;margin-left:10px">Draw</span><button class="sv gap" onclick="drDone()">Done</button></div>
+  <canvas id="cv"></canvas>
+  <div class="drt"><input type="color" id="dc" value="#6d5bd0"><input type="range" id="dw" min="2" max="24" value="4"><button class="ib" onclick="drClear()">🧽</button></div>
 </div>
 <div id="toast"></div>
 <div id="print"></div>
@@ -133,7 +192,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const MOODS=[['😊','खुश','#ffe9a8'],['😌','शांत','#c4f5d0'],['🥰','प्यार','#ffc8dd'],['🤩','जोश','#ffd6a5'],['😴','थका','#d9c8ff'],['😔','उदास','#bde0fe'],['😰','चिंता','#e2e2ea'],['😡','गुस्सा','#ffb8b8']];
 const PROMPTS=['आज किस बात ने मुस्कुराने पर मजबूर किया?','आज तुमने खुद के लिए क्या किया?','किस इंसान की याद आज आई?','आज की सबसे छोटी लेकिन खास बात क्या थी?','अगर आज को एक नाम दो तो क्या होगा?','कल के लिए तुम्हारी एक उम्मीद क्या है?'];
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
-let uid,entries={},pinHash=null,view='home',calM=new Date(),selDay=null,tagF=null,q='',cur=null,photos=[],mood='';
+let uid,entries={},pinHash=null,view='home',calM=new Date(),selDay=null,tagF=null,q='',cur=null,photos=[],mood='',star=false,rec=null,drawing=false;
 let pinBuf='',lockMode='unlock',lockCb=null,tmpPin='',hiddenAt=0;
 const base=()=>'users/'+uid+'/diary';
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
@@ -180,7 +239,7 @@ const sorted=()=>Object.values(entries).sort((a,b)=>b.date.localeCompare(a.date)
 function streaks(){const ds=new Set(Object.values(entries).map(e=>e.date));let c=0,d=new Date();if(!ds.has(iso(d)))d.setDate(d.getDate()-1);while(ds.has(iso(d))){c++;d.setDate(d.getDate()-1)}
   let best=0,run=0,prev=null;[...ds].sort().forEach(x=>{run=prev&&new Date(x)-new Date(prev)===864e5?run+1:1;best=Math.max(best,run);prev=x});return{cur:c,best}}
 function card(e){const m=MOODS.find(x=>x[0]===e.mood),d=new Date(e.date+'T00:00');
-  return `<div class="glass en" onclick="openEd('${e.id}')"><div class="tab" style="background:${m?m[2]:'#e7def8'}"></div><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString('hi-IN',{month:'short'})}</small></div><div class="bd"><div class="tt">${e.mood||''} ${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div><div class="tg">${(e.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join('')}</div></div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}</div>`}
+  return `<div class="glass en" onclick="openEd('${e.id}')"><div class="tab" style="background:${m?m[2]:'#e7def8'}"></div><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString('hi-IN',{month:'short'})}</small></div><div class="bd"><div class="tt">${e.mood||''}${e.star?'⭐':''} ${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div><div class="tg">${(e.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join('')}</div></div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}</div>`}
 function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ रात्रि':h<12?'सुप्रभात':h<17?'नमस्ते':h<21?'शुभ संध्या':'शुभ रात्रि';
   const name=(auth.currentUser.displayName||auth.currentUser.email.split('@')[0]).split(' ')[0];
   const tags=[...new Set(Object.values(entries).flatMap(e=>e.tags||[]))];
@@ -210,21 +269,44 @@ function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lo
   <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
 
 /* ---------- EDITOR ---------- */
-function renderMoods(){$('moods').innerHTML=MOODS.map(m=>`<button class="mb ${mood===m[0]?'on':''}" onclick="mood=mood==='${m[0]}'?'':'${m[0]}';renderMoods()"><span>${m[0]}</span>${m[1]}</button>`).join('')}
+function renderMoods(){$('moods').innerHTML=MOODS.map(m=>`<button class="mb ${mood===m[0]?'on':''}" onclick="mood=mood==='${m[0]}'?'':'${m[0]}';renderMoods()"><span>${m[0]}</span>${m[1]}</button>`).join('');$('sun').textContent=mood||'😊'}
 function renderPh(){$('ph').innerHTML=photos.map((p,i)=>`<div><img src="${p}"><button onclick="photos.splice(${i},1);renderPh()">✕</button></div>`).join('')+(photos.length<5?'<button class="addp" onclick="document.getElementById(\'phIn\').click()">＋</button>':'')}
-function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];
+function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];star=cur?!!cur.star:false;
   $('edDate').value=cur?cur.date:(date||iso(new Date()));$('edTitle').value=cur?cur.title||'':'';$('edText').value=cur?cur.text||'':'';$('edTags').value=cur?(cur.tags||[]).join(', '):'';
-  $('edDel').style.display=cur?'block':'none';renderMoods();renderPh();$('ed').style.display='flex';history.pushState({ed:1},'');if(!cur)setTimeout(()=>$('edText').focus(),100)}
+  $('edText').style.fontSize='';$('moods').classList.remove('on');$('em').classList.remove('on');$('nm').classList.remove('on');
+  $('edDel').style.display=cur?'block':'none';renderMoods();renderPh();paintStar();updDate();$('ed').style.display='flex';history.pushState({ed:1},'');if(!cur)setTimeout(()=>$('edText').focus(),100)}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;$('ed').style.display='none';if(!quiet&&history.state&&history.state.ed)history.back()}
 window.onpopstate=()=>{$('ed').style.display='none'};
 function addPh(inp){[...inp.files].slice(0,5-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photos.push(c.toDataURL('image/jpeg',.65));renderPh()};im.src=r.result};r.readAsDataURL(f)});inp.value=''}
 function saveEntry(){const title=$('edTitle').value.trim(),text=$('edText').value.trim();if(!title&&!text&&!photos.length)return toast('Kuch likhein pehle ✍️');
   const id=cur?cur.id:db.ref(base()+'/entries').push().key;
   const tags=[...new Set($('edTags').value.split(/[,\s]+/).map(t=>t.replace(/^#/,'').trim()).filter(Boolean))];
-  const e={id,date:$('edDate').value||iso(new Date()),title,text,mood,tags,photos,ts:cur?cur.ts||Date.now():Date.now()};
+  const e={id,date:$('edDate').value||iso(new Date()),title,text,mood,tags,photos,star:!!star,ts:cur?cur.ts||Date.now():Date.now()};
   entries[id]=e;db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));
   closeEd();selDay=e.date;toast('Page save ho gaya 🌸');render()}
 function delEntry(){if(!cur||!confirm('Ye page hamesha ke liye hata dein?'))return;const id=cur.id;delete entries[id];db.ref(base()+'/entries/'+id).remove();closeEd();toast('Page hata diya');render()}
+
+/* ---------- EDITOR TOOLS ---------- */
+const EMO='😊 😂 🥰 😍 😎 🤩 😌 😴 😔 😭 😡 😰 🙏 👍 ❤️ ✨ 🔥 🌸 🌙 ☕ 📚 🎉 🎂 🌈'.split(' ');
+$('em').innerHTML=EMO.map(e=>`<button onclick="ins('${e}')">${e}</button>`).join('');
+function ins(s){const t=$('edText'),p=t.selectionStart==null?t.value.length:t.selectionStart;t.value=t.value.slice(0,p)+s+t.value.slice(p);t.selectionStart=t.selectionEnd=p+s.length;t.focus()}
+function updDate(){const d=new Date($('edDate').value+'T00:00');if(isNaN(d))return;$('dd').textContent=String(d.getDate()).padStart(2,'0');$('dm').textContent=d.toLocaleDateString('en-GB',{month:'short',year:'numeric'})}
+function toggleStar(){star=!star;paintStar()}
+function paintStar(){$('bs').firstChild.textContent=star?'⭐':'☆'}
+function textSize(){const t=$('edText'),s=[17,20,24],c=parseInt(t.style.fontSize)||17;t.style.fontSize=s[(s.indexOf(c)+1)%3]+'px'}
+function lst(){const t=$('edText'),p=t.selectionStart,v=t.value,ls=v.lastIndexOf('\n',p-1)+1;t.value=v.slice(0,ls)+'• '+v.slice(ls);t.selectionStart=t.selectionEnd=p+2;t.focus()}
+function voice(){const S=window.SpeechRecognition||window.webkitSpeechRecognition;if(!S)return toast('Is browser mein voice nahi chalta');
+  if(rec){rec.stop();return}rec=new S();rec.lang='hi-IN';rec.continuous=true;
+  rec.onresult=e=>{const x=e.results[e.results.length-1][0].transcript,t=$('edText');t.value+=(t.value&&!/\s$/.test(t.value)?' ':'')+x};
+  rec.onend=()=>{rec=null;$('bv').classList.remove('rec')};rec.start();$('bv').classList.add('rec');toast('🎤 Boliye...')}
+function drOpen(){if(photos.length>=5)return toast('Max 5 photos');$('dr').style.display='flex';const c=$('cv');c.width=c.clientWidth;c.height=c.clientHeight;drClear()}
+function drClear(){const c=$('cv'),x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height)}
+function drDone(){photos.push($('cv').toDataURL('image/jpeg',.7));$('dr').style.display='none';renderPh()}
+(function(){const c=$('cv'),x=c.getContext('2d');
+  const pt=e=>{const r=c.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  c.onpointerdown=e=>{drawing=true;c.setPointerCapture(e.pointerId);x.strokeStyle=$('dc').value;x.lineWidth=$('dw').value;x.lineCap=x.lineJoin='round';x.beginPath();x.moveTo(...pt(e))};
+  c.onpointermove=e=>{if(!drawing)return;x.lineTo(...pt(e));x.stroke()};
+  c.onpointerup=()=>drawing=false})();
 
 /* ---------- BACKUP / PDF ---------- */
 function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({entries})],{type:'application/json'}));a.download='my_diary_backup.json';a.click()}
