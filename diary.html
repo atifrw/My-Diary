@@ -130,6 +130,21 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .txt:empty:before{font-family:'Caveat','Hind',cursive;font-size:23px}
 .txt h1{font-size:34px}.txt h2{font-size:30px}.txt h3{font-size:26px}.txt h4{font-size:22px}.txt h5{font-size:20px}
 .txt{position:relative}.txt:empty:before,.txt.emp:before{content:attr(data-ph);color:#a79dc9;font-family:'Caveat','Hind',cursive;font-size:23px;position:absolute;left:0;top:0;pointer-events:none}
+
+/* compact tool sheet */
+#sheet{max-height:44vh;padding:0 12px 8px}
+.sht{padding:6px 4px;font-size:14px}
+.sht .shx{width:28px;height:28px;font-size:13px}
+.sb{padding:7px 0;font-size:14px;min-width:0;border-radius:10px}
+.rw{gap:5px;margin-bottom:6px;flex-wrap:nowrap;align-items:center}
+.rw>.sb{flex:1 1 0}
+.rw.stp .vv{flex:0 0 32px;min-width:0;font-size:14px}
+.sw{width:22px;height:22px;flex:0 0 auto}
+.rw.sws{justify-content:space-between;padding:0 2px}
+.rw.scr{overflow-x:auto;scrollbar-width:none}.rw.scr::-webkit-scrollbar{display:none}
+.rw.scr>.sb{flex:0 0 auto;padding:7px 12px}
+.lb{margin:2px 2px 4px;font-size:11px}
+.lg{gap:5px}.lg .sb{padding:8px 0}
 </style>
 </head>
 <body>
@@ -436,13 +451,13 @@ function phCheck(){const E=$('edText');E.classList.toggle('emp',!E.textContent.r
 function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';$('sheet').style.display='block';tools();
   const B=(k,v,lab,act,x)=>`<button class="sb" data-k="${k}" data-v="${v}" ${m} onclick="${act}" ${x||''}>${lab}</button>`,L=x=>`<div class="lb">${x}</div>`;
   if(t==='font'){$('shT').textContent='Text style';
-    b.innerHTML=L('Style')+`<div class="rw">${B('fmt','bold','<b>B</b>',"togFmt('bold')")}${B('fmt','italic','<i>I</i>',"togFmt('italic')")}${B('fmt','underline','<u>U</u>',"togFmt('underline')")}${B('fmt','strike','<s>S</s>',"togFmt('strike')")}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div>`
-    +L('Size')+`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button></div>`
-    +L('Align &amp; line spacing')+`<div class="rw stp">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`setAl('${x[2]}','${x[1]}')`)).join('')}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
-    +L('Heading')+`<div class="rw">${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`setBlk('h${i}')`)).join('')}${B('blk','div','¶',"setBlk('div')")}</div>`
-    +L('Text colour')+`<div class="rw">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="setCol('${c}')"></i>`).join('')}</div>`
-    +L('Highlight')+`<div class="rw">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="setHl('${c}')"></i>`).join('')}</div>`
-    +L('Font')+`<div class="fg">${FONTS.map(f=>B('fnt',f[1],f[0],`setFont('${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
+    const dv='<span style="flex:0 0 1px;background:#e7def8;margin:4px 2px"></span>';
+    b.innerHTML=`<div class="rw">${B('fmt','bold','<b>B</b>',"togFmt('bold')")}${B('fmt','italic','<i>I</i>',"togFmt('italic')")}${B('fmt','underline','<u>U</u>',"togFmt('underline')")}${B('fmt','strike','<s>S</s>',"togFmt('strike')")}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div>`
+    +`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button>${dv}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
+    +`<div class="rw">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`setAl('${x[2]}','${x[1]}')`)).join('')}${dv}${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`setBlk('h${i}')`)).join('')}${B('blk','div','¶',"setBlk('div')")}</div>`
+    +L('Text colour')+`<div class="rw sws">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="setCol('${c}')"></i>`).join('')}</div>`
+    +L('Highlight')+`<div class="rw sws">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="setHl('${c}')"></i>`).join('')}</div>`
+    +L('Font')+`<div class="rw scr">${FONTS.map(f=>B('fnt',f[1],f[0],`setFont('${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
   else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
