@@ -115,7 +115,7 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .paper{position:relative;flex:1;min-height:0;background:rgba(255,255,255,.9);border:1px solid #e3e7f7;border-radius:20px;box-shadow:0 6px 24px rgba(120,130,200,.12);overflow:hidden}
 .paper::after{content:'';position:absolute;left:0;right:0;bottom:0;height:210px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20400%20200%27%3E%3Ccircle%20cx%3D%2785%27%20cy%3D%2762%27%20r%3D%2730%27%20fill%3D%27%23eceffc%27/%3E%3Cpath%20d%3D%27M190%2054q6-6%2012%200M206%2068q6-6%2012%200M224%2050q5-5%2010%200%27%20stroke%3D%27%23b9c2ee%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3Cpath%20d%3D%27M0%20200V122L60%2086%20130%20130%20210%20114%20330%20162%20400%20172V200Z%27%20fill%3D%27%23e8ebfb%27/%3E%3Cpath%20d%3D%27M0%20200V152L50%20127%20120%20162%20220%20152%20400%20192V200Z%27%20fill%3D%27%23dde2f8%27/%3E%3Cg%20fill%3D%27%23c9d0f0%27%3E%3Cpath%20d%3D%27M14%20200l12-48%2012%2048zM38%20200l10-38%2010%2038zM62%20200l12-44%2012%2044zM90%20200l9-30%209%2030zM112%20200l8-24%208%2024z%27/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom/100% auto;pointer-events:none;z-index:0}
 .psc{position:absolute;inset:0;overflow-y:auto;padding:16px 18px 60px;z-index:1}
-.txt{font-family:'Caveat','Hind',sans-serif;font-size:23px;line-height:1.7;min-height:60%;color:var(--tx)}
+.txt{font-family:'Quicksand','Hind',sans-serif;font-size:19px;line-height:1.7;min-height:60%;color:var(--tx)}
 #ed.dark .paper{background:rgba(24,22,48,.6);border-color:rgba(255,255,255,.12)}
 #ed.dark .tbar{background:rgba(255,255,255,.1)}
 #ed.dark .ib2,#ed.dark .mdb{background:rgba(255,255,255,.18)}
@@ -127,6 +127,8 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .bgs i.on{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri)}
 .stp{align-items:center}.vv{min-width:44px;text-align:center;font-size:16px;color:#4a3f6b}
 #sheet{max-height:58vh}
+.txt:empty:before{font-family:'Caveat','Hind',cursive;font-size:23px}
+.txt h1{font-size:34px}.txt h2{font-size:30px}.txt h3{font-size:26px}.txt h4{font-size:22px}.txt h5{font-size:20px}
 </style>
 </head>
 <body>
@@ -275,7 +277,7 @@ function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lo
 const BGS=['','linear-gradient(160deg,#fde2f3,#ffe8d6)','linear-gradient(160deg,#d4f1ff,#e4d9ff)','linear-gradient(160deg,#e0f7e9,#fff6d6)','#fff7e6','#e0ecff','#ffe3ec','#e8e0ff','#dff6ea','#ffffff','linear-gradient(160deg,#1f1b3a,#3b2f63)','linear-gradient(160deg,#0f172a,#1e3a5f)','#22223b','#1b1b1b'];
 const DARKBG=BGS.slice(10);
 const COLS=['#2b3563','#000000','#6b7280','#8b0a1a','#d6336c','#ff4d8d','#7c3aed','#2563eb','#0ea5a4','#16a34a','#f59e0b','#ea580c','#ffffff'];
-const FONTS=[['Default','Caveat'],['Clean','Quicksand'],['Merriweather','Merriweather'],['Great Vibes','Great Vibes'],['Playfair','Playfair Display'],['Mono','monospace']];
+const FONTS=[['Clean','Quicksand'],['Hand','Caveat'],['Merriweather','Merriweather'],['Great Vibes','Great Vibes'],['Playfair','Playfair Display'],['Mono','monospace']];
 const LISTS=[['•',''],['⭐','⭐'],['1.','1'],['✓','✓'],['🌸','🌸'],['☁️','☁️'],['❤️','❤️'],['🌱','🌱'],['🌈','🌈'],['◆','◆'],['▲','▲']];
 const EMO=['😊','😂','🥰','😍','😎','🤔','😴','😭','😡','🙏','👍','🎉','🔥','✨','🌙','☀️','🌧️','🍕','☕','📚','💪','❤️','💔','🌹'];
 let bg='',lh=1.7,savedRange=null,rec=null;
@@ -283,15 +285,16 @@ $('mdPop').innerHTML=MOODS.map(m=>`<button onclick="mood='${m[0]}';setMd();$('md
 function sanitize(h){const t=document.createElement('div');t.innerHTML=h;t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
-function ex(c,v){rs();document.execCommand(c,false,v||null);touch();refreshSheet()}
+const TAGFMT={bold:1,italic:1,underline:1,strikeThrough:1};
+function ex(c,v){rs();try{document.execCommand('styleWithCSS',false,!TAGFMT[c])}catch(e){}document.execCommand(c,false,v||null);touch();refreshSheet()}
 function applyBg(){$('ed').style.background=bg||'';$('ed').classList.toggle('dark',DARKBG.includes(bg))}
 function showDate(){const d=new Date($('edDate').value+'T00:00');$('dBig').innerHTML=`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>${String(d.getDate()).padStart(2,'0')} ${d.toLocaleDateString('en-GB',{month:'short'})} ${d.getFullYear()} <i>▾</i>`}
 function pickDate(){const i=$('edDate');i.style.pointerEvents='auto';i.showPicker?i.showPicker():i.click()}
-function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];bg=cur?cur.bg||'':'';lh=cur?cur.lh||1.7:1.7;savedRange=null;
+function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];bg=cur?cur.bg||'':'';lh=cur?cur.lh||1.7:1.7;savedRange=null;noteFont=cur?cur.ff||'':(function(){try{return localStorage.getItem('diary_ff')||''}catch(e){return ''}})();
   $('edDate').value=cur?cur.date:(date||iso(new Date()));showDate();
   $('edTitle').value=cur?cur.title||'':'';
   $('edText').innerHTML=cur?(cur.html?sanitize(cur.html):esc(cur.text||'').replace(/\n/g,'<br>')):'';
-  $('edText').style.lineHeight=lh;newId=null;dirty=false;$('svT').textContent=cur?'Saved ✓':'Save';
+  $('edText').style.lineHeight=lh;$('edText').style.fontFamily=noteFont?cssFont(noteFont):'';newId=null;dirty=false;$('svT').textContent=cur?'Saved ✓':'Save';
   setMd();$('delB').style.display=cur?'block':'none';
   applyBg();closeSheet();$('mdPop').style.display='none';$('mnu').style.display='none';
   $('ed').style.display='flex';document.body.classList.add('editing');tools();try{document.execCommand('styleWithCSS',false,true)}catch(e){}
@@ -304,10 +307,10 @@ addEventListener('resize',onRs);if(window.visualViewport)visualViewport.addEvent
 function setMd(){$('mdBtn').textContent=mood||'🙂';$('mdBtn').classList.toggle('none',!mood)}
 function touch(){if(!dirty){dirty=true;$('svT').textContent='Save'}}
 function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
-  const title=$('edTitle').value.trim(),text=$('edText').innerText.trim(),html=sanitize($('edText').innerHTML);
+  const title=$('edTitle').value.trim(),text=$('edText').innerText.replace(/\u200b/g,'').trim(),html=sanitize($('edText').innerHTML);
   if(!title&&!text&&!photos.length)return false;
   const id=cur?cur.id:(newId=newId||db.ref(base()+'/entries').push().key);
-  const e={id,date:$('edDate').value||iso(new Date()),title,text,html,mood,tags:cur?cur.tags||[]:[],photos,bg,lh,ts:cur?cur.ts||Date.now():Date.now()};
+  const e={id,date:$('edDate').value||iso(new Date()),title,text,html,mood,tags:cur?cur.tags||[]:[],photos,bg,lh,ff:noteFont,ts:cur?cur.ts||Date.now():Date.now()};
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
@@ -336,22 +339,39 @@ function setSize(px){rs();const sel=getSelection();if(!sel.rangeCount)return;
   if(sel.isCollapsed){const sp=document.createElement('span');sp.style.fontSize=px+'px';const t=document.createTextNode('\u200b');sp.appendChild(t);sel.getRangeAt(0).insertNode(sp);const r=document.createRange();r.setStart(t,1);r.collapse(true);sel.removeAllRanges();sel.addRange(r)}
   else{document.execCommand('fontSize',false,'7');const E=$('edText');E.querySelectorAll('font[size="7"]').forEach(f=>{f.removeAttribute('size');f.style.fontSize=px+'px'});E.querySelectorAll('span').forEach(sp=>{if(sp.style.fontSize==='xxx-large')sp.style.fontSize=px+'px'})}
   touch();refreshSheet()}
-function stepSize(d){setSize(Math.max(10,Math.min(60,(st().size||23)+d)))}
+const DEF_SIZE=19,DEF_COL='#2b3563',DEF_FONT='Quicksand';let noteFont='';
+function stepSize(d){setSize(Math.max(10,Math.min(60,(st().size||DEF_SIZE)+d)))}
+function setAl(cmd,key){const S=st();ex(key!=='jl'&&S[key]?'justifyLeft':cmd)}
+function setBlk(v){const S=st();let bl=S.block;if(bl==='p'||bl==='')bl='div';ex('formatBlock',(bl===v)?'div':v)}
+function setCol(c){ex('foreColor',rgb2hex(st().color)===c?DEF_COL:c)}
+function stepOut(test){const sel=getSelection();if(!sel.rangeCount||!sel.isCollapsed)return false;const E=$('edText');let n=sel.anchorNode;if(n.nodeType===3)n=n.parentElement;
+  while(n&&n!==E&&!test(n))n=n.parentElement;if(!n||n===E)return false;
+  const r=document.createRange();r.setStart(sel.anchorNode,sel.anchorOffset);r.setEnd(n,n.childNodes.length);const tail=r.extractContents(),z=document.createTextNode('\u200b');n.after(z);
+  if(tail.textContent.length){const t=n.cloneNode(false);t.appendChild(tail);z.after(t)}if(!n.textContent.length)n.remove();
+  const nr=document.createRange();nr.setStart(z,1);nr.collapse(true);sel.removeAllRanges();sel.addRange(nr);return true}
+function setHl(c){rs();const off=!c||rgb2hex(st().hl)===c;if(!off){ex('hiliteColor',c);return}
+  const sel=getSelection();if(sel.rangeCount&&sel.isCollapsed&&stepOut(el=>el.tagName==='SPAN'&&rgb2hex(el.style.backgroundColor)!=='')){touch();refreshSheet();return}
+  ex('hiliteColor','transparent')}
+function cssFont(n){return n==='monospace'?'monospace':`'${n}','Hind',sans-serif`}
+function setFont(name){rs();const sel=getSelection(),same=st().font===name.toLowerCase(),target=same?DEF_FONT:name;
+  if(sel.rangeCount&&!sel.isCollapsed){ex('fontName',target);return}
+  noteFont=target===DEF_FONT?'':target;$('edText').style.fontFamily=noteFont?cssFont(noteFont):'';
+  try{noteFont?localStorage.setItem('diary_ff',noteFont):localStorage.removeItem('diary_ff')}catch(e){}touch();refreshSheet()}
 function clr(){rs();document.execCommand('removeFormat');document.execCommand('formatBlock',false,'div');touch();refreshSheet()}
 function noList(){rs();const n=curEl(),l=n&&n.closest?n.closest('ul,ol'):null;if(l)document.execCommand(l.tagName==='OL'?'insertOrderedList':'insertUnorderedList');touch();refreshSheet()}
-function setList(sym){rs();const ord=sym==='1';let n=getSelection().anchorNode;if(n&&n.nodeType===3)n=n.parentElement;let l=n&&n.closest?n.closest('ul,ol'):null;
+function setList(sym){rs();if(listSym()===sym){noList();return}const ord=sym==='1';let n=getSelection().anchorNode;if(n&&n.nodeType===3)n=n.parentElement;let l=n&&n.closest?n.closest('ul,ol'):null;
   if(!l||(ord&&l.tagName!=='OL')||(!ord&&l.tagName!=='UL')){document.execCommand(ord?'insertOrderedList':'insertUnorderedList');n=getSelection().anchorNode;if(n&&n.nodeType===3)n=n.parentElement;l=n&&n.closest?n.closest('ul,ol'):null}
   if(l)l.style.listStyleType=ord?'decimal':(sym?`"${sym} "`:'disc');touch();refreshSheet()}
 function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';$('sheet').style.display='block';tools();
   const B=(k,v,lab,act,x)=>`<button class="sb" data-k="${k}" data-v="${v}" ${m} onclick="${act}" ${x||''}>${lab}</button>`,L=x=>`<div class="lb">${x}</div>`;
   if(t==='font'){$('shT').textContent='Text style';
     b.innerHTML=L('Style')+`<div class="rw">${B('fmt','bold','<b>B</b>',"ex('bold')")}${B('fmt','italic','<i>I</i>',"ex('italic')")}${B('fmt','underline','<u>U</u>',"ex('underline')")}${B('fmt','strike','<s>S</s>',"ex('strikeThrough')")}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div>`
-    +L('Size')+`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button></div><div class="rw">${SIZES.map(z=>B('sz',z,z,`setSize(${z})`)).join('')}</div>`
-    +L('Align &amp; line spacing')+`<div class="rw stp">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`ex('${x[2]}')`)).join('')}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
-    +L('Heading')+`<div class="rw">${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`ex('formatBlock','h${i}')`)).join('')}${B('blk','div','¶',"ex('formatBlock','div')")}</div>`
-    +L('Text colour')+`<div class="rw">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="ex('foreColor','${c}')"></i>`).join('')}</div>`
-    +L('Highlight')+`<div class="rw">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="ex('hiliteColor','${c||'transparent'}')"></i>`).join('')}</div>`
-    +L('Font')+`<div class="fg">${FONTS.map(f=>B('fnt',f[1],f[0],`ex('fontName','${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
+    +L('Size')+`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button></div>`
+    +L('Align &amp; line spacing')+`<div class="rw stp">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`setAl('${x[2]}','${x[1]}')`)).join('')}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
+    +L('Heading')+`<div class="rw">${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`setBlk('h${i}')`)).join('')}${B('blk','div','¶',"setBlk('div')")}</div>`
+    +L('Text colour')+`<div class="rw">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="setCol('${c}')"></i>`).join('')}</div>`
+    +L('Highlight')+`<div class="rw">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="setHl('${c}')"></i>`).join('')}</div>`
+    +L('Font')+`<div class="fg">${FONTS.map(f=>B('fnt',f[1],f[0],`setFont('${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
   else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
@@ -363,7 +383,7 @@ function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;
 function copyTxt(){navigator.clipboard&&navigator.clipboard.writeText($('edText').innerText).then(()=>toast('Text copy ho gaya'));$('mnu').style.display='none'}
 function renderPh(){$('ph').innerHTML=photos.map((p,i)=>`<div><img src="${p}"><button onclick="photos.splice(${i},1);renderPh()">✕</button></div>`).join('')}
 function addPh(inp){[...inp.files].slice(0,5-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photos.push(c.toDataURL('image/jpeg',.65));renderPh()};im.src=r.result};r.readAsDataURL(f)});inp.value=''}
-function saveEntry(){if(!$('edTitle').value.trim()&&!$('edText').innerText.trim()&&!photos.length)return toast('Kuch likhein pehle ✍️');dirty=true;persist();toast('Page save ho gaya 🌸');closeEd()}
+function saveEntry(){if(!$('edTitle').value.trim()&&!$('edText').innerText.replace(/\u200b/g,'').trim()&&!photos.length)return toast('Kuch likhein pehle ✍️');dirty=true;persist();toast('Page save ho gaya 🌸');closeEd()}
 function delEntry(){if(!cur||!confirm('Ye page hamesha ke liye hata dein?'))return;const id=cur.id;delete entries[id];db.ref(base()+'/entries/'+id).remove();cur=null;dirty=false;photos=[];$('edTitle').value='';$('edText').innerHTML='';closeEd();toast('Page hata diya');render()}
 
 /* ---------- BACKUP / PDF ---------- */
