@@ -185,7 +185,7 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('list')">☰</button>
     <button class="pb" id="micB" onmousedown="event.preventDefault()" onclick="mic()">🎤</button>
   </div>
-  <div id="sheet"><div class="sht"><span id="shT"></span><button class="shx" onclick="closeSheet()" aria-label="Close">✕</button></div><div id="shB"></div></div>
+  <div id="sheet"><div class="sht"><span id="shT"></span><button class="shx" onmousedown="event.preventDefault()" onclick="xSheet()" aria-label="Close">✕</button></div><div id="shB"></div></div>
 </div>
 <div id="toast"></div>
 <div id="print"></div>
@@ -303,7 +303,10 @@ function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos
 let newId=null,dirty=false,saveT=null;
 const vh=()=>Math.min(innerHeight,(window.visualViewport||{}).height||innerHeight);let vh0=vh();
 function tools(){const kb=vh()<vh0-120,on=$('ed').style.display==='flex'&&(kb||$('sheet').style.display==='block');$('tp').style.display=on?'flex':'none'}
-function onRs(){if(vh()>vh0)vh0=vh();tools()}
+let wasKb=false;
+function onRs(){if(vh()>vh0)vh0=vh();const kb=vh()<vh0-120;
+  if(wasKb&&!kb&&$('sheet').style.display==='block')closeSheet();
+  wasKb=kb;tools()}
 addEventListener('resize',onRs);if(window.visualViewport)visualViewport.addEventListener('resize',onRs);
 function setMd(){$('mdBtn').textContent=mood||'🙂';$('mdBtn').classList.toggle('none',!mood)}
 function touch(){if(!dirty){dirty=true;$('svT').textContent='Save'}phCheck()}
@@ -320,6 +323,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').st
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
 function closeSheet(){$('sheet').style.display='none';$('mnu').style.display='none';tools()}
+function xSheet(){closeSheet();rs()}
 const SIZES=[14,16,18,20,23,26,30,36],HL=['#fff3a3','#ffd1e1','#cdf5d8','#cfe3ff','#e5d6ff',''];
 let rfq=false;function refreshSoon(){if(rfq)return;rfq=true;requestAnimationFrame(()=>{rfq=false;refreshSheet()})}
 function setLh(d){lh=Math.min(2.6,Math.max(1.2,+(lh+d).toFixed(1)));$('edText').style.lineHeight=lh;touch();refreshSheet()}
