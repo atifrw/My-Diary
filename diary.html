@@ -197,6 +197,9 @@ nav button.on{color:#7c5cf0;background:none}
 nav button.on::after{content:'';position:absolute;bottom:-3px;left:20%;right:20%;height:3px;border-radius:3px;background:#7c5cf0}
 nav .fab{width:64px;height:64px;border-radius:50%;margin:-36px 0 6px;padding:0;justify-content:center;background:linear-gradient(135deg,#7c6cf5,#d36bf0);color:#fff;border:4px solid rgba(255,255,255,.95);box-shadow:0 10px 24px rgba(140,100,240,.5)}
 nav .fab svg{width:28px;height:28px;stroke:#fff}
+#app{max-width:none;padding-left:10px;padding-right:10px}
+nav{max-width:none}
+.hero2 p{max-width:80%}
 </style>
 </head>
 <body>
@@ -217,7 +220,7 @@ nav .fab svg{width:28px;height:28px;stroke:#fff}
 </div>
 
 <div id="app">
-  <div class="top"><div class="brand"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9" fill="none"/></svg><div><h1 class="hand">My Diary</h1><span class="tagline">सोचो ✦ लिखो ✦ महसूस करो</span></div></div><button class="moon" onclick="lockNow()" aria-label="Lock">🌙</button></div>
+  <div class="top"><div class="brand"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9" fill="none"/></svg><div><h1 class="hand">My Diary</h1><span class="tagline">सोचो ✦ लिखो ✦ महसूस करो</span></div></div></div>
   <div id="main"></div>
 </div>
 
@@ -316,11 +319,11 @@ let tagsOpen=false;
 function lockNow(){if(!pinHash)return toast('Settings mein PIN lagayein, phir yahan se turant lock kar sakte hain 🔒');openLock('unlock',null,'PIN daalein',false)}
 function toggleTags(){if(!Object.values(entries).some(e=>(e.tags||[]).length))return toast('Abhi koi tag nahi hai');tagsOpen=!tagsOpen;renderHome()}
 function card(e){const m=MOODS.find(x=>x[0]===e.mood),d=new Date(e.date+'T00:00'),c=m?m[2]:'#e7def8';
-  return `<div class="en2" style="background:linear-gradient(100deg,${c}55,#ffffffd9 70%)" onclick="openEd('${e.id}')"><div class="dt2"><b>${d.getDate()}</b><small>${d.toLocaleDateString('hi-IN',{month:'short'})}</small></div><div class="ic" style="background:${c}">${e.mood||FEATHER}</div><div class="bd"><div class="tt">${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div>${(e.tags||[]).length?`<div class="tg">${e.tags.map(t=>'<span>#'+esc(t)+'</span>').join('')}</div>`:''}</div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}<span class="chv">›</span></div>`}
+  return `<div class="en2" style="background:linear-gradient(100deg,${c}55,#ffffffd9 70%)" onclick="openEd('${e.id}')"><div class="dt2"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'})}</small></div><div class="ic" style="background:${c}">${e.mood||FEATHER}</div><div class="bd"><div class="tt">${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div>${(e.tags||[]).length?`<div class="tg">${e.tags.map(t=>'<span>#'+esc(t)+'</span>').join('')}</div>`:''}</div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}<span class="chv">›</span></div>`}
 function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ रात्रि':h<12?'सुप्रभात':h<17?'नमस्ते':h<21?'शुभ संध्या':'शुभ रात्रि',ic=(h<5||h>=21)?'🌙':h<17?'☀️':'🌅';
   const name=(auth.currentUser.displayName||auth.currentUser.email.split('@')[0]).split(' ')[0];
   const tags=[...new Set(Object.values(entries).flatMap(e=>e.tags||[]))];
-  $('main').innerHTML=`<div class="hero2"><div class="gr"><span class="gi">${ic}</span><b>${g},</b><span class="nm">${esc(name)}</span><span>✨</span></div><p>${PROMPTS[new Date().getDate()%PROMPTS.length]}</p>${s.cur?`<div class="stk"><b>🔥${s.cur}</b><small>दिन</small></div>`:''}</div>
+  $('main').innerHTML=`<div class="hero2"><div class="gr"><span class="gi">${ic}</span><b>${g},</b><span class="nm">${esc(name)}</span><span>✨</span></div><p>${PROMPTS[new Date().getDate()%PROMPTS.length]}</p></div>
   <div class="srchw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="diary mein khojein..." value="${esc(q)}" oninput="q=this.value.toLowerCase();renderList()"><span class="fil" onclick="toggleTags()"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span></div>
   ${tagsOpen&&tags.length?`<div class="chips">${tags.map(t=>`<button class="chip ${tagF===t?'on':''}" onclick="tagF=tagF==='${esc(t).replace(/'/g,"\\'")}'?null:'${esc(t).replace(/'/g,"\\'")}';renderHome()">#${esc(t)}</button>`).join('')}</div>`:''}
   <div id="list"></div>`;renderList()}
