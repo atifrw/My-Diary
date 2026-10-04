@@ -145,6 +145,21 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .rw.scr>.sb{flex:0 0 auto;padding:7px 12px}
 .lb{margin:2px 2px 4px;font-size:11px}
 .lg{gap:5px}.lg .sb{padding:8px 0}
+
+/* modern tabbed tool sheet */
+#sheet{max-height:40vh;padding:0 14px 10px}
+.tb{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -2px 12px;padding:2px}
+.tb::-webkit-scrollbar{display:none}
+.tb button{flex:0 0 auto;border:none;background:#f3effc;color:#8f84b3;border-radius:999px;padding:9px 18px;font-weight:700;font-size:13.5px;cursor:pointer}
+.tb button.on{background:linear-gradient(135deg,#a78bfa,#818cf8);color:#fff;box-shadow:0 4px 12px rgba(129,140,248,.4)}
+.pn .rw{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:10px;padding:4px 2px 8px;margin:0 -2px;scrollbar-width:none;scroll-snap-type:x proximity;align-items:center}
+.pn .rw::-webkit-scrollbar{display:none}
+.pn .rw>.sb{flex:0 0 auto;width:48px;height:46px;padding:0;border-radius:15px;font-size:16px;scroll-snap-align:start;display:flex;align-items:center;justify-content:center}
+.pn .rw.scr>.sb{width:auto;padding:0 20px;font-size:16px}
+.pn .vv{flex:0 0 38px;min-width:0;text-align:center;font-weight:700;font-size:15px}
+.pn .sw{width:36px;height:36px;flex:0 0 auto;border-width:3px;scroll-snap-align:start}
+.dv{flex:0 0 1.5px;height:26px;background:#e7def8;border-radius:2px}
+.pn .lb{margin:0 2px 4px;font-size:11.5px}
 </style>
 </head>
 <body>
@@ -337,6 +352,8 @@ window.onpopstate=()=>{if($('ed').style.display==='flex'){if(rec)rec.stop();cons
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
+let shTab='style';
+function shTabGo(n){shTab=n;document.querySelectorAll('#shB .pn').forEach(p=>p.style.display=p.dataset.p===n?'block':'none');document.querySelectorAll('#shB .tb button').forEach(x=>x.classList.toggle('on',x.dataset.t===n));refreshSheet()}
 function closeSheet(){$('sheet').style.display='none';$('mnu').style.display='none';tools()}
 function xSheet(){closeSheet();rs()}
 const SIZES=[14,16,18,20,23,26,30,36],HL=['#fff3a3','#ffd1e1','#cdf5d8','#cfe3ff','#e5d6ff',''];
@@ -451,13 +468,14 @@ function phCheck(){const E=$('edText');E.classList.toggle('emp',!E.textContent.r
 function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';$('sheet').style.display='block';tools();
   const B=(k,v,lab,act,x)=>`<button class="sb" data-k="${k}" data-v="${v}" ${m} onclick="${act}" ${x||''}>${lab}</button>`,L=x=>`<div class="lb">${x}</div>`;
   if(t==='font'){$('shT').textContent='Text style';
-    const dv='<span style="flex:0 0 1px;background:#e7def8;margin:4px 2px"></span>';
-    b.innerHTML=`<div class="rw">${B('fmt','bold','<b>B</b>',"togFmt('bold')")}${B('fmt','italic','<i>I</i>',"togFmt('italic')")}${B('fmt','underline','<u>U</u>',"togFmt('underline')")}${B('fmt','strike','<s>S</s>',"togFmt('strike')")}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div>`
-    +`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button>${dv}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
-    +`<div class="rw">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`setAl('${x[2]}','${x[1]}')`)).join('')}${dv}${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`setBlk('h${i}')`)).join('')}${B('blk','div','¶',"setBlk('div')")}</div>`
-    +L('Text colour')+`<div class="rw sws">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="setCol('${c}')"></i>`).join('')}</div>`
-    +L('Highlight')+`<div class="rw sws">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="setHl('${c}')"></i>`).join('')}</div>`
-    +L('Font')+`<div class="rw scr">${FONTS.map(f=>B('fnt',f[1],f[0],`setFont('${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
+    const dv='<span class="dv"></span>';
+    const TABS=[['style','Aa  Style'],['para','¶  Paragraph'],['col','🎨  Colour'],['font','Font']];
+    b.innerHTML=`<div class="tb">${TABS.map(x=>`<button ${m} data-t="${x[0]}" onclick="shTabGo('${x[0]}')">${x[1]}</button>`).join('')}</div>`
+    +`<div class="pn" data-p="style"><div class="rw">${B('fmt','bold','<b>B</b>',"togFmt('bold')")}${B('fmt','italic','<i>I</i>',"togFmt('italic')")}${B('fmt','underline','<u>U</u>',"togFmt('underline')")}${B('fmt','strike','<s>S</s>',"togFmt('strike')")}${dv}<button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button>${dv}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div></div>`
+    +`<div class="pn" data-p="para"><div class="rw">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`setAl('${x[2]}','${x[1]}')`)).join('')}${dv}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button>${dv}${B('blk','div','¶',"setBlk('div')")}${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`setBlk('h${i}')`)).join('')}</div></div>`
+    +`<div class="pn" data-p="col">${L('Text colour')}<div class="rw">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="setCol('${c}')"></i>`).join('')}</div>${L('Highlight')}<div class="rw">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="setHl('${c}')"></i>`).join('')}</div></div>`
+    +`<div class="pn" data-p="font"><div class="rw scr">${FONTS.map(f=>B('fnt',f[1],f[0],`setFont('${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div></div>`;
+    shTabGo(shTab)}
   else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
