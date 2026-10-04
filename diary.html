@@ -120,6 +120,13 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 #ed.dark .tbar{background:rgba(255,255,255,.1)}
 #ed.dark .ib2,#ed.dark .mdb{background:rgba(255,255,255,.18)}
 .blob{animation:none!important}body.editing .blob,body.editing nav{display:none!important}
+.sht .shx{width:34px;height:34px;border-radius:50%;background:#f1ecfb;color:#4a3f6b;font-size:16px;display:flex;align-items:center;justify-content:center;padding:0}
+.lb{font-size:12px;color:#8f97c4;font-weight:700;margin:6px 2px 6px;letter-spacing:.3px}
+.sb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.sw.on{box-shadow:0 0 0 3px var(--pri)}
+.bgs i.on{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri)}
+.stp{align-items:center}.vv{min-width:44px;text-align:center;font-size:16px;color:#4a3f6b}
+#sheet{max-height:58vh}
 </style>
 </head>
 <body>
@@ -175,7 +182,7 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('list')">☰</button>
     <button class="pb" id="micB" onmousedown="event.preventDefault()" onclick="mic()">🎤</button>
   </div>
-  <div id="sheet"><div class="sht"><span id="shT"></span><button onclick="closeSheet()">✓</button></div><div id="shB"></div></div>
+  <div id="sheet"><div class="sht"><span id="shT"></span><button class="shx" onclick="closeSheet()" aria-label="Close">✕</button></div><div id="shB"></div></div>
 </div>
 <div id="toast"></div>
 <div id="print"></div>
@@ -267,16 +274,16 @@ function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lo
 /* ---------- EDITOR ---------- */
 const BGS=['','linear-gradient(160deg,#fde2f3,#ffe8d6)','linear-gradient(160deg,#d4f1ff,#e4d9ff)','linear-gradient(160deg,#e0f7e9,#fff6d6)','#fff7e6','#e0ecff','#ffe3ec','#e8e0ff','#dff6ea','#ffffff','linear-gradient(160deg,#1f1b3a,#3b2f63)','linear-gradient(160deg,#0f172a,#1e3a5f)','#22223b','#1b1b1b'];
 const DARKBG=BGS.slice(10);
-const COLS=['#4a3f6b','#000000','#6b7280','#8b0a1a','#d6336c','#ff4d8d','#7c3aed','#2563eb','#0ea5a4','#16a34a','#f59e0b','#ea580c','#ffffff'];
-const FONTS=[['Default','Quicksand'],['Merriweather','Merriweather'],['Hand','Caveat'],['Great Vibes','Great Vibes'],['Playfair','Playfair Display'],['Mono','monospace']];
+const COLS=['#2b3563','#000000','#6b7280','#8b0a1a','#d6336c','#ff4d8d','#7c3aed','#2563eb','#0ea5a4','#16a34a','#f59e0b','#ea580c','#ffffff'];
+const FONTS=[['Default','Caveat'],['Clean','Quicksand'],['Merriweather','Merriweather'],['Great Vibes','Great Vibes'],['Playfair','Playfair Display'],['Mono','monospace']];
 const LISTS=[['•',''],['⭐','⭐'],['1.','1'],['✓','✓'],['🌸','🌸'],['☁️','☁️'],['❤️','❤️'],['🌱','🌱'],['🌈','🌈'],['◆','◆'],['▲','▲']];
 const EMO=['😊','😂','🥰','😍','😎','🤔','😴','😭','😡','🙏','👍','🎉','🔥','✨','🌙','☀️','🌧️','🍕','☕','📚','💪','❤️','💔','🌹'];
 let bg='',lh=1.7,savedRange=null,rec=null;
 $('mdPop').innerHTML=MOODS.map(m=>`<button onclick="mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`).join('');
 function sanitize(h){const t=document.createElement('div');t.innerHTML=h;t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
-document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange()});
+document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
-function ex(c,v){rs();document.execCommand(c,false,v||null)}
+function ex(c,v){rs();document.execCommand(c,false,v||null);touch();refreshSheet()}
 function applyBg(){$('ed').style.background=bg||'';$('ed').classList.toggle('dark',DARKBG.includes(bg))}
 function showDate(){const d=new Date($('edDate').value+'T00:00');$('dBig').innerHTML=`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>${String(d.getDate()).padStart(2,'0')} ${d.toLocaleDateString('en-GB',{month:'short'})} ${d.getFullYear()} <i>▾</i>`}
 function pickDate(){const i=$('edDate');i.style.pointerEvents='auto';i.showPicker?i.showPicker():i.click()}
@@ -309,19 +316,46 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').st
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
 function closeSheet(){$('sheet').style.display='none';$('mnu').style.display='none';tools()}
-function setLh(d){lh=Math.min(2.6,Math.max(1.2,lh+d));$('edText').style.lineHeight=lh;touch()}
+const SIZES=[14,16,18,20,23,26,30,36],HL=['#fff3a3','#ffd1e1','#cdf5d8','#cfe3ff','#e5d6ff',''];
+let rfq=false;function refreshSoon(){if(rfq)return;rfq=true;requestAnimationFrame(()=>{rfq=false;refreshSheet()})}
+function setLh(d){lh=Math.min(2.6,Math.max(1.2,+(lh+d).toFixed(1)));$('edText').style.lineHeight=lh;touch();refreshSheet()}
+function curEl(){let n=null;const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))n=s.anchorNode;else if(savedRange&&$('edText').contains(savedRange.startContainer))n=savedRange.startContainer;if(n&&n.nodeType===3)n=n.parentElement;return n||$('edText')}
+function rgb2hex(c){if(!c)return '';const m=c.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+))?/);if(m){if(m[4]!==undefined&&+m[4]===0)return '';return '#'+[m[1],m[2],m[3]].map(x=>(+x).toString(16).padStart(2,'0')).join('')}return c.toLowerCase()==='transparent'?'':c.toLowerCase()}
+function listSym(){const n=curEl(),l=n&&n.closest?n.closest('ul,ol'):null;if(!l||!$('edText').contains(l))return null;if(l.tagName==='OL')return '1';const t=(l.style.listStyleType||'').replace(/^"|\s*"$/g,'').trim();return(t===''||t==='disc')?'':t}
+const qs=c=>{try{return document.queryCommandState(c)}catch(e){return false}},qv=c=>{try{return document.queryCommandValue(c)||''}catch(e){return ''}};
+function st(){const el=curEl();return{bold:qs('bold'),italic:qs('italic'),underline:qs('underline'),strike:qs('strikeThrough'),jl:qs('justifyLeft'),jc:qs('justifyCenter'),jr:qs('justifyRight'),jf:qs('justifyFull'),
+  block:qv('formatBlock').toLowerCase().replace(/[<>]/g,''),color:qv('foreColor'),hl:qv('hiliteColor')||qv('backColor'),
+  font:qv('fontName').replace(/["']/g,'').split(',')[0].trim().toLowerCase(),size:Math.round(parseFloat(getComputedStyle(el).fontSize))||0,lst:listSym()}}
+function refreshSheet(){if($('sheet').style.display!=='block')return;const S=st();let bl=S.block;if(bl==='p'||bl==='')bl='div';
+  document.querySelectorAll('#shB [data-k]').forEach(b=>{const k=b.dataset.k,v=b.dataset.v;let on=false;
+    if(k==='fmt')on=!!S[v];else if(k==='blk')on=bl===v;else if(k==='col')on=rgb2hex(S.color)===v;else if(k==='hl')on=rgb2hex(S.hl)===v;
+    else if(k==='fnt')on=S.font===v.toLowerCase();else if(k==='sz')on=S.size===+v;else if(k==='lst')on=S.lst===v;else if(k==='bg')on=BGS[+v]===bg;
+    b.classList.toggle('on',on)});
+  const z=$('szV');if(z)z.textContent=S.size||'';const l=$('lhV');if(l)l.textContent=lh.toFixed(1)}
+function setSize(px){rs();const sel=getSelection();if(!sel.rangeCount)return;
+  if(sel.isCollapsed){const sp=document.createElement('span');sp.style.fontSize=px+'px';const t=document.createTextNode('\u200b');sp.appendChild(t);sel.getRangeAt(0).insertNode(sp);const r=document.createRange();r.setStart(t,1);r.collapse(true);sel.removeAllRanges();sel.addRange(r)}
+  else{document.execCommand('fontSize',false,'7');const E=$('edText');E.querySelectorAll('font[size="7"]').forEach(f=>{f.removeAttribute('size');f.style.fontSize=px+'px'});E.querySelectorAll('span').forEach(sp=>{if(sp.style.fontSize==='xxx-large')sp.style.fontSize=px+'px'})}
+  touch();refreshSheet()}
+function stepSize(d){setSize(Math.max(10,Math.min(60,(st().size||23)+d)))}
+function clr(){rs();document.execCommand('removeFormat');document.execCommand('formatBlock',false,'div');touch();refreshSheet()}
+function noList(){rs();const n=curEl(),l=n&&n.closest?n.closest('ul,ol'):null;if(l)document.execCommand(l.tagName==='OL'?'insertOrderedList':'insertUnorderedList');touch();refreshSheet()}
 function setList(sym){rs();const ord=sym==='1';let n=getSelection().anchorNode;if(n&&n.nodeType===3)n=n.parentElement;let l=n&&n.closest?n.closest('ul,ol'):null;
   if(!l||(ord&&l.tagName!=='OL')||(!ord&&l.tagName!=='UL')){document.execCommand(ord?'insertOrderedList':'insertUnorderedList');n=getSelection().anchorNode;if(n&&n.nodeType===3)n=n.parentElement;l=n&&n.closest?n.closest('ul,ol'):null}
-  if(l)l.style.listStyleType=ord?'decimal':(sym?`"${sym} "`:'disc')}
+  if(l)l.style.listStyleType=ord?'decimal':(sym?`"${sym} "`:'disc');touch();refreshSheet()}
 function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';$('sheet').style.display='block';tools();
-  if(t==='font'){$('shT').textContent='Font';
-    b.innerHTML=`<div class="rw">${[['⬅','justifyLeft'],['↔','justifyCenter'],['➡','justifyRight']].map(x=>`<button class="sb" ${m} onclick="ex('${x[1]}')">${x[0]}</button>`).join('')}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>
-    <div class="rw">${[1,2,3,4,5].map(i=>`<button class="sb" ${m} onclick="ex('formatBlock','h${i}')">H${i}</button>`).join('')}<button class="sb" ${m} onclick="ex('formatBlock','div')">¶</button></div>
-    <div class="rw">${COLS.map(c=>`<i class="sw" style="background:${c}" ${m} onclick="ex('foreColor','${c}')"></i>`).join('')}</div>
-    <div class="fg"><button class="sb" ${m} onclick="ex('bold')"><b>Bold</b></button><button class="sb" ${m} onclick="ex('underline')"><u>Underline</u></button>${FONTS.map(f=>`<button class="sb" style="font-family:'${f[1]}'" ${m} onclick="ex('fontName','${f[1]}')">${f[0]}</button>`).join('')}</div>`}
-  else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>`<button class="sb" ${m} onclick="setList('${l[1]}')">${l[0]}</button>`).join('')}</div>`}
-  else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i style="background:${c||'linear-gradient(165deg,#fff1f8,#efe8ff 50%,#e6f3ff)'}" onclick="bg=BGS[${i}];applyBg();touch()"></i>`).join('')}</div>`}
-  else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}}
+  const B=(k,v,lab,act,x)=>`<button class="sb" data-k="${k}" data-v="${v}" ${m} onclick="${act}" ${x||''}>${lab}</button>`,L=x=>`<div class="lb">${x}</div>`;
+  if(t==='font'){$('shT').textContent='Text style';
+    b.innerHTML=L('Style')+`<div class="rw">${B('fmt','bold','<b>B</b>',"ex('bold')")}${B('fmt','italic','<i>I</i>',"ex('italic')")}${B('fmt','underline','<u>U</u>',"ex('underline')")}${B('fmt','strike','<s>S</s>',"ex('strikeThrough')")}<button class="sb" ${m} onclick="clr()">Tx</button><button class="sb" ${m} onclick="ex('undo')">↶</button><button class="sb" ${m} onclick="ex('redo')">↷</button></div>`
+    +L('Size')+`<div class="rw stp"><button class="sb" ${m} onclick="stepSize(-2)">A−</button><b id="szV" class="vv"></b><button class="sb" ${m} onclick="stepSize(2)">A+</button></div><div class="rw">${SIZES.map(z=>B('sz',z,z,`setSize(${z})`)).join('')}</div>`
+    +L('Align &amp; line spacing')+`<div class="rw stp">${[['⬅','jl','justifyLeft'],['↔','jc','justifyCenter'],['➡','jr','justifyRight'],['☰','jf','justifyFull']].map(x=>B('fmt',x[1],x[0],`ex('${x[2]}')`)).join('')}<button class="sb" ${m} onclick="setLh(-.3)">↕−</button><b id="lhV" class="vv"></b><button class="sb" ${m} onclick="setLh(.3)">↕+</button></div>`
+    +L('Heading')+`<div class="rw">${[1,2,3,4,5].map(i=>B('blk','h'+i,'H'+i,`ex('formatBlock','h${i}')`)).join('')}${B('blk','div','¶',"ex('formatBlock','div')")}</div>`
+    +L('Text colour')+`<div class="rw">${COLS.map(c=>`<i class="sw" data-k="col" data-v="${c}" style="background:${c}" ${m} onclick="ex('foreColor','${c}')"></i>`).join('')}</div>`
+    +L('Highlight')+`<div class="rw">${HL.map(c=>`<i class="sw" data-k="hl" data-v="${c}" style="background:${c||'repeating-linear-gradient(45deg,#fff 0 5px,#e5e5e5 5px 10px)'}" ${m} onclick="ex('hiliteColor','${c||'transparent'}')"></i>`).join('')}</div>`
+    +L('Font')+`<div class="fg">${FONTS.map(f=>B('fnt',f[1],f[0],`ex('fontName','${f[1]}')`,`style="font-family:'${f[1]}'"`)).join('')}</div>`}
+  else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
+  else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
+  else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
+  refreshSheet()}
 function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Is browser mein voice typing nahi hai');
   if(rec){rec.stop();return}rec=new R();rec.lang='hi-IN';rec.continuous=true;rec.interimResults=false;
   rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript;rs();document.execCommand('insertText',false,t+' ')};
