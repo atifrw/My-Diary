@@ -97,16 +97,28 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 #toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-90px);background:#4a3f6b;color:#fff;padding:10px 18px;border-radius:20px;z-index:99;transition:.35s;font-size:14px;font-weight:600}#toast.on{transform:translateX(-50%) translateY(0)}
 #print{display:none}
 @media print{body{background:#fff}#app,.blob,nav,#ed,#toast{display:none!important}#print{display:block;color:#000;font-family:'Hind',sans-serif}.pe{page-break-inside:avoid;margin-bottom:22px;border-bottom:1px solid #ccc;padding-bottom:12px}.pe img{max-width:220px;margin:6px 6px 0 0;border-radius:8px}}
-.bar2{position:relative;align-self:center;width:calc(100% - 24px);max-width:640px;margin:calc(10px + env(safe-area-inset-top,0px)) 0 4px;padding:8px 10px 6px;border-radius:24px;background:rgba(255,255,255,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 30px rgba(150,120,200,.2);flex-shrink:0}
-.bar2 .r1{display:flex;align-items:center;gap:6px}
-.bar2 .dw{position:relative;flex:1;min-width:0}
-.bar2 .ib{width:36px;height:36px;font-size:18px;background:#f4eefc;flex-shrink:0;padding:0}
-.bar2 #dBig{white-space:nowrap;color:#4a3f6b;font-size:13px}.bar2 #dBig b{font-size:32px}
-.bar2 .md{width:40px;height:40px;font-size:23px;background:#f4eefc;flex-shrink:0;padding:0}.bar2 .md.none{opacity:.55;filter:grayscale(.7)}
-.bar2 .sv{padding:9px 13px;border-radius:14px;box-shadow:0 4px 12px rgba(167,139,250,.4);flex-shrink:0}
-.bar2 .ttl{color:#4a3f6b;font-size:30px;padding:2px 4px 0}
-#mdPop{width:auto;left:10px;right:10px;top:58px;grid-template-columns:repeat(5,1fr);justify-items:center;padding:10px}
-.edb{padding:14px 22px 12px}.txt{font-size:18px;min-height:50vh}
+#ed{background:linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff);--tx:#2b3563;padding:0 12px calc(4px + env(safe-area-inset-bottom,0px))}
+.top2{position:relative;z-index:8;display:flex;align-items:center;gap:8px;margin:calc(12px + env(safe-area-inset-top,0px)) 4px 10px}
+.dw2{position:relative;flex:1;min-width:0}
+#dBig{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--tx);cursor:pointer;white-space:nowrap}
+#dBig svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+#dBig i{font-style:normal;font-size:12px}
+.ib2{border:none;background:rgba(255,255,255,.8);width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--tx);padding:0}
+.svp{border:none;cursor:pointer;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:20px;background:linear-gradient(135deg,#9a9bfa,#7c7df0);box-shadow:0 8px 20px rgba(124,125,240,.35)}
+.svp svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linejoin:round}
+.svp i{font-style:normal;font-size:18px;line-height:1}
+.tbar{position:relative;z-index:7;display:flex;align-items:center;gap:8px;background:rgba(228,232,250,.8);border:1px solid rgba(255,255,255,.9);border-radius:18px;padding:4px 8px 4px 16px;margin:0 0 12px}
+.ttl2{flex:1;min-width:0;border:none;background:transparent;font-family:'Caveat','Hind',cursive;font-weight:700;font-size:34px;color:var(--tx);outline:none;padding:6px 0}
+.ttl2::placeholder{color:#8f97c4}
+.mdb{border:none;background:rgba(255,255,255,.85);width:42px;height:42px;border-radius:50%;font-size:24px;cursor:pointer;flex-shrink:0;padding:0}.mdb.none{opacity:.6;filter:grayscale(.6)}
+.tbar #mdPop{right:6px;left:auto;top:58px}
+.paper{position:relative;flex:1;min-height:0;background:rgba(255,255,255,.9);border:1px solid #e3e7f7;border-radius:20px;box-shadow:0 6px 24px rgba(120,130,200,.12);overflow:hidden}
+.paper::after{content:'';position:absolute;left:0;right:0;bottom:0;height:210px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20400%20200%27%3E%3Ccircle%20cx%3D%2785%27%20cy%3D%2762%27%20r%3D%2730%27%20fill%3D%27%23eceffc%27/%3E%3Cpath%20d%3D%27M190%2054q6-6%2012%200M206%2068q6-6%2012%200M224%2050q5-5%2010%200%27%20stroke%3D%27%23b9c2ee%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3Cpath%20d%3D%27M0%20200V122L60%2086%20130%20130%20210%20114%20330%20162%20400%20172V200Z%27%20fill%3D%27%23e8ebfb%27/%3E%3Cpath%20d%3D%27M0%20200V152L50%20127%20120%20162%20220%20152%20400%20192V200Z%27%20fill%3D%27%23dde2f8%27/%3E%3Cg%20fill%3D%27%23c9d0f0%27%3E%3Cpath%20d%3D%27M14%20200l12-48%2012%2048zM38%20200l10-38%2010%2038zM62%20200l12-44%2012%2044zM90%20200l9-30%209%2030zM112%20200l8-24%208%2024z%27/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom/100% auto;pointer-events:none;z-index:0}
+.psc{position:absolute;inset:0;overflow-y:auto;padding:16px 18px 60px;z-index:1}
+.txt{font-family:'Caveat','Hind',sans-serif;font-size:23px;line-height:1.7;min-height:60%;color:var(--tx)}
+#ed.dark .paper{background:rgba(24,22,48,.6);border-color:rgba(255,255,255,.12)}
+#ed.dark .tbar{background:rgba(255,255,255,.1)}
+#ed.dark .ib2,#ed.dark .mdb{background:rgba(255,255,255,.18)}
 </style>
 </head>
 <body>
@@ -140,22 +152,21 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 </nav>
 
 <div id="ed">
-  <div class="bar2">
-    <div class="r1">
-      <button class="ib" onclick="closeEd()">←</button>
-      <div class="dw"><div id="dBig" onclick="pickDate()"></div><input id="edDate" type="date" onchange="showDate();touch()"></div>
-      <button id="mdBtn" class="md" onclick="$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
-      <div style="position:relative"><button class="ib" onclick="$('mnu').style.display=$('mnu').style.display==='block'?'none':'block'">⋯</button>
-        <div id="mnu"><button onclick="copyTxt()">📋 Text copy karein</button><button id="delB" onclick="delEntry()">🗑️ Delete</button></div></div>
-      <button id="svB" class="sv" onclick="saveEntry()">SAVE</button>
-    </div>
+  <div class="top2">
+    <div class="dw2"><div id="dBig" onclick="pickDate()"></div><input id="edDate" type="date" onchange="showDate();touch()"></div>
+    <div style="position:relative"><button class="ib2" onclick="$('mnu').style.display=$('mnu').style.display==='block'?'none':'block'">⋯</button>
+      <div id="mnu"><button onclick="copyTxt()">📋 Text copy karein</button><button id="delB" onclick="delEntry()">🗑️ Delete</button><button onclick="closeEd()">✕ Band karein</button></div></div>
+    <button id="svB" class="svp" onclick="saveEntry()"><svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg><span id="svT">Save</span><i>›</i></button>
+  </div>
+  <div class="tbar">
+    <input id="edTitle" class="ttl2" placeholder="Title" oninput="touch()">
+    <button id="mdBtn" class="mdb" onclick="$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
     <div id="mdPop"></div>
-    <input id="edTitle" class="ttl" placeholder="Title" oninput="touch()">
   </div>
-  <div class="edb">
-    <div id="edText" class="txt" contenteditable="true" data-ph="Write more here..." oninput="touch()"></div>
+  <div class="paper"><div class="psc">
+    <div id="edText" class="txt" contenteditable="true" data-ph="Start writing your thoughts..." oninput="touch()"></div>
     <div class="ph" id="ph"></div>
-  </div>
+  </div></div>
   <div class="pill">
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('bg')">🎨</button>
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('emo')">😊</button>
@@ -266,26 +277,26 @@ document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.ran
 function rs(){$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
 function ex(c,v){rs();document.execCommand(c,false,v||null)}
 function applyBg(){$('ed').style.background=bg||'';$('ed').classList.toggle('dark',DARKBG.includes(bg))}
-function showDate(){const d=new Date($('edDate').value+'T00:00');$('dBig').innerHTML=`<b>${String(d.getDate()).padStart(2,'0')}</b> ${d.toLocaleDateString('en-GB',{month:'short',year:'numeric'})} ▾`}
+function showDate(){const d=new Date($('edDate').value+'T00:00');$('dBig').innerHTML=`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>${String(d.getDate()).padStart(2,'0')} ${d.toLocaleDateString('en-GB',{month:'short'})} ${d.getFullYear()} <i>▾</i>`}
 function pickDate(){const i=$('edDate');i.style.pointerEvents='auto';i.showPicker?i.showPicker():i.click()}
 function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos=cur?[...(cur.photos||[])]:[];bg=cur?cur.bg||'':'';lh=cur?cur.lh||1.7:1.7;savedRange=null;
   $('edDate').value=cur?cur.date:(date||iso(new Date()));showDate();
   $('edTitle').value=cur?cur.title||'':'';
   $('edText').innerHTML=cur?(cur.html?sanitize(cur.html):esc(cur.text||'').replace(/\n/g,'<br>')):'';
-  $('edText').style.lineHeight=lh;newId=null;dirty=false;$('svB').textContent=cur?'SAVED ✓':'SAVE';
+  $('edText').style.lineHeight=lh;newId=null;dirty=false;$('svT').textContent=cur?'Saved ✓':'Save';
   setMd();$('delB').style.display=cur?'block':'none';
   applyBg();closeSheet();$('mdPop').style.display='none';$('mnu').style.display='none';
   $('ed').style.display='flex';try{document.execCommand('styleWithCSS',false,true)}catch(e){}
   renderPh();history.pushState({ed:1},'');if(!cur)setTimeout(()=>$('edTitle').focus(),100)}
 let newId=null,dirty=false,saveT=null;
 function setMd(){$('mdBtn').textContent=mood||'🙂';$('mdBtn').classList.toggle('none',!mood)}
-function touch(){dirty=true;$('svB').textContent='SAVE';clearTimeout(saveT);saveT=setTimeout(persist,1200)}
+function touch(){dirty=true;$('svT').textContent='Save';clearTimeout(saveT);saveT=setTimeout(persist,1200)}
 function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   const title=$('edTitle').value.trim(),text=$('edText').innerText.trim(),html=sanitize($('edText').innerHTML);
   if(!title&&!text&&!photos.length)return false;
   const id=cur?cur.id:(newId=newId||db.ref(base()+'/entries').push().key);
   const e={id,date:$('edDate').value||iso(new Date()),title,text,html,mood,tags:cur?cur.tags||[]:[],photos,bg,lh,ts:cur?cur.ts||Date.now():Date.now()};
-  entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svB').textContent='SAVED ✓';
+  entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
 window.onpopstate=()=>{if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';if(sv)toast('Page save ho gaya 🌸');render()}};
