@@ -254,6 +254,28 @@ nav{max-width:none}
 .dsb.td i{box-shadow:0 0 0 1.5px #fff}
 .dsb.on:not(.td){background:rgba(255,255,255,.95);color:#4a3f6b;border-color:#6366f1;box-shadow:0 0 0 1.5px #6366f1,0 6px 14px rgba(99,102,241,.22)}
 .dsb.on:not(.td) small{color:var(--soft)}
+/* premium calendar */
+.calc{padding:16px 14px 12px;margin-bottom:14px;border-radius:30px;background:linear-gradient(160deg,rgba(255,255,255,.86),rgba(255,255,255,.58))}
+.cah{display:flex;align-items:center;justify-content:space-between}
+.cnb{width:42px;height:42px;border-radius:50%;border:none;background:#fff;box-shadow:0 4px 12px rgba(150,120,200,.2);font-size:22px;color:#6b5fa8;cursor:pointer;line-height:1}
+.cmt{text-align:center;line-height:1}.cmt b{display:block;font-size:42px;color:#2f2a63}.cmt small{font-size:13px;color:var(--soft);font-weight:700}
+.cchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:12px 0;align-items:center}.cchips::-webkit-scrollbar{display:none}
+.cchips span,.cchips button{flex:0 0 auto;background:#fff;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;color:#4a3f6b;border:none;box-shadow:0 3px 10px rgba(150,120,200,.12)}
+.cchips button{background:linear-gradient(135deg,#8b7cf6,#d36bf0);color:#fff;margin-left:auto;cursor:pointer}
+.cgr{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cgr small{text-align:center;font-size:11.5px;font-weight:700;color:var(--soft);padding:2px 0 4px}.cgr small.su{color:#e0607e}
+.cdx{position:relative;border:none;background:rgba(255,255,255,.55);border-radius:16px;aspect-ratio:1/1.08;font-size:15px;color:#2b3563;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0}
+.cdx b{font-weight:700}.cdx.su b{color:#e0607e}
+.cdx.has{background:#fff;box-shadow:0 4px 12px rgba(150,120,200,.14)}
+.cdx.today{background:linear-gradient(135deg,#8b7cf6,#d36bf0);box-shadow:0 8px 18px rgba(139,124,246,.4)}.cdx.today b{color:#fff}.cdx.today em{color:#fff}
+.cdx.sel{box-shadow:0 0 0 2.5px #6366f1,0 6px 14px rgba(99,102,241,.25)}
+.cdx .ce{font-size:15px;line-height:1;min-height:16px;color:#8b7cf6}
+.cdx em{position:absolute;bottom:4px;right:6px;font-size:9.5px;font-style:normal;color:var(--soft);font-weight:700}
+.cdx u,.clg u{width:7px;height:7px;border-radius:50%;text-decoration:none;display:inline-block}.cdx u{position:absolute;top:6px;right:6px;box-shadow:0 0 0 1.5px #fff}
+u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
+.clg{display:flex;justify-content:center;gap:14px;margin-top:12px;font-size:11.5px;color:var(--soft);font-weight:600}.clg span{display:flex;align-items:center;gap:5px}
+.csel{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 4px 10px}.csel b{font-size:17px;color:#2b3563;display:block}.csel small{color:var(--soft);font-weight:600}
+.cgl{border:none;background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;color:#4a3f6b;box-shadow:0 4px 12px rgba(150,120,200,.16);cursor:pointer;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -394,13 +416,29 @@ function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ
 function renderList(){const l=sorted().filter(e=>(!tagF||(e.tags||[]).includes(tagF))&&(!q||(e.title+' '+e.text+' '+(e.tags||[]).join(' ')).toLowerCase().includes(q)));
   $('list').innerHTML=l.length?l.map(card).join(''):`<div class="empty"><div class="big">🌸</div>${Object.keys(entries).length?'Kuch nahi mila.':'Diary abhi khali hai.<br>Neeche ✍️ dabakar pehla page likhein.'}</div>`}
 function calGo(n){calM=new Date(calM.getFullYear(),calM.getMonth()+n,1);selDay=null;renderCal()}
-function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={};
+let cTx=0;
+function calTS(e){cTx=e.touches[0].clientX}
+function calTE(e){const dx=e.changedTouches[0].clientX-cTx;if(Math.abs(dx)>70)calGo(dx<0?1:-1)}
+function calToday(){calM=new Date();selDay=iso(new Date());renderCal()}
+function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={},td=iso(new Date()),now=new Date();
   Object.values(entries).forEach(e=>(by[e.date]=by[e.date]||[]).push(e));
-  let h=`<div class="glass set"><div class="cn"><button onclick="calGo(-1)">‹</button><b>${calM.toLocaleDateString('hi-IN',{month:'long',year:'numeric'})}</b><button onclick="calGo(1)">›</button></div><div class="cg">`+'रवि सोम मंगल बुध गुरु शुक्र शनि'.split(' ').map(x=>`<small>${x}</small>`).join('');
+  if(!selDay&&y===now.getFullYear()&&m===now.getMonth())selDay=td;
+  let cnt=0,days=0;const mc={};
+  for(let d=1;d<=dim;d++){const es=by[iso(new Date(y,m,d))];if(es){days++;cnt+=es.length;es.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1})}}
+  const top=Object.entries(mc).sort((p,q)=>q[1]-p[1])[0];
+  let h=`<div class="glass calc" ontouchstart="calTS(event)" ontouchend="calTE(event)"><div class="cah"><button class="cnb" onclick="calGo(-1)" aria-label="prev">‹</button><div class="cmt"><b class="hand">${calM.toLocaleDateString('en-US',{month:'long'})}</b><small>${calM.toLocaleDateString('hi-IN',{month:'long'})} ${y}</small></div><button class="cnb" onclick="calGo(1)" aria-label="next">›</button></div>
+  <div class="cchips"><span>📖 ${cnt} पन्ने</span><span>🗓️ ${days} दिन लिखा</span>${top?`<span>${top[0]} सबसे ज़्यादा</span>`:''}<button onclick="calToday()">आज</button></div>
+  <div class="cgr">`+'रवि सोम मंगल बुध गुरु शुक्र शनि'.split(' ').map((x,i)=>`<small class="${i?'':'su'}">${x}</small>`).join('');
   for(let i=0;i<first;i++)h+='<i></i>';
-  for(let d=1;d<=dim;d++){const k=iso(new Date(y,m,d)),es=by[k];h+=`<button class="cd ${es?'has':''} ${k===iso(new Date())?'today':''} ${k===selDay?'sel':''}" onclick="selDay='${k}';renderCal()">${d}<span>${es?(es[0].mood||'•'):''}</span></button>`}
-  h+='</div></div>';
-  if(selDay){const es=by[selDay]||[];h+=`<div style="margin:0 4px 10px;font-weight:700">${new Date(selDay+'T00:00').toLocaleDateString('hi-IN',{day:'numeric',month:'long'})}</div>`+es.map(card).join('')+`<button class="btn alt" onclick="openEd(null,'${selDay}')">✍️ Is din ke liye likhein</button>`}
+  for(let d=1;d<=dim;d++){const k=iso(new Date(y,m,d)),es=by[k],q=dayStat(k),col=(first+d-1)%7===0;
+    const tc=!q.t?'':q.n===q.t?'g':q.n>0?'y':(k<=td?'r':'');
+    h+=`<button class="cdx ${es?'has':''} ${col?'su':''} ${k===td?'today':''} ${k===selDay?'sel':''}" onclick="selDay='${k}';renderCal()">${tc?`<u class="${tc}"></u>`:''}<b>${d}</b><span class="ce">${es?(es[0].mood||'•'):''}</span>${es&&es.length>1?`<em>+${es.length-1}</em>`:''}</button>`}
+  h+=`</div><div class="clg"><span><u class="g"></u>लक्ष्य पूरे</span><span><u class="y"></u>कुछ बाकी</span><span><u class="r"></u>छूटे</span></div></div>`;
+  if(selDay){const es=by[selDay]||[],q=dayStat(selDay);
+    h+=`<div class="csel"><div><b>${new Date(selDay+'T00:00').toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'})}</b><small>${es.length} पन्ने</small></div>${q.t?`<button class="cgl" onclick="tgtDay='${selDay}';go('tgt')">🎯 ${q.n}/${q.t} लक्ष्य</button>`:''}</div>`
+    +(es.length?es.map(card).join(''):'<div class="empty" style="padding:14px 6px">इस दिन कुछ नहीं लिखा 🌸</div>')
+    +`<button class="btn" onclick="openEd(null,'${selDay}')">✍️ इस दिन के लिए लिखें</button>`}
+  else h+='<div class="empty" style="padding:14px 6px">किसी तारीख पर tap करें 👆</div>';
   $('main').innerHTML=h}
 function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce((n,e)=>n+(e.text.trim()?e.text.trim().split(/\s+/).length:0),0);
   const mc={},tc={};a.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1;(e.tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1)});
