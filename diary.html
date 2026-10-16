@@ -246,6 +246,12 @@ nav{max-width:none}
 .hl{padding:2px 12px 12px}.hr{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #f0eafb}
 .hk{width:26px;height:26px;border-radius:50%;border:none;flex-shrink:0;font-weight:700;cursor:pointer;font-size:14px}.hk.y{background:#d9f7e6;color:#16794a}.hk.n{background:#ffe1e7;color:#c0304f}
 .hv{flex:1;min-width:0}.hs{font-weight:600;font-size:14.5px;color:#2b3563;word-break:break-word}.hs.ms{color:#8b7fa8}.hv .t2{margin-top:3px}
+.dsb i{width:7px;height:7px}
+.dsb i.dg{background:#22c55e}.dsb i.dr{background:#ef4444}.dsb i.dy{background:#facc15}
+.dsb.td{background:linear-gradient(135deg,#8b7cf6,#d36bf0);color:#fff;border-color:transparent}.dsb.td small{color:#fff}
+.dsb.on:not(.td){background:linear-gradient(135deg,#2dd4bf,#3b82f6);color:#fff;border-color:transparent;box-shadow:0 8px 18px rgba(59,130,246,.38)}.dsb.on:not(.td) small{color:#fff}
+.dsb.on.td{box-shadow:0 0 0 3px rgba(167,139,250,.45),0 8px 18px rgba(139,124,246,.4)}
+.dsb.td i,.dsb.on i{box-shadow:0 0 0 1.5px #fff}
 </style>
 </head>
 <body>
@@ -456,7 +462,7 @@ function histHTML(){const td=iso(new Date()),ds=Object.values(tasks).map(t=>t.da
   const card=r=>{const d=r[0],q=r[1],x=new Date(d+'T00:00'),op=!!hisOpen[d];
     const inner=op?`<div class="hl">${tasksFor(d).map(t=>{const dn=isDone(t,d);return `<div class="hr"><button class="hk ${dn?'y':'n'}" onclick="tkTog('${t.id}','${d}')" aria-label="toggle">${dn?'✓':'✕'}</button><div class="hv"><div class="hs ${dn?'':'ms'}">${esc(t.title)}</div><div class="t2">${repLabel(t,d)}</div></div></div>`}).join('')}<button class="carry" onclick="tgtDay='${d}';renderTgt();scrollTo(0,0)">इस दिन को खोलें</button></div>`:'';
     return `<div class="hd"><button class="hh" onclick="hisOpen['${d}']=!hisOpen['${d}'];renderTgt()"><div class="hdt"><b>${x.getDate()} ${x.toLocaleDateString('en-US',{month:'short'})}</b><small>${x.toLocaleDateString('en-US',{weekday:'short'})}</small></div><div class="hbar"><i class="${q.p===100?'full':''}" style="width:${q.p}%"></i></div><span class="hp ${q.p===100?'f':q.p===0?'z':''}">${q.n}/${q.t}</span><span class="chv" style="transform:rotate(${op?90:0}deg)">›</span></button>${inner}</div>`};
-  const html=`<div class="glass set"><h3 class="hand" style="font-size:26px;margin-bottom:10px">📜 पिछला रिकॉर्ड</h3>
+  const html=`<div class="glass set"><h3 class="hand" style="font-size:26px;margin-bottom:10px">📜 Goal Journey</h3>
   <div class="ftb">${[['7','7 दिन'],['30','30 दिन'],['all','सब']].map(f=>`<button class="${hisR===f[0]?'on':''}" onclick="hisR='${f[0]}';renderTgt()">${f[1]}</button>`).join('')}</div>
   <div class="hsum"><div><b>${N}</b><small>पूरे</small></div><div><b>${T-N}</b><small>छूटे</small></div><div><b>${avg}%</b><small>औसत</small></div></div>
   ${rows.length?rows.map(card).join(''):'<div class="empty" style="padding:18px 6px">इस अवधि का कोई रिकॉर्ड नहीं।</div>'}</div>`;
@@ -464,7 +470,7 @@ function histHTML(){const td=iso(new Date()),ds=Object.values(tasks).map(t=>t.da
 function tkRow(t){const c=CATS.find(x=>x[0]===t.cat)||CATS[4],dn=isDone(t,tgtDay);
   return `<div class="tk pr-${t.pri||'m'} ${dn?'dn':''}"><button class="ck" onclick="tkTog('${t.id}')" aria-label="done">${CHK}</button><div class="tbd" onclick="tkOpen('${t.id}')"><div class="t1">${esc(t.title)}</div>${t.note?`<div class="t3">${esc(t.note)}</div>`:''}<div class="t2"><span class="cp" style="background:${c[3]}">${c[1]} ${c[2]}</span>${t.time?`<span>⏰ ${fmtT(t.time)}</span>`:''}${repLabel(t,tgtDay)}</div></div></div>`}
 function renderTgt(){const H=histHTML();const td=iso(new Date()),S=dayStat(tgtDay),PR={h:0,m:1,l:2};
-  const strip=Array.from({length:28},(_,i)=>addD(td,i-7)).map(d=>{const x=new Date(d+'T00:00');return `<button class="dsb ${d===tgtDay?'on':''} ${d===td?'td':''}" data-d="${d}" onclick="tgtDay='${d}';renderTgt()"><small>${x.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${x.getDate()}</b><i class="${tasksFor(d).length?'has':''}"></i></button>`}).join('');
+  const strip=Array.from({length:28},(_,i)=>addD(td,i-7)).map(d=>{const x=new Date(d+'T00:00');return `<button class="dsb ${d===tgtDay?'on':''} ${d===td?'td':''}" data-d="${d}" onclick="tgtDay='${d}';renderTgt()"><small>${x.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${x.getDate()}</b><i class="${(q=>!q.t?'':q.n===q.t?'dg':q.n===0?'dr':'dy')(dayStat(d))}"></i></button>`}).join('');
   const label=tgtDay===td?'आज':tgtDay===addD(td,1)?'कल':tgtDay===addD(td,-1)?'बीता कल':new Date(tgtDay+'T00:00').toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'});
   const msg=!S.t?'अपना पहला लक्ष्य जोड़ें 🌱':S.p===100?'🎉 शानदार! सारे लक्ष्य पूरे':S.p>=50?'बहुत बढ़िया, बस थोड़ा और 💪':'चलो शुरू करें, एक-एक करके ✨';
   const wDone=Array.from({length:7},(_,i)=>dayStat(addD(td,i-6)).n).reduce((a,b)=>a+b,0);
@@ -476,7 +482,6 @@ function renderTgt(){const H=histHTML();const td=iso(new Date()),S=dayStat(tgtDa
   <div class="sts"><div class="glass stt"><b>${tgtStreak()}</b><small>लगातार दिन</small></div><div class="glass stt"><b>${wDone}</b><small>इस हफ्ते पूरे</small></div><div class="glass stt"><b>${H.tot}</b><small>कुल पूरे</small></div></div>
   <div class="qa"><input id="qi" placeholder="+ नया लक्ष्य लिखें…" onkeydown="if(event.key==='Enter')qAdd()"><button class="go" onclick="qAdd()">+</button><button class="opt" onclick="tkOpen()" aria-label="Details">⚙️</button></div>
   <div class="ftb">${[['all','सभी'],['todo','बाकी'],['done','पूरे']].map(f=>`<button class="${tgtF===f[0]?'on':''}" onclick="tgtF='${f[0]}';renderTgt()">${f[1]}</button>`).join('')}</div>
-  ${tgtDay===td&&od?`<button class="carry" onclick="carry()">↪ पिछले ${od} बचे काम आज में ले आएं</button>`:''}
   <div>${list.length?list.map(tkRow).join(''):`<div class="empty"><div class="big">🌱</div>${S.t?'इस फ़िल्टर में कुछ नहीं।':'इस दिन का कोई लक्ष्य नहीं।<br>ऊपर लिखकर जोड़ें, जैसे “Maths Ch-3 revision”.'}</div>`}</div>
   ${H.html}`;
   const ds=$('ds'),b=ds.querySelector('.on');if(b)ds.scrollLeft=b.offsetLeft-ds.clientWidth/2+b.clientWidth/2;
