@@ -252,6 +252,8 @@ nav{max-width:none}
 .dsb.on:not(.td){background:rgba(255,255,255,.9);color:#4a3f6b;border-color:#ef4444;box-shadow:0 0 0 1px #ef4444,0 6px 14px rgba(239,68,68,.22)}.dsb.on:not(.td) small{color:var(--soft)}
 .dsb.on.td{border-color:#ef4444;box-shadow:0 0 0 1px #ef4444,0 8px 18px rgba(239,68,68,.25)}
 .dsb.td i{box-shadow:0 0 0 1.5px #fff}
+.dsb.on:not(.td){background:rgba(255,255,255,.95);color:#4a3f6b;border-color:#6366f1;box-shadow:0 0 0 1.5px #6366f1,0 6px 14px rgba(99,102,241,.22)}
+.dsb.on:not(.td) small{color:var(--soft)}
 </style>
 </head>
 <body>
@@ -292,7 +294,7 @@ nav{max-width:none}
     <button id="svB" class="svp" onclick="saveEntry()"><svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg><span id="svT">Save</span><i>›</i></button>
   </div>
   <div class="tbar">
-    <input id="edTitle" class="ttl2" placeholder="Title" oninput="touch()">
+    <input id="edTitle" class="ttl2" autocomplete="off"  placeholder="Title" oninput="touch()">
     <button id="mdBtn" class="mdb" onclick="$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
     <div id="mdPop"></div>
   </div>
@@ -311,8 +313,8 @@ nav{max-width:none}
 </div>
 <div id="tsk"><div class="tkc">
   <div class="sht2"><b id="tkH">नया लक्ष्य</b><button class="xb" onclick="tkClose()" aria-label="Close">✕</button></div>
-  <input id="tkT" class="in" placeholder="क्या करना है? (जैसे: Physics Ch-5 पढ़ना)">
-  <textarea id="tkN" class="in" rows="2" placeholder="विषय / नोट (optional)"></textarea>
+  <input id="tkT" class="in" autocomplete="off" autocorrect="off" spellcheck="false"  placeholder="क्या करना है? (जैसे: Physics Ch-5 पढ़ना)">
+  <textarea id="tkN" class="in" autocomplete="off" autocorrect="off" spellcheck="false"  rows="2" placeholder="विषय / नोट (optional)"></textarea>
   <div class="lb">श्रेणी</div><div class="rw2" id="tkC"></div>
   <div class="lb">प्राथमिकता</div><div class="rw2" id="tkP"></div>
   <div class="lb">दोहराव</div><div class="rw2" id="tkR"></div><div id="tkX"></div>
@@ -386,7 +388,7 @@ function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ
   const name=(auth.currentUser.displayName||auth.currentUser.email.split('@')[0]).split(' ')[0];
   const tags=[...new Set(Object.values(entries).flatMap(e=>e.tags||[]))];
   $('main').innerHTML=`<div class="hero2"><div class="gr"><span class="gi">${ic}</span><b>${g},</b><span class="nm">${esc(name)}</span><span>✨</span></div><p>${PROMPTS[new Date().getDate()%PROMPTS.length]}</p></div>
-  <div class="srchw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="diary mein khojein..." value="${esc(q)}" oninput="q=this.value.toLowerCase();renderList()"><span class="fil" onclick="toggleTags()"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span></div>
+  <div class="srchw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input autocomplete="off" autocorrect="off" spellcheck="false" placeholder="diary mein khojein..." value="${esc(q)}" oninput="q=this.value.toLowerCase();renderList()"><span class="fil" onclick="toggleTags()"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span></div>
   ${tagsOpen&&tags.length?`<div class="chips">${tags.map(t=>`<button class="chip ${tagF===t?'on':''}" onclick="tagF=tagF==='${esc(t).replace(/'/g,"\\'")}'?null:'${esc(t).replace(/'/g,"\\'")}';renderHome()">#${esc(t)}</button>`).join('')}</div>`:''}
   <div id="list"></div>`;renderList()}
 function renderList(){const l=sorted().filter(e=>(!tagF||(e.tags||[]).includes(tagF))&&(!q||(e.title+' '+e.text+' '+(e.tags||[]).join(' ')).toLowerCase().includes(q)));
@@ -437,7 +439,7 @@ function tkTog(id,dd){const t=tasks[id];if(!t)return;const day=dd||tgtDay;t.done
 function qAdd(){const i=$('qi'),v=i.value.trim();if(!v)return;const id=db.ref(tPath('x')).parent.push().key;
   const t={id,title:v,note:'',cat:'study',pri:'m',rep:'once',time:'',date:tgtDay,created:Date.now()};tasks[id]=t;db.ref(tPath(id)).set(t);renderTgt();$('qi').focus()}
 function carry(){const td=iso(new Date());Object.values(tasks).filter(t=>t.rep==='once'&&t.date<td&&!isDone(t,t.date)).forEach(t=>{t.date=td;db.ref(tPath(t.id)+'/date').set(td)});tgtDay=td;renderTgt();toast('बचे हुए काम आज में आ गए ↪')}
-function tkXr(){$('tkX').innerHTML=tkRep==='every'?`<div class="lb">हर कितने दिन में दोहराएं?</div><input id="tkE" type="number" inputmode="numeric" min="2" max="365" class="in" value="${tkEv}" oninput="tkEv=+this.value||2">`:tkRep==='spaced'?'<div class="hint">🧠 जिस दिन पढ़ा (तारीख), उसके बाद दिन 1, 3, 7, 15, 30 और फिर हर 30 दिन में ये topic revision के लिए आएगा।</div>':''}
+function tkXr(){$('tkX').innerHTML=tkRep==='every'?`<div class="lb">हर कितने दिन में दोहराएं?</div><input id="tkE" autocomplete="off" autocorrect="off" spellcheck="false" type="number" inputmode="numeric" min="2" max="365" class="in" value="${tkEv}" oninput="tkEv=+this.value||2">`:tkRep==='spaced'?'<div class="hint">🧠 जिस दिन पढ़ा (तारीख), उसके बाद दिन 1, 3, 7, 15, 30 और फिर हर 30 दिन में ये topic revision के लिए आएगा।</div>':''}
 function tkChips(){tkXr();
   $('tkC').innerHTML=CATS.map(c=>`<button class="ch2 ${tkCat===c[0]?'on':''}" onclick="tkCat='${c[0]}';tkChips()">${c[1]} ${c[2]}</button>`).join('');
   $('tkP').innerHTML=[['h','🔴 ज़रूरी'],['m','🟣 सामान्य'],['l','🟢 आसान']].map(c=>`<button class="ch2 ${tkPri===c[0]?'on':''}" onclick="tkPri='${c[0]}';tkChips()">${c[1]}</button>`).join('');
@@ -480,7 +482,7 @@ function renderTgt(){const H=histHTML();const td=iso(new Date()),S=dayStat(tgtDa
   $('main').innerHTML=`<div class="ds" id="ds">${strip}</div>
   <div class="glass tcard"><div class="rg"><svg viewBox="0 0 80 80"><defs><linearGradient id="rgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7cf6"/><stop offset="1" stop-color="#f06bd0"/></linearGradient></defs><circle cx="40" cy="40" r="34" class="r0"/><circle cx="40" cy="40" r="34" class="r1" stroke-dasharray="213.6" stroke-dashoffset="${(213.6*(1-S.p/100)).toFixed(1)}" transform="rotate(-90 40 40)"/></svg><b>${S.p}%</b></div><div><div class="lab">${label} का लक्ष्य</div><div class="big">${S.n} / ${S.t} पूरे</div><p>${msg}</p></div></div>
   <div class="sts"><div class="glass stt"><b>${tgtStreak()}</b><small>लगातार दिन</small></div><div class="glass stt"><b>${wDone}</b><small>इस हफ्ते पूरे</small></div><div class="glass stt"><b>${H.tot}</b><small>कुल पूरे</small></div></div>
-  <div class="qa"><input id="qi" placeholder="+ नया लक्ष्य लिखें…" onkeydown="if(event.key==='Enter')qAdd()"><button class="go" onclick="qAdd()">+</button><button class="opt" onclick="tkOpen()" aria-label="Details">⚙️</button></div>
+  <div class="qa"><input id="qi" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="+ नया लक्ष्य लिखें…" onkeydown="if(event.key==='Enter')qAdd()"><button class="go" onclick="qAdd()">+</button><button class="opt" onclick="tkOpen()" aria-label="Details">⚙️</button></div>
   <div class="ftb">${[['all','सभी'],['todo','बाकी'],['done','पूरे']].map(f=>`<button class="${tgtF===f[0]?'on':''}" onclick="tgtF='${f[0]}';renderTgt()">${f[1]}</button>`).join('')}</div>
   <div>${list.length?list.map(tkRow).join(''):`<div class="empty"><div class="big">🌱</div>${S.t?'इस फ़िल्टर में कुछ नहीं।':'इस दिन का कोई लक्ष्य नहीं।<br>ऊपर लिखकर जोड़ें, जैसे “Maths Ch-3 revision”.'}</div>`}</div>
   ${H.html}`;
