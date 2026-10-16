@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>🌙 My Diary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -448,8 +449,8 @@ function forgotPw(){const e=$('em').value;if(!e)return alert('Pehle Gmail ID lik
 const loadT0=Date.now();
 const imgP=new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src='sunset.jpg'});
 function hideLoader(){const l=$('loader');if(!l||l.dataset.gone)return;l.dataset.gone=1;
-  const ready=Promise.race([Promise.all([imgP,document.fonts?document.fonts.ready:0]),new Promise(r=>setTimeout(r,4000))]);
-  ready.then(()=>{const w=Math.max(0,1600-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
+  const ready=Promise.race([Promise.all([imgP,document.fonts?document.fonts.ready:0]),new Promise(r=>setTimeout(r,1500))]);
+  ready.then(()=>{const w=Math.max(0,900-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
 setTimeout(hideLoader,12000);
 auth.onAuthStateChanged(u=>{
   if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';hideLoader();return}
