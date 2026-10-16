@@ -276,6 +276,24 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
 .clg{display:flex;justify-content:center;gap:14px;margin-top:12px;font-size:11.5px;color:var(--soft);font-weight:600}.clg span{display:flex;align-items:center;gap:5px}
 .csel{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 4px 10px}.csel b{font-size:17px;color:#2b3563;display:block}.csel small{color:var(--soft);font-weight:600}
 .cgl{border:none;background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;color:#4a3f6b;box-shadow:0 4px 12px rgba(150,120,200,.16);cursor:pointer;flex-shrink:0}
+/* premium calendar */
+.calw{padding:16px 12px}
+.cn b{font-size:19px;letter-spacing:.3px;color:#2b3563}
+.cg{gap:6px}.cg small{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}.cg small.sun{color:#e11d48}
+.cd{aspect-ratio:auto;min-height:68px;gap:6px;padding:7px 0 6px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9);border-radius:16px;justify-content:center}
+.cd.has{background:#fff}.cd.today{outline:none}.cd.sel{background:#fff;box-shadow:0 0 0 2px #6366f1,0 6px 14px rgba(99,102,241,.22)}
+.dnum{font-size:19px;font-weight:700;line-height:1;color:#2b3563}
+.cd.sun .dnum{color:#e11d48}
+.cd.today .dnum{background:linear-gradient(135deg,#8b7cf6,#d36bf0);color:#fff;border-radius:10px;padding:3px 8px}
+.cb{display:flex;align-items:center;width:84%;height:20px;border-radius:10px;background:rgba(255,255,255,.95);box-shadow:inset 0 0 0 1px #e8e1fa;overflow:hidden}
+.cb>i{flex:1;height:100%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;line-height:1}.cb>i+i{border-left:1px solid #e8e1fa}
+.cd .me,.cd .gs{display:block;min-height:0;font-size:0;width:9px;height:9px;border-radius:50%}
+.cd .me,.cd .gs.e{border:1.5px dashed #d9d0f0}
+.cd .gs.g{background:#22c55e}.cd .gs.r{background:#ef4444}.cd .gs.y{background:#facc15}
+.cday{display:flex;justify-content:space-between;align-items:center;margin:2px 4px 10px;gap:10px}.cday>b{font-size:16px;color:#2b3563}
+.gp{border:1.5px solid #fff;background:rgba(255,255,255,.95);border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px;color:#2b3563;cursor:pointer;box-shadow:0 6px 16px rgba(150,120,200,.18)}
+.gp.g{border-color:#22c55e}.gp.r{border-color:#ef4444}.gp.y{border-color:#facc15}
+.gl{padding:10px 14px;margin-bottom:12px;cursor:pointer}.gr2{display:flex;gap:10px;align-items:center;padding:5px 0;font-size:14.5px;font-weight:600;color:#2b3563}.gr2 span{width:20px;text-align:center;color:#a79dc9}.gr2.ok{color:#8b7fa8;text-decoration:line-through}.gr2.ok span{color:#22c55e;text-decoration:none}.gl small{color:var(--soft);font-weight:600}
 </style>
 </head>
 <body>
@@ -420,25 +438,19 @@ let cTx=0;
 function calTS(e){cTx=e.touches[0].clientX}
 function calTE(e){const dx=e.changedTouches[0].clientX-cTx;if(Math.abs(dx)>70)calGo(dx<0?1:-1)}
 function calToday(){calM=new Date();selDay=iso(new Date());renderCal()}
-function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={},td=iso(new Date()),now=new Date();
+function dotCls(d){const q=dayStat(d);return !q.t?'e':q.n===q.t?'g':q.n===0?'r':'y'}
+function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={},tdk=iso(new Date());
+  if(!selDay&&tdk.startsWith(y+'-'+String(m+1).padStart(2,'0')))selDay=tdk;
   Object.values(entries).forEach(e=>(by[e.date]=by[e.date]||[]).push(e));
-  if(!selDay&&y===now.getFullYear()&&m===now.getMonth())selDay=td;
-  let cnt=0,days=0;const mc={};
-  for(let d=1;d<=dim;d++){const es=by[iso(new Date(y,m,d))];if(es){days++;cnt+=es.length;es.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1})}}
-  const top=Object.entries(mc).sort((p,q)=>q[1]-p[1])[0];
-  let h=`<div class="glass calc" ontouchstart="calTS(event)" ontouchend="calTE(event)"><div class="cah"><button class="cnb" onclick="calGo(-1)" aria-label="prev">‹</button><div class="cmt"><b class="hand">${calM.toLocaleDateString('en-US',{month:'long'})}</b><small>${calM.toLocaleDateString('hi-IN',{month:'long'})} ${y}</small></div><button class="cnb" onclick="calGo(1)" aria-label="next">›</button></div>
-  <div class="cchips"><span>📖 ${cnt} पन्ने</span><span>🗓️ ${days} दिन लिखा</span>${top?`<span>${top[0]} सबसे ज़्यादा</span>`:''}<button onclick="calToday()">आज</button></div>
-  <div class="cgr">`+'रवि सोम मंगल बुध गुरु शुक्र शनि'.split(' ').map((x,i)=>`<small class="${i?'':'su'}">${x}</small>`).join('');
+  let h=`<div class="glass set calw"><div class="cn"><button onclick="calGo(-1)">‹</button><b>${calM.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</b><button onclick="calGo(1)">›</button></div><div class="cg">`+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((x,i)=>`<small class="${i?'':'sun'}">${x}</small>`).join('');
   for(let i=0;i<first;i++)h+='<i></i>';
-  for(let d=1;d<=dim;d++){const k=iso(new Date(y,m,d)),es=by[k],q=dayStat(k),col=(first+d-1)%7===0;
-    const tc=!q.t?'':q.n===q.t?'g':q.n>0?'y':(k<=td?'r':'');
-    h+=`<button class="cdx ${es?'has':''} ${col?'su':''} ${k===td?'today':''} ${k===selDay?'sel':''}" onclick="selDay='${k}';renderCal()">${tc?`<u class="${tc}"></u>`:''}<b>${d}</b><span class="ce">${es?(es[0].mood||'•'):''}</span>${es&&es.length>1?`<em>+${es.length-1}</em>`:''}</button>`}
-  h+=`</div><div class="clg"><span><u class="g"></u>लक्ष्य पूरे</span><span><u class="y"></u>कुछ बाकी</span><span><u class="r"></u>छूटे</span></div></div>`;
-  if(selDay){const es=by[selDay]||[],q=dayStat(selDay);
-    h+=`<div class="csel"><div><b>${new Date(selDay+'T00:00').toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'})}</b><small>${es.length} पन्ने</small></div>${q.t?`<button class="cgl" onclick="tgtDay='${selDay}';go('tgt')">🎯 ${q.n}/${q.t} लक्ष्य</button>`:''}</div>`
-    +(es.length?es.map(card).join(''):'<div class="empty" style="padding:14px 6px">इस दिन कुछ नहीं लिखा 🌸</div>')
-    +`<button class="btn" onclick="openEd(null,'${selDay}')">✍️ इस दिन के लिए लिखें</button>`}
-  else h+='<div class="empty" style="padding:14px 6px">किसी तारीख पर tap करें 👆</div>';
+  for(let d=1;d<=dim;d++){const k=iso(new Date(y,m,d)),es=by[k]||[],mo=(es.find(e=>e.mood)||{}).mood,sun=(first+d-1)%7===0;
+    h+=`<button class="cd ${es.length?'has':''} ${sun?'sun':''} ${k===tdk?'today':''} ${k===selDay?'sel':''}" onclick="selDay='${k}';renderCal()"><b class="dnum">${d}</b><div class="cb"><i>${mo?mo:'<span class="me"></span>'}</i><i><span class="gs ${dotCls(k)}"></span></i></div></button>`}
+  h+='</div></div>';
+  if(selDay){const es=by[selDay]||[],q=dayStat(selDay),gl=tasksFor(selDay),x=new Date(selDay+'T00:00'),go2=`tgtDay='${selDay}';go('tgt')`;
+    h+=`<div class="cday"><b>${x.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'long'})}</b><button class="gp ${q.t?(q.n===q.t?'g':q.n===0?'r':'y'):''}" onclick="${go2}">🎯 ${q.t?q.n+'/'+q.t+' लक्ष्य':'लक्ष्य जोड़ें'}</button></div>`;
+    if(gl.length)h+=`<div class="glass gl" onclick="${go2}">${gl.slice(0,5).map(t=>`<div class="gr2 ${isDone(t,selDay)?'ok':''}"><span>${isDone(t,selDay)?'✓':'○'}</span>${esc(t.title)}</div>`).join('')}${gl.length>5?`<small>+${gl.length-5} और</small>`:''}</div>`;
+    h+=es.map(card).join('')+`<button class="btn alt" onclick="openEd(null,'${selDay}')">✍️ Is din ke liye likhein</button>`}
   $('main').innerHTML=h}
 function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce((n,e)=>n+(e.text.trim()?e.text.trim().split(/\s+/).length:0),0);
   const mc={},tc={};a.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1;(e.tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1)});
