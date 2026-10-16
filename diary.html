@@ -446,14 +446,18 @@ function emailLogin(){const e=$('em').value,p=$('pw').value;if(!e||!p)return ale
   auth.signInWithEmailAndPassword(e,p).catch(er=>{if(['auth/user-not-found','auth/invalid-credential'].includes(er.code)||er.message.includes('INVALID_LOGIN'))auth.createUserWithEmailAndPassword(e,p).then(()=>alert('Account ban gaya! Yehi aapka password hai.')).catch(x=>alert(x.message));else alert(er.message)})}
 function forgotPw(){const e=$('em').value;if(!e)return alert('Pehle Gmail ID likhein.');auth.sendPasswordResetEmail(e).then(()=>alert('Reset link bhej diya gaya.')).catch(x=>alert(x.message))}
 const loadT0=Date.now();
-function hideLoader(){const l=$('loader');if(!l||l.dataset.gone)return;l.dataset.gone=1;const w=Math.max(0,1600-(Date.now()-loadT0));setTimeout(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)},w)}
-auth.onAuthStateChanged(u=>{hideLoader();
-  if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';return}
+const imgP=new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src='sunset.jpg'});
+function hideLoader(){const l=$('loader');if(!l||l.dataset.gone)return;l.dataset.gone=1;
+  const ready=Promise.race([Promise.all([imgP,document.fonts?document.fonts.ready:0]),new Promise(r=>setTimeout(r,4000))]);
+  ready.then(()=>{const w=Math.max(0,1600-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
+setTimeout(hideLoader,12000);
+auth.onAuthStateChanged(u=>{
+  if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';hideLoader();return}
   if(uid===u.uid)return;uid=u.uid;
   db.ref(base()).once('value').then(s=>{const v=s.val()||{};entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
     $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
     
-    go('home');if(pinHash)openLock('unlock',null,'PIN daalein',false)}).catch(e=>{alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
+    go('home');if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
 
 /* ---------- PIN LOCK ---------- */
