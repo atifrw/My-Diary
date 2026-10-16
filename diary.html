@@ -236,6 +236,7 @@ nav{max-width:none}
 .rw2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .ch2{border:1.5px solid #e7def8;background:#f8f5ff;border-radius:14px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;color:#4a3f6b}.ch2.on{background:var(--pri);color:#fff;border-color:var(--pri)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.acts{display:flex;gap:10px;margin-top:6px}.acts .btn{width:auto;flex:1}
+.hint{background:#f3effc;color:#4a3f6b;border-radius:14px;padding:10px 12px;font-size:13.5px;line-height:1.55;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -299,7 +300,7 @@ nav{max-width:none}
   <textarea id="tkN" class="in" rows="2" placeholder="विषय / नोट (optional)"></textarea>
   <div class="lb">श्रेणी</div><div class="rw2" id="tkC"></div>
   <div class="lb">प्राथमिकता</div><div class="rw2" id="tkP"></div>
-  <div class="lb">दोहराव</div><div class="rw2" id="tkR"></div>
+  <div class="lb">दोहराव</div><div class="rw2" id="tkR"></div><div id="tkX"></div>
   <div class="two"><div><div class="lb">तारीख</div><input id="tkD" type="date" class="in"></div><div><div class="lb">समय (optional)</div><input id="tkTm" type="time" class="in"></div></div>
   <div class="acts"><button class="btn red" id="tkDel" onclick="tkDelete()">🗑️ हटाएं</button><button class="btn" onclick="tkSave()">Save</button></div>
 </div></div>
@@ -395,12 +396,18 @@ function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lo
   <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
 
 /* ---------- TARGETS (लक्ष्य) ---------- */
-let tasks={},fcLog={},tgtDay=iso(new Date()),tgtF='all',tkEd=null,tkCat='study',tkPri='m',tkRep='once',fcT=null,fcEnd=0,fcLen=1500,fcRun=false;
+let tasks={},fcLog={},tgtDay=iso(new Date()),tgtF='all',tkEd=null,tkCat='study',tkPri='m',tkRep='once',tkEv=5,fcT=null,fcEnd=0,fcLen=1500,fcRun=false;
 const CATS=[['study','📚','पढ़ाई','#dbeafe'],['work','💼','काम','#fde68a'],['health','🏃','सेहत','#c4f5d0'],['home','🏠','घर','#ffd6a5'],['other','✨','अन्य','#e9d5ff']];
 const CHK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const addD=(d,n)=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+n);return iso(x)};
 const dowOf=d=>new Date(d+'T00:00').getDay();
-const onDay=(t,d)=>d>=t.date&&(t.rep==='daily'||(t.rep==='weekly'?dowOf(d)===dowOf(t.date):t.date===d));
+const SPACED=[1,3,7,15,30];
+const dayK=(t,d)=>Math.round((new Date(d+'T00:00')-new Date(t.date+'T00:00'))/864e5);
+function onDay(t,d){if(d<t.date)return false;const k=dayK(t,d);
+  if(t.rep==='daily')return true;if(t.rep==='weekly')return k%7===0;if(t.rep==='every')return k%Math.max(1,t.ev||1)===0;
+  if(t.rep==='spaced')return k===0||SPACED.includes(k)||(k>30&&k%30===0);return t.date===d}
+function repLabel(t,d){if(t.rep==='daily')return '<span>🔁 रोज़</span>';if(t.rep==='weekly')return '<span>🔁 साप्ताहिक</span>';if(t.rep==='every')return `<span>📆 हर ${t.ev||1} दिन</span>`;
+  if(t.rep==='spaced'){const k=dayK(t,d);return k===0?'<span>📖 नया पढ़ा</span>':`<span>🧠 Revision · दिन ${k}</span>`}return ''}
 const tasksFor=d=>Object.values(tasks).filter(t=>onDay(t,d));
 const isDone=(t,d)=>!!(t.done&&t.done[d]);
 const tPath=id=>base()+'/targets/tasks/'+id;
@@ -415,11 +422,12 @@ function tkTog(id){const t=tasks[id];if(!t)return;t.done=t.done||{};const was=da
 function qAdd(){const i=$('qi'),v=i.value.trim();if(!v)return;const id=db.ref(tPath('x')).parent.push().key;
   const t={id,title:v,note:'',cat:'study',pri:'m',rep:'once',time:'',date:tgtDay,created:Date.now()};tasks[id]=t;db.ref(tPath(id)).set(t);renderTgt();$('qi').focus()}
 function carry(){const td=iso(new Date());Object.values(tasks).filter(t=>t.rep==='once'&&t.date<td&&!isDone(t,t.date)).forEach(t=>{t.date=td;db.ref(tPath(t.id)+'/date').set(td)});tgtDay=td;renderTgt();toast('बचे हुए काम आज में आ गए ↪')}
-function tkChips(){
+function tkXr(){$('tkX').innerHTML=tkRep==='every'?`<div class="lb">हर कितने दिन में दोहराएं?</div><input id="tkE" type="number" inputmode="numeric" min="2" max="365" class="in" value="${tkEv}" oninput="tkEv=+this.value||2">`:tkRep==='spaced'?'<div class="hint">🧠 जिस दिन पढ़ा (तारीख), उसके बाद दिन 1, 3, 7, 15, 30 और फिर हर 30 दिन में ये topic revision के लिए आएगा।</div>':''}
+function tkChips(){tkXr();
   $('tkC').innerHTML=CATS.map(c=>`<button class="ch2 ${tkCat===c[0]?'on':''}" onclick="tkCat='${c[0]}';tkChips()">${c[1]} ${c[2]}</button>`).join('');
   $('tkP').innerHTML=[['h','🔴 ज़रूरी'],['m','🟣 सामान्य'],['l','🟢 आसान']].map(c=>`<button class="ch2 ${tkPri===c[0]?'on':''}" onclick="tkPri='${c[0]}';tkChips()">${c[1]}</button>`).join('');
-  $('tkR').innerHTML=[['once','एक बार'],['daily','🔁 रोज़'],['weekly','🔁 हर हफ्ते']].map(c=>`<button class="ch2 ${tkRep===c[0]?'on':''}" onclick="tkRep='${c[0]}';tkChips()">${c[1]}</button>`).join('')}
-function tkOpen(id){tkEd=id||null;const t=id?tasks[id]:null;tkCat=t?t.cat||'other':'study';tkPri=t?t.pri||'m':'m';tkRep=t?t.rep||'once':'once';
+  $('tkR').innerHTML=[['once','एक बार'],['daily','🔁 रोज़'],['weekly','🔁 हर हफ्ते'],['every','📆 हर N दिन'],['spaced','🧠 Revision']].map(c=>`<button class="ch2 ${tkRep===c[0]?'on':''}" onclick="tkRep='${c[0]}';tkChips()">${c[1]}</button>`).join('')}
+function tkOpen(id){tkEd=id||null;const t=id?tasks[id]:null;tkCat=t?t.cat||'other':'study';tkPri=t?t.pri||'m':'m';tkRep=t?t.rep||'once':'once';tkEv=t&&t.ev?t.ev:5;
   $('tkH').textContent=t?'लक्ष्य बदलें':'नया लक्ष्य';$('tkT').value=t?t.title:(($('qi')||{}).value||'').trim();$('tkN').value=t?t.note||'':'';
   $('tkD').value=t?t.date:tgtDay;$('tkTm').value=t?t.time||'':'';$('tkDel').style.display=t?'block':'none';tkChips();
   $('tsk').style.display='flex';history.pushState({tk:1},'');if(!t)setTimeout(()=>$('tkT').focus(),120)}
@@ -427,7 +435,7 @@ function tkClose(){$('tsk').style.display='none';if(history.state&&history.state
 function tkSave(){const title=$('tkT').value.trim();if(!title)return toast('Pehle lakshya likhein ✍️');
   const id=tkEd||db.ref(tPath('x')).parent.push().key,o=tasks[id]||{};
   const t={id,title,note:$('tkN').value.trim(),cat:tkCat,pri:tkPri,rep:tkRep,time:$('tkTm').value||'',date:$('tkD').value||tgtDay,created:o.created||Date.now()};
-  if(o.done)t.done=o.done;tasks[id]=t;db.ref(tPath(id)).set(t).catch(x=>toast('Sync nahi hua: '+x.message));
+  if(o.done)t.done=o.done;if(tkRep==='every')t.ev=Math.max(2,Math.min(365,tkEv||5));tasks[id]=t;db.ref(tPath(id)).set(t).catch(x=>toast('Sync nahi hua: '+x.message));
   tgtDay=t.rep==='once'?t.date:tgtDay;if($('qi'))$('qi').value='';tkClose();renderTgt();toast('लक्ष्य जुड़ गया 🎯')}
 function tkDelete(){if(!tkEd||!confirm('Ye lakshya hata dein?'))return;delete tasks[tkEd];db.ref(tPath(tkEd)).remove();tkClose();renderTgt();toast('लक्ष्य हटा दिया')}
 function fcTick(){const left=Math.max(0,Math.round((fcEnd-Date.now())/1000)),el=$('fcTime');if(el)el.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');if(left<=0)fcStop(true)}
@@ -437,7 +445,7 @@ function fcStop(done){if(!fcRun)return;clearInterval(fcT);fcRun=false;const sp=d
   toast(done?'🎉 Focus poora! '+m+' मिनट जुड़े':(m>=1?m+' मिनट जोड़े गए':'Timer रुका'));
   if(done){try{navigator.vibrate&&navigator.vibrate([250,120,250])}catch(e){}}if(view==='tgt')renderTgt()}
 function tkRow(t){const c=CATS.find(x=>x[0]===t.cat)||CATS[4],dn=isDone(t,tgtDay);
-  return `<div class="tk pr-${t.pri||'m'} ${dn?'dn':''}"><button class="ck" onclick="tkTog('${t.id}')" aria-label="done">${CHK}</button><div class="tbd" onclick="tkOpen('${t.id}')"><div class="t1">${esc(t.title)}</div>${t.note?`<div class="t3">${esc(t.note)}</div>`:''}<div class="t2"><span class="cp" style="background:${c[3]}">${c[1]} ${c[2]}</span>${t.time?`<span>⏰ ${fmtT(t.time)}</span>`:''}${t.rep==='daily'?'<span>🔁 रोज़</span>':t.rep==='weekly'?'<span>🔁 साप्ताहिक</span>':''}</div></div></div>`}
+  return `<div class="tk pr-${t.pri||'m'} ${dn?'dn':''}"><button class="ck" onclick="tkTog('${t.id}')" aria-label="done">${CHK}</button><div class="tbd" onclick="tkOpen('${t.id}')"><div class="t1">${esc(t.title)}</div>${t.note?`<div class="t3">${esc(t.note)}</div>`:''}<div class="t2"><span class="cp" style="background:${c[3]}">${c[1]} ${c[2]}</span>${t.time?`<span>⏰ ${fmtT(t.time)}</span>`:''}${repLabel(t,tgtDay)}</div></div></div>`}
 function renderTgt(){const td=iso(new Date()),S=dayStat(tgtDay),PR={h:0,m:1,l:2};
   const strip=Array.from({length:28},(_,i)=>addD(td,i-7)).map(d=>{const x=new Date(d+'T00:00');return `<button class="dsb ${d===tgtDay?'on':''} ${d===td?'td':''}" data-d="${d}" onclick="tgtDay='${d}';renderTgt()"><small>${x.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${x.getDate()}</b><i class="${tasksFor(d).length?'has':''}"></i></button>`}).join('');
   const label=tgtDay===td?'आज':tgtDay===addD(td,1)?'कल':tgtDay===addD(td,-1)?'बीता कल':new Date(tgtDay+'T00:00').toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'});
