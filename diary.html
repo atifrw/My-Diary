@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>🌙 My Diary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -446,19 +446,19 @@ function googleLogin(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider
 function emailLogin(){const e=$('em').value,p=$('pw').value;if(!e||!p)return alert('Email aur Password dono bhariye');
   auth.signInWithEmailAndPassword(e,p).catch(er=>{if(['auth/user-not-found','auth/invalid-credential'].includes(er.code)||er.message.includes('INVALID_LOGIN'))auth.createUserWithEmailAndPassword(e,p).then(()=>alert('Account ban gaya! Yehi aapka password hai.')).catch(x=>alert(x.message));else alert(er.message)})}
 function forgotPw(){const e=$('em').value;if(!e)return alert('Pehle Gmail ID likhein.');auth.sendPasswordResetEmail(e).then(()=>alert('Reset link bhej diya gaya.')).catch(x=>alert(x.message))}
-const loadT0=Date.now(),TM={};const mark=k=>{TM[k]=Date.now()-loadT0};
+const loadT0=Date.now();
 const imgP=new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src='sunset.jpg'});
 function hideLoader(){const l=$('loader');if(!l||l.dataset.gone)return;l.dataset.gone=1;
-  const ready=Promise.race([imgP,new Promise(r=>setTimeout(r,800))]);
-  ready.then(()=>{const w=Math.max(0,700-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
+  const ready=Promise.race([Promise.all([imgP,document.fonts?document.fonts.ready:0]),new Promise(r=>setTimeout(r,1500))]);
+  ready.then(()=>{const w=Math.max(0,900-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
 setTimeout(hideLoader,12000);
-auth.onAuthStateChanged(u=>{mark('auth');
+auth.onAuthStateChanged(u=>{
   if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';hideLoader();return}
   if(uid===u.uid)return;uid=u.uid;
-  db.ref(base()).once('value').then(s=>{mark('data');const v=s.val()||{};TM.kb=Math.round(JSON.stringify(v).length/1024);entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
+  db.ref(base()).once('value').then(s=>{const v=s.val()||{};entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
     $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
     
-    go('home');mark('render');if(location.hash==='#debug')setTimeout(()=>alert('auth '+TM.auth+'ms, data '+TM.data+'ms, render '+TM.render+'ms, data size '+TM.kb+' KB'),1500);if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
+    go('home');if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
 
 /* ---------- PIN LOCK ---------- */
