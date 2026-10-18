@@ -95,7 +95,18 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .sv{border:none;background:linear-gradient(135deg,#c4b5fd,#f9a8d4);color:#fff;border-radius:12px;padding:10px 18px;font-weight:700;cursor:pointer}
 #mnu,#mdPop{display:none;position:absolute;right:0;top:46px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(80,60,140,.25);z-index:5;padding:8px}
 #mnu button{display:block;border:none;background:none;padding:10px 14px;text-align:left;white-space:nowrap;cursor:pointer;font-weight:600;width:100%;color:#4a3f6b}
-#mdPop{width:262px;grid-template-columns:repeat(5,1fr);gap:6px}
+#mdPop{width:290px;grid-template-columns:repeat(5,1fr);gap:6px}
+#mdPop{max-height:62vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#mdPop button{position:relative}
+#mdPop .mdx{animation:mdw .5s ease-in-out infinite alternate}
+@keyframes mdw{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+#mdPop .mdx i{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4a6b;color:#fff;font:700 10px/18px sans-serif;font-style:normal;text-align:center}
+#mdPop .mdadd{grid-column:1/-1;display:flex;gap:6px;margin-top:4px;padding-top:8px;border-top:1px solid #eee8fa}
+#mdPop .mdadd input{flex:1;min-width:0;border:1px solid #e0d6f7;border-radius:21px;padding:0 14px;height:42px;font:inherit;font-size:16px;outline:0;background:#faf7ff}
+#mdPop .mdadd button{width:auto;min-width:42px;border-radius:21px;font-size:15px;padding:0 12px;font-weight:700;color:#5b43b8}
+#mdPop .mdadd .ad{background:#7c5cf0;color:#fff;font-size:22px;padding:0}
+#mdPop .mdadd .ed.on{background:#7c5cf0;color:#fff}
+#mdPop .mdhint{grid-column:1/-1;text-align:center;font-size:12px;color:#8a86a8}
 #mdPop button{border:none;background:#f6f1ff;border-radius:50%;width:42px;height:42px;font-size:23px;cursor:pointer}
 .edb{flex:1;overflow-y:auto;padding:0 18px 12px;max-width:640px;width:100%;margin:0 auto}
 .drow{display:flex;justify-content:space-between;align-items:center;position:relative}
@@ -413,7 +424,7 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
   </div>
   <div class="tbar">
     <input id="edTitle" class="ttl2" autocomplete="off"  placeholder="Title" oninput="touch()">
-    <button id="mdBtn" class="mdb" onclick="$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
+    <button id="mdBtn" class="mdb" onclick="mdEdit=false;renderMdPop();$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
     <div id="mdPop"></div>
   </div>
   <div class="paper"><div class="psc">
@@ -476,7 +487,7 @@ setTimeout(hideLoader,12000);
 auth.onAuthStateChanged(u=>{mark('auth');
   if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';hideLoader();return}
   if(uid===u.uid)return;uid=u.uid;
-  loadDiary(u).then(v=>{mark('data');TM.kb=Math.round(JSON.stringify(v).length/1024);entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
+  loadDiary(u).then(v=>{mark('data');TM.kb=Math.round(JSON.stringify(v).length/1024);entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;if(Array.isArray(v.moodList)&&v.moodList.length)MOODS.splice(0,MOODS.length,...v.moodList.filter(Boolean));tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
     $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
     
     go('home');mark('render');if(location.hash==='#debug')setTimeout(()=>alert('auth '+TM.auth+'ms, data '+TM.data+'ms, render '+TM.render+'ms, data size '+TM.kb+' KB, via '+TM.via),1500);if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
@@ -547,7 +558,7 @@ function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce
   const mc={},tc={};a.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1;(e.tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1)});
   const mx=Math.max(1,...Object.values(mc)),top=Object.entries(tc).sort((x,y)=>y[1]-x[1]).slice(0,8);
   $('main').innerHTML=`<div class="sg"><div class="glass sc"><b>${a.length}</b><small>कुल पन्ने</small></div><div class="glass sc"><b>${words}</b><small>कुल शब्द</small></div><div class="glass sc"><b>🔥 ${s.cur}</b><small>अभी की streak</small></div><div class="glass sc"><b>${s.best}</b><small>सबसे लंबी streak</small></div></div>
-  <div class="glass set"><h3 class="hand" style="font-size:26px">Mood ka safar</h3>${Object.keys(mc).length?MOODS.filter(m=>mc[m[0]]).map(m=>`<div class="bar"><span style="width:62px">${m[0]} ${m[1]}</span><i style="width:${mc[m[0]]/mx*55}%;background:${m[2]}"></i>${mc[m[0]]}</div>`).join(''):'<div class="empty">Entry mein mood chunein, yahan dikhega.</div>'}</div>
+  <div class="glass set"><h3 class="hand" style="font-size:26px">Mood ka safar</h3>${Object.keys(mc).length?[...MOODS,...Object.keys(mc).filter(k=>!MOODS.some(m=>m[0]===k)).map(k=>[k,'','#e7def8'])].filter(m=>mc[m[0]]).map(m=>`<div class="bar"><span style="width:62px">${m[0]} ${m[1]}</span><i style="width:${mc[m[0]]/mx*55}%;background:${m[2]}"></i>${mc[m[0]]}</div>`).join(''):'<div class="empty">Entry mein mood chunein, yahan dikhega.</div>'}</div>
   <div class="glass set"><h3 class="hand" style="font-size:26px">Aapke tags</h3>${top.length?`<div class="tg">${top.map(t=>`<span>#${esc(t[0])} · ${t[1]}</span>`).join('')}</div>`:'<div class="empty">Abhi koi tag nahi.</div>'}</div>`}
 function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN laga hua hai. Diary 1 minute baad band hone par dobara lock hogi.':'Abhi PIN nahi hai. 4-digit PIN lagakar diary ko private rakhein.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">PIN badlein</button><button class="btn red" onclick="removePin()">PIN hatayein</button>':'<button class="btn" onclick="setPin()">PIN set karein</button>'}</div>
   <div class="glass set"><h3>💾 Backup & PDF</h3><button class="btn" onclick="printAll()">📄 Poori diary PDF banayein</button><button class="btn alt" onclick="exportJson()">📤 Backup download</button><button class="btn alt" onclick="document.getElementById('imp').click()">📥 Backup restore</button><input id="imp" type="file" accept=".json" style="display:none" onchange="importJson(event)"></div>
@@ -647,7 +658,21 @@ function titleFmt(k){const cs=getComputedStyle($('edTitle'));
 function stTitle(){const cs=getComputedStyle($('edTitle')),al=cs.textAlign;
   return{bold:parseInt(cs.fontWeight)>=600,italic:cs.fontStyle==='italic',underline:!!tst.u,strike:!!tst.s,jl:al==='start'||al==='left',jc:al==='center',jr:al==='right',jf:false,block:'div',color:cs.color,hl:tst.hl?cs.backgroundColor:'',font:cs.fontFamily.replace(/["']/g,'').split(',')[0].trim().toLowerCase(),size:Math.round(parseFloat(cs.fontSize))||34,lst:null}}
 
-$('mdPop').innerHTML=MOODS.map(m=>`<button onclick="mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`).join('');
+let mdEdit=false;
+const MDCOL=['#ffd6a5','#ffe9a8','#ffc8dd','#c4f5d0','#bde0fe','#d9c8ff','#b8f0ea','#ffb8b8','#e2e2ea'];
+function renderMdPop(){const st=e=>'event.stopPropagation();';
+  $('mdPop').innerHTML=MOODS.map((m,i)=>mdEdit?`<button class="mdx" onclick="${st()}mdDel(${i})">${m[0]}<i>✕</i></button>`:`<button onclick="${st()}mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`).join('')
+  +`<div class="mdadd"><input id="mdIn" autocomplete="off" placeholder="Emoji jodein…" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();mdAdd()}"><button class="ad" onclick="${st()}mdAdd()">＋</button><button class="ed ${mdEdit?'on':''}" onclick="${st()}mdEdit=!mdEdit;renderMdPop()">${mdEdit?'✓ Done':'🗑️'}</button></div>`+(mdEdit?'<div class="mdhint">Jo emoji hatana ho uspar tap karein</div>':'')}
+function mdSave(){try{localStorage.setItem('moodList',JSON.stringify(MOODS))}catch(_){}db.ref(base()+'/moodList').set(MOODS.length?MOODS:null).catch(x=>toast('Sync nahi hua: '+x.message))}
+function mdAdd(){const inp=$('mdIn'),v=inp.value;if(!v.trim())return;
+  const seg=window.Intl&&Intl.Segmenter?[...new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(v)].map(x=>x.segment):Array.from(v);
+  const em=seg.filter(g=>/\p{Extended_Pictographic}/u.test(g)||/\p{Regional_Indicator}/u.test(g));
+  if(!em.length){toast('Keyboard se emoji daalein 🙂');return}
+  let n=0;em.forEach(g=>{if(!MOODS.some(m=>m[0]===g)){MOODS.push([g,'',MDCOL[MOODS.length%MDCOL.length]]);n++}});
+  inp.value='';if(n){mdSave();toast(n+' emoji jud gaya')}else toast('Ye emoji pehle se hai');
+  renderMdPop();const i2=$('mdIn');if(i2)i2.focus()}
+function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();renderMdPop()}
+renderMdPop();
 function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){if(titleFocus){$('edTitle').focus();return}$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
