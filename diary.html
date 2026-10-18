@@ -109,7 +109,9 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 @keyframes mdw{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
 #mdPop .mdx i{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4a6b;color:#fff;font:700 10px/18px sans-serif;font-style:normal;text-align:center}
 #mdPop .mdadd{grid-column:1/-1;display:flex;gap:6px;margin-top:4px;padding-top:8px;border-top:1px solid #eee8fa}
-#mdPop .mdadd input{flex:1;min-width:0;border:1px solid #e0d6f7;border-radius:21px;padding:0 14px;height:42px;font:inherit;font-size:16px;outline:0;background:#faf7ff}
+#mdPop .mdadd .mdin{display:flex;align-items:center;white-space:nowrap;overflow:hidden;-webkit-user-select:text;user-select:text;cursor:text;box-sizing:border-box;}
+#mdPop .mdadd .mdin:empty::before{color:#8a86a8}
+#mdPop .mdadd .mdin{flex:1;min-width:0;border:1px solid #e0d6f7;border-radius:21px;padding:0 14px;height:42px;font:inherit;font-size:16px;outline:0;background:#faf7ff}
 #mdPop .mdadd button{width:auto;min-width:42px;border-radius:21px;font-size:15px;padding:0 12px;font-weight:700;color:#5b43b8}
 #mdPop .mdadd .ad{background:#7c5cf0;color:#fff;font-size:22px;padding:0}
 #mdPop .mdadd .ed.on{background:#7c5cf0;color:#fff}
@@ -157,7 +159,8 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .svp i{font-style:normal;font-size:18px;line-height:1}
 .tbar{position:relative;z-index:7;display:flex;align-items:center;gap:8px;background:rgba(228,232,250,.8);border:1px solid rgba(255,255,255,.9);border-radius:18px;padding:4px 8px 4px 16px;margin:0 0 12px}
 .ttl2{flex:1;min-width:0;border:none;background:transparent;font-family:'Caveat','Hind',cursive;font-weight:700;font-size:34px;color:var(--tx);outline:none;padding:6px 0}
-.ttl2::placeholder{color:#8f97c4}
+.ttl2{display:block;white-space:pre-wrap;overflow-wrap:anywhere;cursor:text;-webkit-user-select:text;user-select:text;min-height:1.3em;line-height:1.25}
+.pf:empty::before{content:attr(data-ph);color:#8f97c4;pointer-events:none}
 .mdb{border:none;background:rgba(255,255,255,.85);width:42px;height:42px;border-radius:50%;font-size:24px;cursor:pointer;flex-shrink:0;padding:0}.mdb.none{opacity:.6;filter:grayscale(.6)}
 .tbar #mdPop{right:6px;left:auto;top:58px}
 .paper{position:relative;flex:1;min-height:0;background:rgba(255,255,255,.9);border:1px solid #e3e7f7;border-radius:20px;box-shadow:0 6px 24px rgba(120,130,200,.12);overflow:hidden}
@@ -430,7 +433,7 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
     <button id="svB" class="svp" onclick="saveEntry()"><svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg><span id="svT">Save</span><i>›</i></button>
   </div>
   <div class="tbar">
-    <input id="edTitle" class="ttl2" autocomplete="off"  placeholder="Title" oninput="touch()">
+    <div id="edTitle" class="ttl2 pf" contenteditable="plaintext-only" role="textbox" aria-label="Title" data-ph="Title" spellcheck="false" oninput="touch()" onkeydown="if(event.key==='Enter'){event.preventDefault();$('edText').focus()}"></div>
     <button id="mdBtn" class="mdb" onclick="mdToggle()">🙂</button>
     <div id="mdPop"></div>
   </div>
@@ -669,8 +672,11 @@ let mdEdit=false,mdPage=0;
 const MDCOL=['#ffd6a5','#ffe9a8','#ffc8dd','#c4f5d0','#bde0fe','#d9c8ff','#b8f0ea','#ffb8b8','#e2e2ea'],MDPER=10;
 function renderMdPop(){
   $('mdPop').innerHTML='<div class="mdpg" id="mdPg" onscroll="mdScr()"></div><div class="mddots" id="mdDots"></div>'
-  +'<div class="mdadd"><input id="mdIn" autocomplete="off" placeholder="Add Emoji" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();mdAdd()}"><button class="ad" onclick="event.stopPropagation();mdAdd()">＋</button><button class="ed" id="mdEd" onclick="event.stopPropagation();mdEdit=!mdEdit;mdPages()">🗑️</button></div><div class="mdhint" id="mdHint"></div>';
-  mdPages()}
+  +'<div class="mdadd"><div id="mdIn" class="pf mdin" contenteditable="plaintext-only" role="textbox" aria-label="Add Emoji" data-ph="Add Emoji" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();mdAdd()}"></div><button class="ad" onclick="event.stopPropagation();mdAdd()">＋</button><button class="ed" id="mdEd" onclick="event.stopPropagation();mdEdit=!mdEdit;mdPages()">🗑️</button></div><div class="mdhint" id="mdHint"></div>';
+  plainField($('mdIn'));mdPages()}
+function plainField(el){if(!el||el._pf)return;el._pf=1;Object.defineProperty(el,'value',{get(){return el.textContent.replace(/[\r\n]+/g,' ')},set(v){el.textContent=v}});
+  el.addEventListener('input',()=>{if(!el.textContent&&el.innerHTML)el.innerHTML=''});
+  el.addEventListener('paste',e=>{e.preventDefault();const t=((e.clipboardData||window.clipboardData).getData('text')||'').replace(/[\r\n]+/g,' ');document.execCommand('insertText',false,t)})}
 function mdPages(){const pg=$('mdPg');if(!pg)return;const n=Math.max(1,Math.ceil(MOODS.length/MDPER));if(mdPage>n-1)mdPage=n-1;let h='';
   for(let k=0;k<n;k++){h+='<div class="mdp">'+MOODS.slice(k*MDPER,(k+1)*MDPER).map((m,j)=>{const i=k*MDPER+j;return mdEdit?`<button class="mdx" onclick="event.stopPropagation();mdDel(${i})">${m[0]}<i>✕</i></button>`:`<button onclick="event.stopPropagation();mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`}).join('')+'</div>'}
   pg.innerHTML=h;
@@ -688,7 +694,7 @@ function mdAdd(){const inp=$('mdIn'),v=inp.value;if(!v.trim())return;
   let n=0;em.forEach(g=>{if(!MOODS.some(m=>m[0]===g)){MOODS.push([g,'',MDCOL[MOODS.length%MDCOL.length]]);n++}});
   inp.value='';if(n){mdSave();toast(n+' emoji jud gaya');mdEdit=false;mdPage=Math.ceil(MOODS.length/MDPER)-1;mdPages()}else toast('Ye emoji pehle se hai');inp.focus()}
 function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();mdPages()}
-renderMdPop();
+plainField($('edTitle'));renderMdPop();
 function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){if(titleFocus){$('edTitle').focus();return}$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
