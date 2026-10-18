@@ -368,6 +368,57 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
 .dsb.td i,.dsb.on i{box-shadow:none}
 .dsb.td i.dg,.dsb.td i.dr,.dsb.td i.dy,.dsb.on i.dg,.dsb.on i.dr,.dsb.on i.dy{box-shadow:0 0 0 1.5px #fff}
 .dsb.on.td{box-shadow:0 0 0 2.5px #fff,0 8px 18px rgba(139,124,246,.5)}
+/* ===== reading mode (book view) ===== */
+nav .rdb{position:absolute;right:14px;bottom:calc(100% + 14px);width:54px;height:54px;border-radius:50%;padding:0;margin:0;display:flex;align-items:center;justify-content:center;opacity:1;color:#fff;background:linear-gradient(135deg,#7c6cf5,#d36bf0);border:3px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(140,100,240,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
+nav .rdb::after{display:none}
+nav .rdb svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav .rdb:active{transform:scale(.92)}
+#rd{--rfs:1;--bg:#efe6d2;--pg:#fbf6ea;--ink:#3a2e22;--soft:#8a7a66;--acc:#9b5a3c;--rule:#e2d5bb;--bar:rgba(251,246,234,.94);position:fixed;inset:0;z-index:60;display:none;flex-direction:column;background:var(--bg);color:var(--ink);overscroll-behavior:contain}
+#rd.on{display:flex;animation:rdIn .35s ease}
+@keyframes rdIn{from{opacity:0;transform:translateY(18px)}}
+#rd.lav{--bg:#ece6fb;--pg:#fbf9ff;--ink:#2f2a55;--soft:#8479b0;--acc:#7c5cf0;--rule:#ddd3f5;--bar:rgba(251,249,255,.94)}
+#rd.night{--bg:#0f1220;--pg:#171b2e;--ink:#dcd8ee;--soft:#8f8bb0;--acc:#b9a4ff;--rule:#2b3050;--bar:rgba(23,27,46,.95)}
+#rd.night .rbd *{color:inherit!important;background:transparent!important}
+#rd .rtb{flex:none;display:flex;align-items:center;gap:6px;padding:8px 10px calc(8px);background:var(--bar);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);position:relative}
+#rd .rtb b{flex:1;min-width:0;font-family:'Playfair Display','Hind',serif;font-size:18px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
+#rd .rtb button{flex:none;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#rd .rtb button:active{background:var(--rule)}
+#rd .rtb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#rd .rpr{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--acc);transition:width .15s}
+#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:18px 12px calc(40px + env(safe-area-inset-bottom,0px))}
+#rd .rbk{max-width:720px;margin:0 auto;background:var(--pg);border-radius:6px 18px 18px 6px;box-shadow:0 14px 40px rgba(60,40,20,.18),inset 6px 0 10px -6px rgba(0,0,0,.18);border-left:5px solid var(--acc);padding:6px 0;font-family:'Merriweather','Hind',Georgia,serif}
+#rd .orn{text-align:center;color:var(--acc);opacity:.7;letter-spacing:10px;font-size:18px;margin:22px 0}
+#rd .rcov{text-align:center;padding:56px 24px 40px}
+#rd .rcov h1{font-family:'Playfair Display','Hind',serif;font-size:clamp(40px,9vw,60px);margin:6px 0 4px;font-weight:700;color:var(--ink);line-height:1.1}
+#rd .rcov .rsub{font-family:'Caveat',cursive;font-size:32px;color:var(--acc);margin-top:6px}
+#rd .rcov .rln{width:90px;height:2px;background:var(--acc);margin:22px auto;opacity:.6;border-radius:2px}
+#rd .rcov p{margin:0;font-size:14px;color:var(--soft);line-height:1.8;font-family:'Hind','Quicksand',sans-serif}
+#rd .rtoc{padding:10px 26px 34px;border-top:1px solid var(--rule)}
+#rd .rtoc h2,#rd .rmh h2{font-family:'Playfair Display','Hind',serif;font-weight:700;color:var(--ink);margin:18px 0 14px}
+#rd .rtoc h2{font-size:24px;text-align:center}
+#rd .rtoc a{display:flex;align-items:baseline;gap:8px;padding:9px 0;cursor:pointer;color:var(--ink);font-size:16px;-webkit-tap-highlight-color:transparent}
+#rd .rtoc a i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
+#rd .rtoc a b{color:var(--acc);font-family:'Hind',sans-serif;font-size:14px}
+#rd .rtoc a:active span{color:var(--acc)}
+#rd .rmh{text-align:center;padding:38px 20px 8px;border-top:1px solid var(--rule);scroll-margin-top:6px}
+#rd .rmh small{font-family:'Hind',sans-serif;color:var(--soft);font-size:14px;font-weight:600}
+#rd .rmh h2{font-size:clamp(26px,6vw,34px);margin:6px 0 0}
+#rd .rpg{padding:20px 26px 6px;scroll-margin-top:6px}
+#rd .rhd{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+#rd .rhd .dd{font-family:'Playfair Display',serif;font-size:42px;line-height:1;color:var(--acc);font-weight:700}
+#rd .rhd .dm{flex:1;min-width:0;font-family:'Hind','Quicksand',sans-serif;font-size:13.5px;color:var(--soft);line-height:1.4}
+#rd .rhd .dm b{display:block;color:var(--ink);font-size:15px}
+#rd .rhd em{font-style:normal;font-size:26px}
+#rd .rpg h3{font-family:'Playfair Display','Hind',serif;font-size:calc(22px*var(--rfs));margin:4px 0 10px;color:var(--ink);line-height:1.35}
+#rd .rbd{font-size:calc(17px*var(--rfs));line-height:1.95;color:var(--ink);overflow-wrap:anywhere;word-break:break-word}
+#rd .rbd img{max-width:100%;height:auto;border-radius:8px}
+#rd .rph{display:grid;gap:10px;margin:16px 0 4px}
+#rd .rph img{width:100%;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+#rd .rft{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-family:'Hind',sans-serif;font-size:12.5px;color:var(--soft)}
+#rd .rft button{border:1px solid var(--rule);background:transparent;color:var(--acc);border-radius:14px;padding:5px 12px;font:600 12.5px 'Hind',sans-serif;cursor:pointer}
+#rd .rend{text-align:center;padding:10px 20px 34px;font-family:'Caveat',cursive;font-size:26px;color:var(--soft)}
+#rd .rto{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;cursor:pointer}
+#rd.on.sc .rto{display:flex}
 </style>
 </head>
 <body>
@@ -425,6 +476,7 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
   <button class="fab" onclick="openEd()" aria-label="Write"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9" fill="none"/></svg></button>
   <button data-v="tgt" onclick="go('tgt')"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg><span>लक्ष्य</span></button>
   <button data-v="set" onclick="go('set')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>सेटिंग्स</span></button>
+  <button class="rdb" id="rdBtn" onclick="openReader()" aria-label="Padhne ka mode"><svg viewBox="0 0 24 24"><path d="M12 6.5C10.3 5 7.6 4.5 4 4.5v13c3.6 0 6.3.5 8 2 1.7-1.5 4.4-2 8-2v-13c-3.6 0-6.3.5-8 2z"/><path d="M12 6.5v13"/></svg></button>
 </nav>
 
 <div id="ed">
@@ -463,6 +515,20 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
   <div class="acts"><button class="btn red" id="tkDel" onclick="tkDelete()">🗑️ हटाएं</button><button class="btn" onclick="tkSave()">Save</button></div>
 </div></div>
 <div id="toast"></div>
+<div id="rd" role="dialog" aria-label="Padhne ka mode">
+  <div class="rtb">
+    <button onclick="history.back()" aria-label="Band karein"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <b>मेरी डायरी</b>
+    <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
+    <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
+    <button onclick="rdFont()" aria-label="Akshar ka size">Aa</button>
+    <button id="rdTh" onclick="rdTheme()" aria-label="Theme">🌙</button>
+    <i class="rpr" id="rdPr"></i>
+  </div>
+  <div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div>
+  <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
+</div>
+
 <div id="pmWrap" onclick="if(event.target===this&&Date.now()-pmAt>450)pmClose()"><div id="pmBox"><div class="gr8"></div><div class="pt" id="pmT"></div><button id="pmPin" onclick="pmDoPin()"></button><button class="dl" onclick="pmDoDel()">🗑️ Delete karein</button><button class="cn" onclick="pmClose()">Cancel</button></div></div>
 <div id="print"></div>
 
@@ -736,7 +802,7 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
-window.onpopstate=()=>{if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render()}};
+window.onpopstate=()=>{if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
@@ -896,6 +962,42 @@ document.addEventListener('touchmove',ev=>{const t=ev.touches[0];if(Math.abs(t.c
 ['touchend','touchcancel'].forEach(n=>document.addEventListener(n,()=>{clearTimeout(lpT);document.querySelectorAll('.en2.lp').forEach(x=>x.classList.remove('lp'))},{passive:true}));
 document.addEventListener('contextmenu',ev=>{const c=ev.target.closest&&ev.target.closest('.en2');if(c){ev.preventDefault();if(!lpFired){lpFired=true;pmOpen(c.dataset.id)}}});
 document.addEventListener('click',ev=>{if(lpFired&&ev.target.closest&&ev.target.closest('.en2')){ev.stopPropagation();ev.preventDefault()}lpFired=false},true);
+
+/* ===== reading mode (book view) ===== */
+const RDFS=[.88,1,1.14,1.3,1.5],RDTH=['paper','lav','night'],RDIC={paper:'📜',lav:'💜',night:'🌙'};
+let rdP=(()=>{try{return Object.assign({th:'paper',fs:1,ord:'asc'},JSON.parse(localStorage.getItem('rdPref')||'{}'))}catch(_){return{th:'paper',fs:1,ord:'asc'}}})();
+function rdSaveP(){try{localStorage.setItem('rdPref',JSON.stringify(rdP))}catch(_){}}
+function rdApply(){const r=$('rd');RDTH.forEach(t=>r.classList.toggle(t,t===rdP.th));r.style.setProperty('--rfs',RDFS[rdP.fs]||1);$('rdTh').textContent=RDIC[rdP.th]||'📜'}
+function rdTheme(){rdP.th=RDTH[(RDTH.indexOf(rdP.th)+1)%RDTH.length];rdSaveP();rdApply()}
+function rdFont(){rdP.fs=(rdP.fs+1)%RDFS.length;rdSaveP();rdApply();toast('Akshar size '+(rdP.fs+1)+'/'+RDFS.length)}
+function rdOrder(){rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'Purane se naye':'Naye se purane')}
+function rdJump(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function rdScr(){const s=$('rdSc'),m=s.scrollHeight-s.clientHeight;$('rdPr').style.width=(m>0?s.scrollTop/m*100:0)+'%';$('rd').classList.toggle('sc',s.scrollTop>700)}
+function rdBody(e){const h=e.html&&String(e.html).trim()?sanitize(e.html):esc(e.text||'').replace(/\n/g,'<br>');return h}
+function rdBuild(){
+  const all=Object.values(entries).sort((a,b)=>a.date.localeCompare(b.date)||(a.ts||0)-(b.ts||0));
+  const pgN=new Map();all.forEach((e,i)=>pgN.set(e.id,i+1));
+  const months=[];all.forEach(e=>{const k=e.date.slice(0,7);let m=months[months.length-1];if(!m||m.k!==k){m={k,list:[]};months.push(m)}m.list.push(e)});
+  if(rdP.ord==='desc'){months.reverse();months.forEach(m=>m.list.reverse())}
+  const name=(auth.currentUser&&(auth.currentUser.displayName||auth.currentUser.email.split('@')[0])||'').split(' ')[0];
+  const fm=d=>new Date(d+'T00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+  const ml=k=>new Date(k+'-01T00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  let h=`<section class="rcov"><div class="orn">❦</div><h1>My Diary</h1><div class="rsub">${esc(name)}</div><div class="rln"></div><p>${all.length} पन्ने · ${months.length} महीने<br>${fm(all[0].date)} — ${fm(all[all.length-1].date)}</p></section>`;
+  h+=`<section class="rtoc" id="rdToc"><h2>अनुक्रम</h2>`+months.map(m=>`<a onclick="rdJump('m-${m.k}')"><span>${ml(m.k)}</span><i></i><b>${m.list.length}</b></a>`).join('')+`</section>`;
+  months.forEach((m,mi)=>{
+    h+=`<section><div class="rmh" id="m-${m.k}"><small>अध्याय ${rdP.ord==='asc'?mi+1:months.length-mi}</small><h2>${ml(m.k)}</h2></div>`;
+    m.list.forEach(e=>{const d=new Date(e.date+'T00:00'),ph=(e.photos||[]).filter(Boolean);
+      h+=`<article class="rpg" id="p-${e.id}"><div class="rhd"><span class="dd">${d.getDate()}</span><div class="dm"><b>${d.toLocaleDateString('en-US',{weekday:'long'})}</b>${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</div>${e.mood?`<em>${e.mood}</em>`:''}</div>`
+      +(e.title?`<h3>${esc(e.title)}</h3>`:'')+`<div class="rbd">${rdBody(e)}</div>`
+      +(ph.length?`<div class="rph">${ph.map(s=>`<img loading="lazy" src="${s}">`).join('')}</div>`:'')
+      +`<div class="rft"><span>पन्ना ${pgN.get(e.id)}</span><button onclick="rdEdit('${e.id}')">✎ Badlein</button></div><div class="orn">✦ ✦ ✦</div></article>`});
+    h+='</section>'});
+  h+=`<div class="rend">~ ${rdP.ord==='asc'?'abhi tak ki kahani':'kahani ki shuruaat'} ~</div>`;
+  $('rdBk').innerHTML=h}
+function openReader(){if(!Object.keys(entries).length){toast('Diary abhi khali hai 🌸');return}
+  rdApply();rdBuild();const r=$('rd');r.classList.add('on');document.documentElement.classList.add('ed-lock');$('rdSc').scrollTop=0;rdScr();history.pushState({rd:1},'')}
+function rdHide(){$('rd').classList.remove('on');document.documentElement.classList.remove('ed-lock');$('rdBk').innerHTML=''}
+function rdEdit(id){history.back();setTimeout(()=>openEd(id),80)}
 </script>
 </body>
 </html>
