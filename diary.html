@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>🌙 My Diary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap"></noscript>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -213,6 +213,20 @@ body.editing .scene{display:none}
 .srchw input{flex:1;min-width:0;border:none;background:none;outline:none;padding:13px 0;font-size:16px;color:var(--ink)}
 .srchw input::placeholder{color:#8f84b3}
 .srchw .fil{border-left:1.5px solid #e7def8;padding:6px 4px 6px 12px;display:flex;cursor:pointer}
+.en2{position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.en2.lp{transform:scale(.97);transition:transform .15s}
+.en2.pinned{border-color:#c9b6f5;box-shadow:0 6px 20px rgba(140,100,220,.25)}
+.en2 .pnb{position:absolute;top:-7px;right:14px;font-size:15px;background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(120,90,200,.3);transform:rotate(18deg)}
+#pmWrap{position:fixed;inset:0;z-index:90;display:none;align-items:flex-end;justify-content:center;background:rgba(40,30,80,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#pmWrap.on{display:flex;animation:pmF .2s ease}
+@keyframes pmF{from{opacity:0}}
+#pmBox{width:100%;max-width:520px;background:#fff;border-radius:26px 26px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));animation:pmU .25s cubic-bezier(.2,.9,.3,1)}
+@keyframes pmU{from{transform:translateY(100%)}}
+#pmBox .gr8{width:40px;height:4px;border-radius:2px;background:#ddd5f3;margin:0 auto 12px}
+#pmBox .pt{font-weight:700;color:#2b3563;text-align:center;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 10px}
+#pmBox button{display:flex;align-items:center;gap:12px;width:100%;padding:15px 16px;margin-bottom:9px;border:0;border-radius:16px;font:inherit;font-size:16px;font-weight:600;cursor:pointer;background:#f3eefd;color:#4b3a8f}
+#pmBox button.dl{background:#fdecef;color:#d23b5a}
+#pmBox button.cn{background:transparent;color:#8a86a8;justify-content:center;margin-bottom:0}
 .en2{display:flex;align-items:center;gap:12px;padding:13px 12px 13px 14px;border-radius:24px;margin-bottom:12px;cursor:pointer;border:1px solid rgba(255,255,255,.95);box-shadow:0 6px 20px rgba(150,120,200,.12)}
 .dt2{width:48px;flex-shrink:0;text-align:center;line-height:1;padding-right:10px;border-right:1.5px solid #e4dcf5}
 .dt2 b{display:block;font-size:30px;font-weight:700;color:#2b3563}.dt2 small{display:block;font-size:12px;color:var(--soft);margin-top:4px;font-weight:600}
@@ -426,6 +440,7 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
   <div class="acts"><button class="btn red" id="tkDel" onclick="tkDelete()">🗑️ हटाएं</button><button class="btn" onclick="tkSave()">Save</button></div>
 </div></div>
 <div id="toast"></div>
+<div id="pmWrap" onclick="if(event.target===this&&Date.now()-pmAt>450)pmClose()"><div id="pmBox"><div class="gr8"></div><div class="pt" id="pmT"></div><button id="pmPin" onclick="pmDoPin()"></button><button class="dl" onclick="pmDoDel()">🗑️ Delete karein</button><button class="cn" onclick="pmClose()">Cancel</button></div></div>
 <div id="print"></div>
 
 <script>
@@ -446,19 +461,25 @@ function googleLogin(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider
 function emailLogin(){const e=$('em').value,p=$('pw').value;if(!e||!p)return alert('Email aur Password dono bhariye');
   auth.signInWithEmailAndPassword(e,p).catch(er=>{if(['auth/user-not-found','auth/invalid-credential'].includes(er.code)||er.message.includes('INVALID_LOGIN'))auth.createUserWithEmailAndPassword(e,p).then(()=>alert('Account ban gaya! Yehi aapka password hai.')).catch(x=>alert(x.message));else alert(er.message)})}
 function forgotPw(){const e=$('em').value;if(!e)return alert('Pehle Gmail ID likhein.');auth.sendPasswordResetEmail(e).then(()=>alert('Reset link bhej diya gaya.')).catch(x=>alert(x.message))}
-const loadT0=Date.now();
+const loadT0=Date.now(),TM={};const mark=k=>{TM[k]=Date.now()-loadT0};
 const imgP=new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src='sunset.jpg'});
 function hideLoader(){const l=$('loader');if(!l||l.dataset.gone)return;l.dataset.gone=1;
-  const ready=Promise.race([Promise.all([imgP,document.fonts?document.fonts.ready:0]),new Promise(r=>setTimeout(r,1500))]);
-  ready.then(()=>{const w=Math.max(0,900-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
+  const ready=Promise.race([imgP,new Promise(r=>setTimeout(r,800))]);
+  ready.then(()=>{const w=Math.max(0,700-(Date.now()-loadT0));setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{l.classList.add('out');setTimeout(()=>l.style.display='none',600)})),w)})}
+const DBURL="https://mydiary-07-default-rtdb.asia-southeast1.firebasedatabase.app";
+/* fast first read: plain HTTPS (no websocket wait); SDK read runs in parallel as fallback */
+function loadDiary(u){
+  const rest=(async()=>{const t=await u.getIdToken();const r=await fetch(DBURL+'/'+base()+'.json?auth='+encodeURIComponent(t));if(!r.ok)throw new Error('rest '+r.status);const v=(await r.json())||{};TM.via='https';return v})();
+  const sdk=db.ref(base()).once('value').then(x=>{TM.via=TM.via||'sdk';return x.val()||{}});
+  return new Promise((res,rej)=>{let n=0;const f=e=>{if(++n===2)rej(e)};rest.then(res,f);sdk.then(res,f)})}
 setTimeout(hideLoader,12000);
-auth.onAuthStateChanged(u=>{
+auth.onAuthStateChanged(u=>{mark('auth');
   if(!u){uid=null;$('auth').style.display='flex';$('app').style.display='none';$('nav').style.display='none';hideLoader();return}
   if(uid===u.uid)return;uid=u.uid;
-  db.ref(base()).once('value').then(s=>{const v=s.val()||{};entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
+  loadDiary(u).then(v=>{mark('data');TM.kb=Math.round(JSON.stringify(v).length/1024);entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
     $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
     
-    go('home');if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
+    go('home');mark('render');if(location.hash==='#debug')setTimeout(()=>alert('auth '+TM.auth+'ms, data '+TM.data+'ms, render '+TM.render+'ms, data size '+TM.kb+' KB, via '+TM.via),1500);if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
 
 /* ---------- PIN LOCK ---------- */
@@ -493,7 +514,7 @@ let tagsOpen=false;
 function lockNow(){if(!pinHash)return toast('Settings mein PIN lagayein, phir yahan se turant lock kar sakte hain 🔒');openLock('unlock',null,'PIN daalein',false)}
 function toggleTags(){if(!Object.values(entries).some(e=>(e.tags||[]).length))return toast('Abhi koi tag nahi hai');tagsOpen=!tagsOpen;renderHome()}
 function card(e){const m=MOODS.find(x=>x[0]===e.mood),d=new Date(e.date+'T00:00'),c=m?m[2]:'#e7def8';
-  return `<div class="en2" style="background:linear-gradient(100deg,${c}55,#ffffffd9 70%)" onclick="openEd('${e.id}')"><div class="dt2"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'})}</small></div><div class="ic" style="background:${c}">${e.mood||FEATHER}</div><div class="bd"><div class="tt">${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div>${(e.tags||[]).length?`<div class="tg">${e.tags.map(t=>'<span>#'+esc(t)+'</span>').join('')}</div>`:''}</div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}<span class="chv">›</span></div>`}
+  return `<div class="en2${e.pinned?' pinned':''}" data-id="${e.id}" style="background:linear-gradient(100deg,${c}55,#ffffffd9 70%)" onclick="openEd('${e.id}')">${e.pinned?'<span class="pnb">📌</span>':''}<div class="dt2"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'})}</small></div><div class="ic" style="background:${c}">${e.mood||FEATHER}</div><div class="bd"><div class="tt">${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div>${(e.tags||[]).length?`<div class="tg">${e.tags.map(t=>'<span>#'+esc(t)+'</span>').join('')}</div>`:''}</div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}<span class="chv">›</span></div>`}
 function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ रात्रि':h<12?'सुप्रभात':h<17?'नमस्ते':h<21?'शुभ संध्या':'शुभ रात्रि',ic=(h<5||h>=21)?'🌙':h<17?'☀️':'🌅';
   const name=(auth.currentUser.displayName||auth.currentUser.email.split('@')[0]).split(' ')[0];
   const tags=[...new Set(Object.values(entries).flatMap(e=>e.tags||[]))];
@@ -501,7 +522,7 @@ function renderHome(){const s=streaks(),h=new Date().getHours(),g=h<5?'शुभ
   <div class="srchw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input autocomplete="off" autocorrect="off" spellcheck="false" placeholder="diary mein khojein..." value="${esc(q)}" oninput="q=this.value.toLowerCase();renderList()"><span class="fil" onclick="toggleTags()"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span></div>
   ${tagsOpen&&tags.length?`<div class="chips">${tags.map(t=>`<button class="chip ${tagF===t?'on':''}" onclick="tagF=tagF==='${esc(t).replace(/'/g,"\\'")}'?null:'${esc(t).replace(/'/g,"\\'")}';renderHome()">#${esc(t)}</button>`).join('')}</div>`:''}
   <div id="list"></div>`;renderList()}
-function renderList(){const l=sorted().filter(e=>(!tagF||(e.tags||[]).includes(tagF))&&(!q||(e.title+' '+e.text+' '+(e.tags||[]).join(' ')).toLowerCase().includes(q)));
+function renderList(){const l=sorted().sort((x,y)=>(y.pinned?1:0)-(x.pinned?1:0)).filter(e=>(!tagF||(e.tags||[]).includes(tagF))&&(!q||(e.title+' '+e.text+' '+(e.tags||[]).join(' ')).toLowerCase().includes(q)));
   $('list').innerHTML=l.length?l.map(card).join(''):`<div class="empty"><div class="big">🌸</div>${Object.keys(entries).length?'Kuch nahi mila.':'Diary abhi khali hai.<br>Neeche ✍️ dabakar pehla page likhein.'}</div>`}
 function calGo(n){calM=new Date(calM.getFullYear(),calM.getMonth()+n,1);selDay=null;renderCal()}
 let cTx=0;
@@ -520,7 +541,7 @@ function renderCal(){const y=calM.getFullYear(),m=calM.getMonth(),first=new Date
   if(selDay){const es=by[selDay]||[],q=dayStat(selDay),gl=tasksFor(selDay),x=new Date(selDay+'T00:00'),go2=`tgtDay='${selDay}';go('tgt')`;
     h+=`<div class="cday"><b>${x.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'long'})}</b><button class="gp ${q.t?(q.n===q.t?'g':q.n===0?'r':'y'):''}" onclick="${go2}">🎯 ${q.t?q.n+'/'+q.t+' लक्ष्य':'लक्ष्य जोड़ें'}</button></div>`;
     if(gl.length)h+=`<div class="glass gl" onclick="${go2}">${gl.slice(0,5).map(t=>`<div class="gr2 ${isDone(t,selDay)?'ok':''}"><span>${isDone(t,selDay)?'✓':'○'}</span>${esc(t.title)}</div>`).join('')}${gl.length>5?`<small>+${gl.length-5} और</small>`:''}</div>`;
-    h+=es.map(card).join('')+`<button class="btn alt" onclick="openEd(null,'${selDay}')">✍️ Is din ke liye likhein</button>`}
+    h+=es.slice().sort((x,y)=>(y.pinned?1:0)-(x.pinned?1:0)).map(card).join('')+`<button class="btn alt" onclick="openEd(null,'${selDay}')">✍️ Is din ke liye likhein</button>`}
   $('main').innerHTML=h}
 function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce((n,e)=>n+(e.text.trim()?e.text.trim().split(/\s+/).length:0),0);
   const mc={},tc={};a.forEach(e=>{if(e.mood)mc[e.mood]=(mc[e.mood]||0)+1;(e.tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1)});
@@ -810,6 +831,18 @@ function importJson(ev){const f=ev.target.files[0];if(!f)return;const r=new File
 function printAll(){const a=sorted().reverse();if(!a.length)return toast('Diary abhi khali hai');
   $('print').innerHTML='<h1>My Diary</h1>'+a.map(e=>`<div class="pe"><h3>${e.date} ${e.mood||''} ${esc(e.title)}</h3><p>${esc(e.text).replace(/\n/g,'<br>')}</p><div>${(e.tags||[]).map(t=>'#'+esc(t)).join(' ')}</div>${(e.photos||[]).map(p=>`<img src="${p}">`).join('')}</div>`).join('');
   toast('Print screen mein "Save as PDF" chunein');setTimeout(()=>window.print(),600)}
+
+/* ===== long-press: pin / delete ===== */
+let pmAt=0,pmId=null,lpT=null,lpFired=false,lpX=0,lpY=0;
+function pmOpen(id){const e=entries[id];if(!e)return;pmId=id;pmAt=Date.now();$('pmT').textContent=e.title||'बिना शीर्षक';$('pmPin').textContent=e.pinned?'📌 Unpin karein':'📌 Pin karein (upar rakhein)';$('pmWrap').classList.add('on');if(navigator.vibrate)try{navigator.vibrate(18)}catch(_){}}
+function pmClose(){$('pmWrap').classList.remove('on');pmId=null}
+function pmDoPin(){const e=entries[pmId];if(!e)return pmClose();const v=!e.pinned;e.pinned=v;db.ref(base()+'/entries/'+pmId+'/pinned').set(v?true:null).catch(x=>toast('Sync nahi hua: '+x.message));pmClose();toast(v?'Pin ho gaya 📌':'Unpin ho gaya');render()}
+function pmDoDel(){const e=entries[pmId];if(!e)return pmClose();const id=pmId;if(!confirm('Ye page hamesha ke liye hata dein?'))return;delete entries[id];db.ref(base()+'/entries/'+id).remove();pmClose();toast('Page hata diya');render()}
+document.addEventListener('touchstart',ev=>{const c=ev.target.closest&&ev.target.closest('.en2');if(!c)return;const t=ev.touches[0];lpX=t.clientX;lpY=t.clientY;clearTimeout(lpT);lpT=setTimeout(()=>{lpFired=true;c.classList.remove('lp');pmOpen(c.dataset.id)},500);c.classList.add('lp')},{passive:true});
+document.addEventListener('touchmove',ev=>{const t=ev.touches[0];if(Math.abs(t.clientX-lpX)>10||Math.abs(t.clientY-lpY)>10){clearTimeout(lpT);document.querySelectorAll('.en2.lp').forEach(x=>x.classList.remove('lp'))}},{passive:true});
+['touchend','touchcancel'].forEach(n=>document.addEventListener(n,()=>{clearTimeout(lpT);document.querySelectorAll('.en2.lp').forEach(x=>x.classList.remove('lp'))},{passive:true}));
+document.addEventListener('contextmenu',ev=>{const c=ev.target.closest&&ev.target.closest('.en2');if(c){ev.preventDefault();if(!lpFired){lpFired=true;pmOpen(c.dataset.id)}}});
+document.addEventListener('click',ev=>{if(lpFired&&ev.target.closest&&ev.target.closest('.en2')){ev.stopPropagation();ev.preventDefault()}lpFired=false},true);
 </script>
 </body>
 </html>
