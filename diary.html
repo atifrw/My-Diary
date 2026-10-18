@@ -171,6 +171,8 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 #ed.dark .tbar{background:rgba(255,255,255,.1)}
 #ed.dark .ib2,#ed.dark .mdb{background:rgba(255,255,255,.18)}
 .blob{animation:none!important}body.editing .blob,body.editing nav{display:none!important}
+html.ed-lock,html:has(body.editing),body.editing{overflow:hidden!important;overscroll-behavior:none}
+#ed,.edb,#sheet{overscroll-behavior:contain}
 .sht .shx{width:34px;height:34px;border-radius:50%;background:#f1ecfb;color:#4a3f6b;font-size:16px;display:flex;align-items:center;justify-content:center;padding:0}
 .lb{font-size:12px;color:#8f97c4;font-weight:700;margin:6px 2px 6px;letter-spacing:.3px}
 .sb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
@@ -710,7 +712,7 @@ function openEd(id,date){cur=id?entries[id]:null;mood=cur?cur.mood||'':'';photos
   $('edText').style.lineHeight=lh;$('edText').style.fontFamily=noteFont?cssFont(noteFont):'';phCheck();newId=null;dirty=false;$('svT').textContent=cur?'Saved ✓':'Save';
   setMd();$('delB').style.display=cur?'block':'none';
   applyBg();closeSheet();$('mdPop').style.display='none';$('mnu').style.display='none';
-  $('ed').style.display='flex';document.body.classList.add('editing');tools();try{document.execCommand('styleWithCSS',false,true)}catch(e){}
+  $('ed').style.display='flex';document.body.classList.add('editing');document.documentElement.classList.add('ed-lock');tools();try{document.execCommand('styleWithCSS',false,true)}catch(e){}
   renderPh();history.pushState({ed:1},'');if(!cur)setTimeout(()=>$('edTitle').focus(),100)}
 let newId=null,dirty=false,saveT=null;
 const vh=()=>Math.min(innerHeight,(window.visualViewport||{}).height||innerHeight);let vh0=vh();
@@ -733,8 +735,8 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   const e={id,date:$('edDate').value||iso(new Date()),title,text,html,mood,tags:cur?cur.tags||[]:[],photos,bg,lh,ff:noteFont,tst:Object.assign({},tst),ts:cur?cur.ts||Date.now():Date.now()};
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
-function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
-window.onpopstate=()=>{if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');if(sv)toast('Page save ho gaya 🌸');render()}};
+function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
+window.onpopstate=()=>{if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
