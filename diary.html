@@ -96,7 +96,14 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 #mnu,#mdPop{display:none;position:absolute;right:0;top:46px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(80,60,140,.25);z-index:5;padding:8px}
 #mnu button{display:block;border:none;background:none;padding:10px 14px;text-align:left;white-space:nowrap;cursor:pointer;font-weight:600;width:100%;color:#4a3f6b}
 #mdPop{width:290px;grid-template-columns:repeat(5,1fr);gap:6px}
-#mdPop{max-height:62vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#mdPop .mdpg{grid-column:1/-1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#mdPop .mdpg::-webkit-scrollbar{display:none}
+#mdPop .mdp{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:42px;gap:6px;justify-items:center;align-content:start;min-height:90px}
+#mdPop .mddots{grid-column:1/-1;display:flex;justify-content:center;gap:6px;min-height:0}
+#mdPop .mddots:not(:empty){margin:6px 0 2px}
+#mdPop .mddots b{width:6px;height:6px;border-radius:3px;background:#d9d0f2;transition:.2s}
+#mdPop .mddots b.on{width:16px;background:#7c5cf0}
+
 #mdPop button{position:relative}
 #mdPop .mdx{animation:mdw .5s ease-in-out infinite alternate}
 @keyframes mdw{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
@@ -424,7 +431,7 @@ u.g{background:#22c55e}u.y{background:#facc15}u.r{background:#ef4444}
   </div>
   <div class="tbar">
     <input id="edTitle" class="ttl2" autocomplete="off"  placeholder="Title" oninput="touch()">
-    <button id="mdBtn" class="mdb" onclick="mdEdit=false;renderMdPop();$('mdPop').style.display=$('mdPop').style.display==='grid'?'none':'grid'">🙂</button>
+    <button id="mdBtn" class="mdb" onclick="mdToggle()">🙂</button>
     <div id="mdPop"></div>
   </div>
   <div class="paper"><div class="psc">
@@ -658,20 +665,29 @@ function titleFmt(k){const cs=getComputedStyle($('edTitle'));
 function stTitle(){const cs=getComputedStyle($('edTitle')),al=cs.textAlign;
   return{bold:parseInt(cs.fontWeight)>=600,italic:cs.fontStyle==='italic',underline:!!tst.u,strike:!!tst.s,jl:al==='start'||al==='left',jc:al==='center',jr:al==='right',jf:false,block:'div',color:cs.color,hl:tst.hl?cs.backgroundColor:'',font:cs.fontFamily.replace(/["']/g,'').split(',')[0].trim().toLowerCase(),size:Math.round(parseFloat(cs.fontSize))||34,lst:null}}
 
-let mdEdit=false;
-const MDCOL=['#ffd6a5','#ffe9a8','#ffc8dd','#c4f5d0','#bde0fe','#d9c8ff','#b8f0ea','#ffb8b8','#e2e2ea'];
-function renderMdPop(){const st=e=>'event.stopPropagation();';
-  $('mdPop').innerHTML=MOODS.map((m,i)=>mdEdit?`<button class="mdx" onclick="${st()}mdDel(${i})">${m[0]}<i>✕</i></button>`:`<button onclick="${st()}mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`).join('')
-  +`<div class="mdadd"><input id="mdIn" autocomplete="off" placeholder="Emoji jodein…" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();mdAdd()}"><button class="ad" onclick="${st()}mdAdd()">＋</button><button class="ed ${mdEdit?'on':''}" onclick="${st()}mdEdit=!mdEdit;renderMdPop()">${mdEdit?'✓ Done':'🗑️'}</button></div>`+(mdEdit?'<div class="mdhint">Jo emoji hatana ho uspar tap karein</div>':'')}
+let mdEdit=false,mdPage=0;
+const MDCOL=['#ffd6a5','#ffe9a8','#ffc8dd','#c4f5d0','#bde0fe','#d9c8ff','#b8f0ea','#ffb8b8','#e2e2ea'],MDPER=10;
+function renderMdPop(){
+  $('mdPop').innerHTML='<div class="mdpg" id="mdPg" onscroll="mdScr()"></div><div class="mddots" id="mdDots"></div>'
+  +'<div class="mdadd"><input id="mdIn" autocomplete="off" placeholder="Add Emoji" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();mdAdd()}"><button class="ad" onclick="event.stopPropagation();mdAdd()">＋</button><button class="ed" id="mdEd" onclick="event.stopPropagation();mdEdit=!mdEdit;mdPages()">🗑️</button></div><div class="mdhint" id="mdHint"></div>';
+  mdPages()}
+function mdPages(){const pg=$('mdPg');if(!pg)return;const n=Math.max(1,Math.ceil(MOODS.length/MDPER));if(mdPage>n-1)mdPage=n-1;let h='';
+  for(let k=0;k<n;k++){h+='<div class="mdp">'+MOODS.slice(k*MDPER,(k+1)*MDPER).map((m,j)=>{const i=k*MDPER+j;return mdEdit?`<button class="mdx" onclick="event.stopPropagation();mdDel(${i})">${m[0]}<i>✕</i></button>`:`<button onclick="event.stopPropagation();mood='${m[0]}';setMd();$('mdPop').style.display='none';touch()">${m[0]}</button>`}).join('')+'</div>'}
+  pg.innerHTML=h;
+  $('mdDots').innerHTML=n>1?Array.from({length:n},(_,k)=>`<b class="${k===mdPage?'on':''}"></b>`).join(''):'';
+  $('mdEd').textContent=mdEdit?'✓ Done':'🗑️';$('mdEd').classList.toggle('on',mdEdit);
+  $('mdHint').textContent=mdEdit?'Jo emoji hatana ho uspar tap karein':'';
+  if(pg.clientWidth)pg.scrollLeft=mdPage*pg.clientWidth;else requestAnimationFrame(()=>{pg.scrollLeft=mdPage*pg.clientWidth})}
+function mdScr(){const pg=$('mdPg');if(!pg||!pg.clientWidth)return;const k=Math.round(pg.scrollLeft/pg.clientWidth);if(k!==mdPage){mdPage=k;document.querySelectorAll('#mdDots b').forEach((d,i)=>d.classList.toggle('on',i===k))}}
+function mdToggle(){const o=$('mdPop').style.display!=='grid';mdEdit=false;mdPage=0;$('mdPop').style.display=o?'grid':'none';if(o)mdPages()}
 function mdSave(){try{localStorage.setItem('moodList',JSON.stringify(MOODS))}catch(_){}db.ref(base()+'/moodList').set(MOODS.length?MOODS:null).catch(x=>toast('Sync nahi hua: '+x.message))}
 function mdAdd(){const inp=$('mdIn'),v=inp.value;if(!v.trim())return;
   const seg=window.Intl&&Intl.Segmenter?[...new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(v)].map(x=>x.segment):Array.from(v);
   const em=seg.filter(g=>/\p{Extended_Pictographic}/u.test(g)||/\p{Regional_Indicator}/u.test(g));
   if(!em.length){toast('Keyboard se emoji daalein 🙂');return}
   let n=0;em.forEach(g=>{if(!MOODS.some(m=>m[0]===g)){MOODS.push([g,'',MDCOL[MOODS.length%MDCOL.length]]);n++}});
-  inp.value='';if(n){mdSave();toast(n+' emoji jud gaya')}else toast('Ye emoji pehle se hai');
-  renderMdPop();const i2=$('mdIn');if(i2)i2.focus()}
-function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();renderMdPop()}
+  inp.value='';if(n){mdSave();toast(n+' emoji jud gaya');mdEdit=false;mdPage=Math.ceil(MOODS.length/MDPER)-1;mdPages()}else toast('Ye emoji pehle se hai');inp.focus()}
+function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();mdPages()}
 renderMdPop();
 function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
