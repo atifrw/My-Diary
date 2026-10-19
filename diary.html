@@ -381,20 +381,41 @@ nav .rdb:active{transform:scale(.92)}
 #rd.t-night{--bg:#0c0f1c;--pg:#151a2c;--ink:#dedaf0;--soft:#8f8bb0;--acc:#c1adff;--rule:#262c4a;--bar:rgba(21,26,44,.96);--chip:#1e2440}
 #rd.t-night .bkb *{color:inherit!important}
 #rd *{box-sizing:border-box}
-#rd .rtb{flex:none;display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--bar);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);position:relative}
+#rd .rtb{flex:none;display:flex;align-items:center;gap:2px;margin:calc(8px + env(safe-area-inset-top,0px)) 8px 0;padding:5px 6px;background:var(--bar);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--rule);border-radius:20px;box-shadow:0 8px 26px rgba(40,28,12,.16);position:relative;overflow:hidden;z-index:3}
+#rd.t-night .rtb{box-shadow:0 8px 26px rgba(0,0,0,.5)}
 #rd .rtb b{flex:1;min-width:0;font:700 18px 'Playfair Display','Hind',serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
 #rd .rtb button{flex:none;width:42px;height:42px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 #rd .rtb button:active{background:var(--rule)}
 #rd .rtb button.on{background:var(--chip);box-shadow:inset 0 0 0 1.5px var(--acc)}
+#rd .rpb{position:absolute;inset:0;z-index:4;display:none}
+#rd .rpn{position:absolute;z-index:5;top:calc(66px + env(safe-area-inset-top,0px));right:8px;width:min(330px,calc(100% - 16px));display:none;background:var(--pg);border:1px solid var(--rule);border-radius:20px;padding:16px 16px 14px;box-shadow:0 18px 48px rgba(30,20,8,.28);font-family:'Hind','Quicksand',sans-serif;color:var(--ink);animation:rpIn .18s ease}
+@keyframes rpIn{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+#rd.pn .rpb,#rd.pn .rpn{display:block}
+#rd .rpn .rpt{font:700 17px 'Playfair Display','Hind',serif;margin-bottom:12px;color:var(--ink)}
+#rd .rpn label,#rd .rpn .lb{display:block;font:600 12px 'Hind',sans-serif;color:var(--soft);margin:12px 0 7px;letter-spacing:.3px}
+#rd .rsz{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+#rd .rsz button,#rd .rth button{border:1.5px solid var(--rule);background:transparent;color:var(--ink);border-radius:12px;height:42px;cursor:pointer;font-family:'Merriweather','Hind',serif;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#rd .rsz button.on,#rd .rth button.on{border-color:var(--acc);background:var(--chip);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);font-weight:700}
+#rd .rth{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#rd .rth button{flex-direction:column;gap:5px;height:auto;padding:9px 4px 7px;font:600 12px 'Hind',sans-serif}
+#rd .rth button i{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);display:block}
+#rd .rsw{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}
+#rd .rsw div{flex:1;min-width:0}
+#rd .rsw b{display:block;font:600 15px 'Hind',sans-serif}
+#rd .rsw small{display:block;font:400 12px/1.4 'Hind',sans-serif;color:var(--soft);margin-top:2px}
+#rd .rsw .tg{flex:none;width:50px;height:30px;border-radius:15px;border:0;background:var(--rule);position:relative;cursor:pointer;transition:background .2s}
+#rd .rsw .tg::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transition:transform .2s}
+#rd .rsw .tg.on{background:var(--acc)}
+#rd .rsw .tg.on::after{transform:translateX(20px)}
 #rd .rtb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-#rd .rpr{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--acc);transition:width .15s}
-#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:16px 12px calc(44px + env(safe-area-inset-bottom,0px))}
-#rd .rbk{max-width:740px;margin:0 auto;background:var(--pg);border-radius:6px 20px 20px 6px;border-left:6px solid var(--acc);box-shadow:0 16px 44px rgba(50,35,15,.2),inset 8px 0 12px -8px rgba(0,0,0,.2);font-family:'Merriweather','Hind',Georgia,serif;text-align:left;overflow:hidden}
+#rd .rpr{position:absolute;left:0;bottom:0;height:3px;border-radius:0 3px 3px 0;width:0;background:var(--acc);transition:width .15s}
+#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:10px 6px calc(44px + env(safe-area-inset-bottom,0px))}
+#rd .rbk{max-width:880px;margin:0 auto;background:var(--pg);border-radius:4px 16px 16px 4px;border-left:5px solid var(--acc);box-shadow:0 16px 44px rgba(50,35,15,.2),inset 8px 0 12px -8px rgba(0,0,0,.2);font-family:'Merriweather','Hind',Georgia,serif;text-align:left;overflow:hidden}
 #rd .bko{text-align:center;color:var(--acc);opacity:.65;letter-spacing:10px;font-size:15px;margin:26px 0 8px}
 /* cover */
-#rd .bkc{text-align:center;padding:34px 22px 34px}
+#rd .bkc{text-align:center;padding:22px 12px 26px}
 #rd .bkc .fr{border:1.5px solid var(--acc);border-radius:14px;padding:6px;opacity:1}
-#rd .bkc .fr>div{border:1px solid var(--rule);border-radius:10px;padding:46px 18px 34px;background:radial-gradient(120% 80% at 50% 0%,var(--chip),transparent 70%)}
+#rd .bkc .fr>div{border:1px solid var(--rule);border-radius:10px;padding:40px 14px 30px;background:radial-gradient(120% 80% at 50% 0%,var(--chip),transparent 70%)}
 #rd .bkc .mk{font:600 11px 'Quicksand',sans-serif;letter-spacing:4px;text-transform:uppercase;color:var(--soft)}
 #rd .bkc h1{font:700 clamp(40px,10vw,62px)/1.05 'Playfair Display','Hind',serif;margin:14px 0 4px;color:var(--ink)}
 #rd .bkc .nm{font:700 34px 'Caveat',cursive;color:var(--acc)}
@@ -406,7 +427,7 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkc .st small{font:500 12px 'Hind',sans-serif;color:var(--soft)}
 #rd .bkc .bkrg{margin-top:20px;font:500 13px 'Hind','Quicksand',sans-serif;color:var(--soft)}
 /* contents */
-#rd .bkt{padding:8px 26px 30px}
+#rd .bkt{padding:8px 18px 28px}
 #rd .bkt h2,#rd .bkm h2{font:700 24px 'Playfair Display','Hind',serif;margin:18px 0 12px;color:var(--ink);text-align:center}
 #rd .bkt a{display:flex;align-items:baseline;gap:8px;padding:10px 0;cursor:pointer;color:var(--ink);font-size:16px;-webkit-tap-highlight-color:transparent}
 #rd .bkt a i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
@@ -420,7 +441,7 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkm .rl{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--acc);margin-top:12px;opacity:.7}
 #rd .bkm .rl::before,#rd .bkm .rl::after{content:'';height:1px;width:56px;background:var(--acc);opacity:.5}
 /* entry */
-#rd .bkp{padding:22px 26px 4px;scroll-margin-top:4px}
+#rd .bkp{padding:20px 18px 4px;scroll-margin-top:4px}
 #rd .bkh{display:flex;align-items:center;gap:14px;margin-bottom:12px}
 #rd .bkd{font:700 46px/1 'Playfair Display',serif;color:var(--acc);min-width:50px;text-align:center}
 #rd .bkw{flex:1;min-width:0;font:500 13px/1.45 'Hind','Quicksand',sans-serif;color:var(--soft)}
@@ -555,10 +576,17 @@ nav .rdb:active{transform:scale(.92)}
     <b>मेरी डायरी</b>
     <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
     <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
-    <button onclick="rdFont()" aria-label="Akshar ka size">Aa</button>
-    <button id="rdFm" onclick="rdFmtT()" aria-label="Auto format">✨</button>
-    <button id="rdTh" onclick="rdTheme()" aria-label="Theme">🌙</button>
+    <button id="rdSet" onclick="rdPanel()" aria-label="Padhne ki settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     <i class="rpr" id="rdPr"></i>
+  </div>
+  <div class="rpb" onclick="rdPanel(false)"></div>
+  <div class="rpn" id="rdPn" role="dialog" aria-label="Padhne ki settings">
+    <div class="rpt">Padhne ki settings</div>
+    <span class="lb">Akshar ka size</span>
+    <div class="rsz" id="rdSz"><button onclick="rdSetFs(0)" aria-label="Size 1"><span style="font-size:12px;line-height:1">A</span></button><button onclick="rdSetFs(1)" aria-label="Size 2"><span style="font-size:15px;line-height:1">A</span></button><button onclick="rdSetFs(2)" aria-label="Size 3"><span style="font-size:17px;line-height:1">A</span></button><button onclick="rdSetFs(3)" aria-label="Size 4"><span style="font-size:20px;line-height:1">A</span></button><button onclick="rdSetFs(4)" aria-label="Size 5"><span style="font-size:22px;line-height:1">A</span></button></div>
+    <span class="lb">Theme</span>
+    <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')"><i style="background:#fcf8ef"></i>Paper</button><button onclick="rdSetTh('lav')"><i style="background:#fbf9ff;border-color:#bba9f3"></i>Lavender</button><button onclick="rdSetTh('night')"><i style="background:#151a2c"></i>Night</button></div>
+    <div class="rsw"><div><b>✨ Auto-format</b><small>Likhawat saaf aur standard dikhegi (sirf padhte waqt, aapki entry nahi badalti)</small></div><button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
   </div>
   <div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div>
   <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
@@ -1002,10 +1030,14 @@ document.addEventListener('click',ev=>{if(lpFired&&ev.target.closest&&ev.target.
 const RDFS=[.88,1,1.14,1.3,1.5],RDTH=['paper','lav','night'],RDIC={paper:'📜',lav:'💜',night:'🌙'};
 let rdP=(()=>{const d={th:'paper',fs:1,ord:'asc',fmt:true};try{const o=JSON.parse(localStorage.getItem('rdPref')||'{}');return Object.assign(d,o,{th:RDTH.includes(o.th)?o.th:'paper'})}catch(_){return d}})();
 function rdSaveP(){try{localStorage.setItem('rdPref',JSON.stringify(rdP))}catch(_){}}
-function rdApply(){const r=$('rd');RDTH.forEach(t=>r.classList.toggle('t-'+t,t===rdP.th));r.style.setProperty('--rfs',RDFS[rdP.fs]||1);$('rdTh').textContent=RDIC[rdP.th]||'📜';$('rdFm').classList.toggle('on',!!rdP.fmt)}
-function rdTheme(){rdP.th=RDTH[(RDTH.indexOf(rdP.th)+1)%RDTH.length];rdSaveP();rdApply()}
-function rdFont(){rdP.fs=(rdP.fs+1)%RDFS.length;rdSaveP();rdApply();toast('Akshar size '+(rdP.fs+1)+'/'+RDFS.length)}
-function rdFmtT(){const sc=$('rdSc'),y=sc.scrollTop;rdP.fmt=!rdP.fmt;rdSaveP();rdApply();rdBuild();sc.scrollTo({top:y,behavior:'auto'});toast(rdP.fmt?'✨ Auto-format ON — saaf, standard likhawat':'Auto-format OFF — jaisa likha waisa')}
+function rdApply(){const r=$('rd');RDTH.forEach(t=>r.classList.toggle('t-'+t,t===rdP.th));r.style.setProperty('--rfs',RDFS[rdP.fs]||1);
+  [...$('rdSz').children].forEach((b,i)=>b.classList.toggle('on',i===rdP.fs));
+  [...$('rdTs').children].forEach((b,i)=>b.classList.toggle('on',RDTH[i]===rdP.th));
+  $('rdFmS').classList.toggle('on',!!rdP.fmt);$('rdFmS').setAttribute('aria-checked',!!rdP.fmt)}
+function rdPanel(f){const r=$('rd'),o=typeof f==='boolean'?f:!r.classList.contains('pn');r.classList.toggle('pn',o);$('rdSet').classList.toggle('on',o);$('rdSet').setAttribute('aria-expanded',o)}
+function rdSetTh(t){rdP.th=t;rdSaveP();rdApply()}
+function rdSetFs(i){rdP.fs=i;rdSaveP();rdApply()}
+function rdFmtT(){const sc=$('rdSc'),y=sc.scrollTop;rdP.fmt=!rdP.fmt;rdSaveP();rdApply();rdBuild();sc.scrollTo({top:y,behavior:'auto'})}
 function rdOrder(){rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'Purane se naye':'Naye se purane')}
 function rdJump(id){const el=document.getElementById(id),sc=$('rdSc');if(!el||!sc)return;const y=el.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-6;sc.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
 function rdScr(){const s=$('rdSc'),m=s.scrollHeight-s.clientHeight;$('rdPr').style.width=(m>0?s.scrollTop/m*100:0)+'%';$('rd').classList.toggle('rsd',s.scrollTop>700)}
@@ -1104,8 +1136,8 @@ function rdBuild(){
   h+=`<div class="bkz">~ ${rdP.ord==='asc'?'abhi tak ki kahani':'kahani ki shuruaat'} ~</div>`;
   $('rdBk').innerHTML=h}
 function openReader(){if(!Object.keys(entries).length){toast('Diary abhi khali hai 🌸');return}
-  rdApply();rdBuild();const r=$('rd');r.classList.add('on');document.documentElement.classList.add('ed-lock');$('rdSc').scrollTop=0;rdScr();history.pushState({rd:1},'')}
-function rdHide(){$('rd').classList.remove('on');document.documentElement.classList.remove('ed-lock');$('rdBk').innerHTML=''}
+  rdApply();rdBuild();const r=$('rd');rdPanel(false);r.classList.add('on');document.documentElement.classList.add('ed-lock');$('rdSc').scrollTop=0;rdScr();history.pushState({rd:1},'')}
+function rdHide(){rdPanel(false);$('rd').classList.remove('on');document.documentElement.classList.remove('ed-lock');$('rdBk').innerHTML=''}
 function rdEdit(id){history.back();setTimeout(()=>openEd(id),80)}
 </script>
 </body>
