@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>🌙 My Diary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather&family=Great+Vibes&family=Playfair+Display&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=Playfair+Display:wght@600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap"></noscript>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -146,7 +146,7 @@ nav .fab{width:58px;height:58px;border-radius:50%;margin-top:-30px;font-size:26p
 .link{background:none;border:none;color:var(--soft);cursor:pointer;font-weight:600;text-decoration:underline}
 #toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-90px);background:#4a3f6b;color:#fff;padding:10px 18px;border-radius:20px;z-index:99;transition:.35s;font-size:14px;font-weight:600}#toast.on{transform:translateX(-50%) translateY(0)}
 #print{display:none}
-@media print{body{background:#fff}#app,.blob,nav,#ed,#toast{display:none!important}#print{display:block;color:#000;font-family:'Hind',sans-serif}.pe{page-break-inside:avoid;margin-bottom:22px;border-bottom:1px solid #ccc;padding-bottom:12px}.pe img{max-width:220px;margin:6px 6px 0 0;border-radius:8px}}
+@media print{body{background:#fff}#app,#rd,.blob,nav,#ed,#toast{display:none!important}#print{display:block;color:#000;font-family:'Hind',sans-serif}.pe{page-break-inside:avoid;margin-bottom:22px;border-bottom:1px solid #ccc;padding-bottom:12px}.pe img{max-width:220px;margin:6px 6px 0 0;border-radius:8px}}
 #ed{background:linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff);--tx:#2b3563;padding:0 12px calc(4px + env(safe-area-inset-bottom,0px))}
 .top2{position:relative;z-index:8;display:flex;align-items:center;gap:8px;margin:calc(12px + env(safe-area-inset-top,0px)) 4px 10px}
 .dw2{position:relative;flex:1;min-width:0}
@@ -373,86 +373,68 @@ nav .rdb{position:absolute;right:14px;bottom:calc(100% + 14px);width:54px;height
 nav .rdb::after{display:none}
 nav .rdb svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 nav .rdb:active{transform:scale(.92)}
-#rd{--rfs:1;--bg:#e9dfca;--pg:#fcf8ef;--ink:#33281d;--soft:#85755f;--acc:#9a5b3b;--rule:#e6dac1;--bar:rgba(252,248,239,.95);--chip:#f3ead7;
-  position:fixed;inset:0;z-index:60;display:none;flex-direction:column;background:var(--bg);color:var(--ink);overscroll-behavior:contain}
-#rd.on{display:flex;animation:bkIn .35s ease}
-@keyframes bkIn{from{opacity:0;transform:translateY(16px)}}
-#rd.t-lav{--bg:#e8e2f8;--pg:#fcfbff;--ink:#2c2752;--soft:#8479b0;--acc:#7457e6;--rule:#e2daf6;--bar:rgba(252,251,255,.95);--chip:#f1ecfc}
-#rd.t-night{--bg:#0c0f1c;--pg:#151a2c;--ink:#dedaf0;--soft:#8f8bb0;--acc:#c1adff;--rule:#262c4a;--bar:rgba(21,26,44,.96);--chip:#1e2440}
-#rd.t-night .bkb *{color:inherit!important}
-#rd *{box-sizing:border-box}
-#rd .rtb{flex:none;display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--bar);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);position:relative}
-#rd .rtb b{flex:1;min-width:0;font:700 18px 'Playfair Display','Hind',serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
-#rd .rtb button{flex:none;width:42px;height:42px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#rd{--rfs:1;--bg:#e8e3d6;--pg:#fcfaf4;--ink:#262a44;--soft:#7a7889;--acc:#454ba6;--rule:#e6e0d1;--bar:rgba(252,250,244,.92);--sh:rgba(38,42,68,.16);position:fixed;inset:0;z-index:60;display:none;flex-direction:column;background:var(--bg);color:var(--ink);overscroll-behavior:contain;-webkit-text-size-adjust:100%}
+#rd.on{display:flex;animation:rdIn .3s ease}
+@keyframes rdIn{from{opacity:0;transform:translateY(14px)}}
+#rd.th-lav{--bg:#e9e3fa;--pg:#fcfaff;--ink:#2f2a55;--soft:#82789f;--acc:#7c5cf0;--rule:#ddd3f5;--bar:rgba(252,250,255,.92);--sh:rgba(80,60,160,.16)}
+#rd.th-night{--bg:#0b0d18;--pg:#141829;--ink:#dddaf0;--soft:#8c89ad;--acc:#aab6ff;--rule:#262b48;--bar:rgba(20,24,41,.94);--sh:rgba(0,0,0,.5)}
+#rd button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#rd .rtb{flex:none;display:flex;align-items:center;gap:4px;margin:calc(6px + env(safe-area-inset-top,0px)) 6px 0;padding:5px 8px;background:var(--bar);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--rule);border-radius:16px;box-shadow:0 6px 18px var(--sh);position:relative;z-index:3}
+#rd .rtb b{flex:1;min-width:0;font:700 18px/1.7 'Noto Serif Devanagari','Playfair Display',serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 0 4px 4px}
+#rd .rtb button{flex:none;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #rd .rtb button:active{background:var(--rule)}
-#rd .rtb button.on{background:var(--chip);box-shadow:inset 0 0 0 1.5px var(--acc)}
 #rd .rtb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-#rd .rpr{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--acc);transition:width .15s}
-#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:16px 12px calc(44px + env(safe-area-inset-bottom,0px))}
-#rd .rbk{max-width:740px;margin:0 auto;background:var(--pg);border-radius:6px 20px 20px 6px;border-left:6px solid var(--acc);box-shadow:0 16px 44px rgba(50,35,15,.2),inset 8px 0 12px -8px rgba(0,0,0,.2);font-family:'Merriweather','Hind',Georgia,serif;text-align:left;overflow:hidden}
-#rd .bko{text-align:center;color:var(--acc);opacity:.65;letter-spacing:10px;font-size:15px;margin:26px 0 8px}
-/* cover */
-#rd .bkc{text-align:center;padding:34px 22px 34px}
-#rd .bkc .fr{border:1.5px solid var(--acc);border-radius:14px;padding:6px;opacity:1}
-#rd .bkc .fr>div{border:1px solid var(--rule);border-radius:10px;padding:46px 18px 34px;background:radial-gradient(120% 80% at 50% 0%,var(--chip),transparent 70%)}
-#rd .bkc .mk{font:600 11px 'Quicksand',sans-serif;letter-spacing:4px;text-transform:uppercase;color:var(--soft)}
-#rd .bkc h1{font:700 clamp(40px,10vw,62px)/1.05 'Playfair Display','Hind',serif;margin:14px 0 4px;color:var(--ink)}
-#rd .bkc .nm{font:700 34px 'Caveat',cursive;color:var(--acc)}
-#rd .bkc .ln{width:80px;height:2px;background:var(--acc);opacity:.55;margin:22px auto;border-radius:2px}
-#rd .bkc .st{display:flex;justify-content:center;gap:0;margin-top:6px}
-#rd .bkc .st div{flex:1;max-width:110px;padding:0 6px;border-left:1px solid var(--rule)}
-#rd .bkc .st div:first-child{border-left:0}
-#rd .bkc .st b{display:block;font:700 24px 'Playfair Display',serif;color:var(--ink)}
-#rd .bkc .st small{font:500 12px 'Hind',sans-serif;color:var(--soft)}
-#rd .bkc .bkrg{margin-top:20px;font:500 13px 'Hind','Quicksand',sans-serif;color:var(--soft)}
-/* contents */
-#rd .bkt{padding:8px 26px 30px}
-#rd .bkt h2,#rd .bkm h2{font:700 24px 'Playfair Display','Hind',serif;margin:18px 0 12px;color:var(--ink);text-align:center}
-#rd .bkt a{display:flex;align-items:baseline;gap:8px;padding:10px 0;cursor:pointer;color:var(--ink);font-size:16px;-webkit-tap-highlight-color:transparent}
-#rd .bkt a i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
-#rd .bkt a b{color:var(--acc);font:600 14px 'Hind',sans-serif}
-#rd .bkt a:active span{color:var(--acc)}
-/* chapter */
-#rd .bkm{text-align:center;padding:40px 20px 6px;border-top:1px solid var(--rule);scroll-margin-top:4px}
-#rd .bkm small{display:block;font:600 13px 'Hind',sans-serif;color:var(--soft)}
-#rd .bkm h2{font-size:clamp(28px,7vw,38px);margin:6px 0 4px}
-#rd .bkm p{margin:0;font:500 12.5px 'Hind',sans-serif;color:var(--soft)}
-#rd .bkm .rl{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--acc);margin-top:12px;opacity:.7}
-#rd .bkm .rl::before,#rd .bkm .rl::after{content:'';height:1px;width:56px;background:var(--acc);opacity:.5}
-/* entry */
-#rd .bkp{padding:22px 26px 4px;scroll-margin-top:4px}
-#rd .bkh{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-#rd .bkd{font:700 46px/1 'Playfair Display',serif;color:var(--acc);min-width:50px;text-align:center}
-#rd .bkw{flex:1;min-width:0;font:500 13px/1.45 'Hind','Quicksand',sans-serif;color:var(--soft)}
-#rd .bkw b{display:block;color:var(--ink);font:600 15.5px 'Hind','Quicksand',sans-serif}
-#rd .bke{flex:none;width:46px;height:46px;border-radius:50%;background:var(--chip);display:flex;align-items:center;justify-content:center;font-size:25px}
-#rd .bkp h3{font:700 calc(24px*var(--rfs))/1.3 'Playfair Display','Hind',serif;margin:2px 0 14px;color:var(--ink);text-align:left}
-#rd .bkp h3::after{content:'';display:block;width:42px;height:2px;background:var(--acc);opacity:.6;margin-top:10px;border-radius:2px}
-#rd .bkb{font-size:calc(17px*var(--rfs));line-height:1.95;color:var(--ink);overflow-wrap:anywhere;word-break:break-word;text-align:left;hyphens:auto}
-#rd .bkb p{margin:0 0 1em}
-#rd .bkb p.dc::first-letter{font:700 3.3em/.8 'Playfair Display',serif;float:left;padding:.08em .1em 0 0;color:var(--acc)}
-#rd .bkb p.ct{text-align:center;font-style:italic}
-#rd .bkb h4{font:700 1.08em/1.5 'Playfair Display','Hind',serif;margin:1.4em 0 .5em;color:var(--acc);text-align:left}
-#rd .bkb ul,#rd .bkb ol{margin:0 0 1em;padding-left:1.4em}
-#rd .bkb li{margin:0 0 .45em;padding-left:.2em;text-align:left}
-#rd .bkb ul li::marker{color:var(--acc)}
-#rd .bkb ol li::marker{color:var(--acc);font-weight:700}
-#rd .bkb blockquote{margin:0 0 1em;padding:.2em 0 .2em 1em;border-left:3px solid var(--acc);color:var(--soft);font-style:italic}
-#rd .bkb hr{border:0;text-align:center;margin:1.4em 0}
-#rd .bkb hr::after{content:'✦ ✦ ✦';color:var(--acc);opacity:.6;font-size:.7em;letter-spacing:8px}
-#rd .bkb img{max-width:100%;height:auto;border-radius:10px;display:block;margin:.6em 0}
-#rd .bkb a{color:var(--acc)}
-#rd .bkf{display:grid;gap:10px;margin:14px 0 6px}
-#rd .bkf.bk2{grid-template-columns:1fr 1fr}
-#rd .bkf img{width:100%;display:block;border-radius:12px;border:4px solid var(--pg);box-shadow:0 6px 18px rgba(0,0,0,.18)}
-#rd .bkg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-#rd .bkg span{font:600 12px 'Hind',sans-serif;color:var(--acc);background:var(--chip);border-radius:12px;padding:3px 10px}
-#rd .bkn{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--rule);font:500 12.5px 'Hind',sans-serif;color:var(--soft)}
-#rd .bkn button{flex:none;border:1px solid var(--rule);background:transparent;color:var(--acc);border-radius:14px;padding:6px 13px;font:600 12.5px 'Hind',sans-serif;cursor:pointer}
-#rd .bkn button:active{background:var(--chip)}
-#rd .bkz{text-align:center;padding:12px 20px 40px;font:700 26px 'Caveat',cursive;color:var(--soft)}
-#rd .rto{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;cursor:pointer}
-#rd.on.rsd .rto{display:flex}
+#rd .rset{position:absolute;right:8px;top:calc(66px + env(safe-area-inset-top,0px));width:min(290px,calc(100vw - 16px));background:var(--pg);border:1px solid var(--rule);border-radius:16px;box-shadow:0 14px 36px var(--sh);padding:4px 14px;display:none;z-index:4;font-family:'Hind','Quicksand',sans-serif}
+#rd .rset.on{display:block}
+#rd .rrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0}
+#rd .rrow+.rrow{border-top:1px solid var(--rule)}
+#rd .rrow>span{font-size:14px;color:var(--soft);font-weight:600}
+#rd .rrow div{display:flex;gap:6px}
+#rd .rset button{min-width:44px;height:40px;padding:0 12px;border:1.5px solid var(--rule);border-radius:12px;background:transparent;font:600 14px 'Hind',sans-serif;color:var(--ink);cursor:pointer}
+#rd .rset button.on{border-color:var(--acc);background:var(--acc);color:var(--pg)}
+#rd .rset button:disabled{opacity:.35}
+#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:8px 6px calc(16px + env(safe-area-inset-bottom,0px))}
+@media(prefers-reduced-motion:reduce){#rd .rsc{scroll-behavior:auto}#rd.on{animation:none}}
+#rd .rbk{max-width:none;margin:0;background:var(--pg);border-radius:16px;border-left:4px solid var(--acc);box-shadow:0 10px 30px var(--sh);overflow:hidden;padding:6px 0;font-family:'Merriweather','Noto Serif Devanagari',Georgia,serif}
+#rd.sans .rbk{font-family:'Quicksand','Hind',sans-serif}
+#rd .orn{text-align:center;color:var(--acc);opacity:.6;letter-spacing:10px;font-size:16px;margin:24px 0}
+#rd .rcov{text-align:center;padding:60px 24px 44px}
+#rd .rcov h1{font-family:'Playfair Display','Noto Serif Devanagari',serif;font-size:clamp(40px,9vw,58px);margin:6px 0 4px;font-weight:700;color:var(--ink);line-height:1.1}
+#rd .rcov .rsub{font-family:'Caveat',cursive;font-size:32px;color:var(--acc);margin-top:6px}
+#rd .rcov .rln{width:80px;height:2px;background:var(--acc);margin:22px auto;opacity:.5;border-radius:2px}
+#rd .rcov p{margin:0;font-size:14.5px;color:var(--soft);line-height:1.9;font-family:'Hind','Quicksand',sans-serif}
+#rd .rtoc{padding:10px 16px 34px;border-top:1px solid var(--rule)}
+#rd .rtoc h2,#rd .rmh h2{font-family:'Playfair Display','Noto Serif Devanagari',serif;font-weight:700;color:var(--ink);margin:18px 0 14px}
+#rd .rtoc h2{font-size:24px;text-align:center}
+#rd .rtoc button{display:flex;align-items:baseline;gap:8px;width:100%;padding:11px 0;border:0;background:none;text-align:left;cursor:pointer;color:var(--ink);font:400 16px 'Hind','Quicksand',sans-serif}
+#rd .rtoc button i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
+#rd .rtoc button b{color:var(--acc);font-size:14px}
+#rd .rtoc button:active span{color:var(--acc)}
+#rd .rmh{text-align:center;padding:40px 20px 8px;border-top:1px solid var(--rule);scroll-margin-top:6px}
+#rd .rmh small{font-family:'Hind',sans-serif;color:var(--soft);font-size:14px;font-weight:600}
+#rd .rmh h2{font-size:clamp(26px,6vw,34px);margin:6px 0 0}
+#rd .rpg{padding:22px 16px 6px;scroll-margin-top:6px}
+#rd .rhd{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+#rd .rhd .dd{font-family:'Playfair Display',serif;font-size:44px;line-height:1;color:var(--acc);font-weight:700}
+#rd .rhd .dm{flex:1;min-width:0;font-family:'Hind','Quicksand',sans-serif;font-size:13.5px;color:var(--soft);line-height:1.4;text-align:left}
+#rd .rhd .dm b{display:block;color:var(--ink);font-size:15px;font-weight:600}
+#rd .rhd em{font-style:normal;font-size:26px}
+#rd .rpg h3{font-family:'Playfair Display','Noto Serif Devanagari',serif;font-size:calc(22px*var(--rfs));margin:4px 0 12px;color:var(--ink);line-height:1.4;text-align:left}
+#rd .rbd{font-size:calc(16.5px*var(--rfs));line-height:1.85;color:var(--ink);overflow-wrap:anywhere;text-align:left;hyphens:none;text-wrap:pretty}
+#rd .rbd p{margin:0 0 .9em}
+#rd .rbd h1,#rd .rbd h2,#rd .rbd h3,#rd .rbd h4,#rd .rbd h5,#rd .rbd h6{font-size:1.08em;font-weight:700;line-height:1.45;margin:1.4em 0 .5em}
+#rd .rbd ul,#rd .rbd ol{margin:.2em 0 1em;padding-left:1.4em}
+#rd .rbd li{margin:.4em 0;padding-left:.2em}
+#rd .rbd li::marker{color:var(--acc)}
+#rd .rbd blockquote{margin:1em 0;padding:.1em 1em;border-left:3px solid var(--acc);color:var(--soft);font-style:italic}
+#rd .rbd img{max-width:100%;height:auto;border-radius:8px}
+#rd .rph{display:grid;gap:10px;margin:16px 0 4px}
+#rd .rph img{width:100%;border-radius:10px;box-shadow:0 6px 18px var(--sh)}
+#rd .rft{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-family:'Hind',sans-serif;font-size:12.5px;color:var(--soft)}
+#rd .rft button{border:1px solid var(--rule);background:transparent;color:var(--acc);border-radius:14px;min-height:36px;padding:5px 14px;font:600 12.5px 'Hind',sans-serif;cursor:pointer}
+#rd .rend{text-align:center;padding:10px 20px 34px;font-family:'Caveat',cursive;font-size:26px;color:var(--soft)}
+#rd .rto{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:var(--pg);font-size:20px;box-shadow:0 6px 16px var(--sh);display:none;align-items:center;justify-content:center;cursor:pointer}
+#rd.on.rd-sc .rto{display:flex}
 </style>
 </head>
 <body>
@@ -549,19 +531,17 @@ nav .rdb:active{transform:scale(.92)}
   <div class="acts"><button class="btn red" id="tkDel" onclick="tkDelete()">🗑️ हटाएं</button><button class="btn" onclick="tkSave()">Save</button></div>
 </div></div>
 <div id="toast"></div>
-<div id="rd" role="dialog" aria-label="Padhne ka mode">
+<div id="rd" role="dialog" aria-modal="true" aria-label="पढ़ने का मोड">
   <div class="rtb">
-    <button onclick="history.back()" aria-label="Band karein"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button onclick="history.back()" aria-label="बंद करें"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <b>मेरी डायरी</b>
-    <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
-    <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
-    <button onclick="rdFont()" aria-label="Akshar ka size">Aa</button>
-    <button id="rdFm" onclick="rdFmtT()" aria-label="Auto format">✨</button>
-    <button id="rdTh" onclick="rdTheme()" aria-label="Theme">🌙</button>
-    <i class="rpr" id="rdPr"></i>
+    <button onclick="rdJump('rdToc')" aria-label="अनुक्रम"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
+    <button id="rdOrd" onclick="rdOrder()" aria-label="क्रम बदलें"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
+    <button id="rdAa" onclick="rdPanel()" aria-label="पढ़ने की सेटिंग" aria-expanded="false">Aa</button>
   </div>
+  <div class="rset" id="rdPan"></div>
   <div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div>
-  <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
+  <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="ऊपर जाएँ">↑</button>
 </div>
 
 <div id="pmWrap" onclick="if(event.target===this&&Date.now()-pmAt>450)pmClose()"><div id="pmBox"><div class="gr8"></div><div class="pt" id="pmT"></div><button id="pmPin" onclick="pmDoPin()"></button><button class="dl" onclick="pmDoDel()">🗑️ Delete karein</button><button class="cn" onclick="pmClose()">Cancel</button></div></div>
@@ -999,114 +979,64 @@ document.addEventListener('contextmenu',ev=>{const c=ev.target.closest&&ev.targe
 document.addEventListener('click',ev=>{if(lpFired&&ev.target.closest&&ev.target.closest('.en2')){ev.stopPropagation();ev.preventDefault()}lpFired=false},true);
 
 /* ===== reading mode (book view) ===== */
-const RDFS=[.88,1,1.14,1.3,1.5],RDTH=['paper','lav','night'],RDIC={paper:'📜',lav:'💜',night:'🌙'};
-let rdP=(()=>{const d={th:'paper',fs:1,ord:'asc',fmt:true};try{const o=JSON.parse(localStorage.getItem('rdPref')||'{}');return Object.assign(d,o,{th:RDTH.includes(o.th)?o.th:'paper'})}catch(_){return d}})();
+const RDFS=[.88,1,1.14,1.3,1.5],RDTH=[['paper','कागज़'],['lav','लैवेंडर'],['night','रात']];
+let rdP=(()=>{const d={th:'paper',fs:1,ord:'asc',ff:'serif'};let p={};try{p=JSON.parse(localStorage.getItem('rdPref')||'{}')}catch(_){}
+  p=Object.assign(d,p);if(!RDTH.some(t=>t[0]===p.th))p.th='paper';p.fs=Math.min(Math.max(+p.fs||0,0),RDFS.length-1);if(p.ff!=='sans')p.ff='serif';if(p.ord!=='desc')p.ord='asc';return p})();
 function rdSaveP(){try{localStorage.setItem('rdPref',JSON.stringify(rdP))}catch(_){}}
-function rdApply(){const r=$('rd');RDTH.forEach(t=>r.classList.toggle('t-'+t,t===rdP.th));r.style.setProperty('--rfs',RDFS[rdP.fs]||1);$('rdTh').textContent=RDIC[rdP.th]||'📜';$('rdFm').classList.toggle('on',!!rdP.fmt)}
-function rdTheme(){rdP.th=RDTH[(RDTH.indexOf(rdP.th)+1)%RDTH.length];rdSaveP();rdApply()}
-function rdFont(){rdP.fs=(rdP.fs+1)%RDFS.length;rdSaveP();rdApply();toast('Akshar size '+(rdP.fs+1)+'/'+RDFS.length)}
-function rdFmtT(){const sc=$('rdSc'),y=sc.scrollTop;rdP.fmt=!rdP.fmt;rdSaveP();rdApply();rdBuild();sc.scrollTo({top:y,behavior:'auto'});toast(rdP.fmt?'✨ Auto-format ON — saaf, standard likhawat':'Auto-format OFF — jaisa likha waisa')}
-function rdOrder(){rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'Purane se naye':'Naye se purane')}
-function rdJump(id){const el=document.getElementById(id),sc=$('rdSc');if(!el||!sc)return;const y=el.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-6;sc.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
-function rdScr(){const s=$('rdSc'),m=s.scrollHeight-s.clientHeight;$('rdPr').style.width=(m>0?s.scrollTop/m*100:0)+'%';$('rd').classList.toggle('rsd',s.scrollTop>700)}
-
-/* --- standardise what the user wrote: keep bold/italic/underline/lists/headings, drop stray fonts, colours, sizes, alignment --- */
-const RDBLK=/^(div|p|ul|ol|li|h[1-6]|blockquote|hr|table|pre|section|article)$/,rdEmpty=h=>!h.replace(/<br>|\s|&nbsp;/g,'').length&&!/<img/.test(h),rdTrim=h=>h.replace(/^(<br>)+|(<br>)+$/g,'');
-function rdInl(n){
-  if(n.nodeType===3)return esc(n.nodeValue.replace(/​/g,''));
-  if(n.nodeType!==1)return'';
-  const t=n.tagName.toLowerCase();
-  if(t==='br')return'<br>';
-  if(t==='img'){const s=n.getAttribute('src')||'';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}">`:''}
-  if(/^(script|style|iframe|object|embed|link|svg)$/.test(t))return'';
-  let c='';n.childNodes.forEach(k=>{c+=rdInl(k)});
-  if(!c)return'';
-  const st=n.style||{},td=(st.textDecoration||'')+(st.textDecorationLine||'');
-  if(t==='b'||t==='strong'||/^(bold|[6-9]00)$/.test(st.fontWeight||''))c=`<b>${c}</b>`;
-  if(t==='i'||t==='em'||st.fontStyle==='italic')c=`<i>${c}</i>`;
-  if(t==='u'||/underline/.test(td))c=`<u>${c}</u>`;
-  if(t==='s'||t==='strike'||t==='del'||/line-through/.test(td))c=`<s>${c}</s>`;
-  return c}
-function rdBlocks(root,out){
-  let buf='';const flush=()=>{const h=rdTrim(buf);if(!rdEmpty(h))out.push({t:'p',h});buf=''};
-  root.childNodes.forEach(n=>{
-    if(n.nodeType!==1){buf+=rdInl(n);return}
-    const t=n.tagName.toLowerCase();
-    if(!RDBLK.test(t)){buf+=rdInl(n);return}
-    flush();
-    if(t==='ul'||t==='ol'){const items=[];[...n.children].forEach(li=>{if(li.tagName.toLowerCase()!=='li')return;const h=rdTrim(rdInl(li));if(!rdEmpty(h))items.push(h)});if(items.length)out.push({t,items})}
-    else if(/^h[1-6]$/.test(t)){const h=rdTrim(rdInl(n)).replace(/<\/?b>/g,'');if(!rdEmpty(h))out.push({t:'h',h})}
-    else if(t==='blockquote'){const h=rdTrim(rdInl(n));if(!rdEmpty(h))out.push({t:'q',h})}
-    else if(t==='hr')out.push({t:'hr'});
-    else if([...n.children].some(c=>RDBLK.test(c.tagName.toLowerCase())))rdBlocks(n,out);
-    else{const h=rdTrim(rdInl(n));if(!rdEmpty(h))out.push({t:'p',h,al:(n.style&&n.style.textAlign)||n.getAttribute('align')||''})}
-  });
-  flush()}
-function rdTextBlocks(txt){const out=[];let cur=null;
-  String(txt).split(/\r?\n/).forEach(l=>{const s=l.trim();if(!s){cur=null;return}
-    const ub=s.match(/^[-•*·]\s+(.*)/),ob=s.match(/^\d+[.)]\s+(.*)/),k=ub?'ul':ob?'ol':null;
-    if(k){if(!cur||cur.t!==k){cur={t:k,items:[]};out.push(cur)}cur.items.push(esc((ub||ob)[1]))}
-    else{cur=null;out.push({t:'p',h:esc(s)})}});
-  return out}
-/* auto-format: display only (saved text is never changed) */
-function rdFmt(h,tail){
-  if(!rdP.fmt)return h;
-  let start=true;
-  let o=h.split(/(<[^>]+>)/).map(tk=>{
-    if(!tk||tk[0]==='<')return tk;
-    let t=tk.replace(/[ \t\u00a0]+/g,' ').replace(/ +([,?!।])/g,'$1').replace(/([,?!])(?=[A-Za-z\u0900-\u097F])/g,'$1 ');
-    if(start&&/\p{L}/u.test(t)){t=t.replace(/^([^\p{L}\p{N}]*)([a-z])/u,(m,a,b)=>a+b.toUpperCase());start=false}
-    t=t.replace(/([.?!।]\s+)([a-z])/g,(m,a,b)=>a+b.toUpperCase());
-    return t});
-  o=o.join('').replace(/(<br>)\s+/g,'$1');
-  if(tail){const tx=o.replace(/<[^>]+>/g,'').trim();if(tx.length>24&&/[A-Za-z0-9)\u0029]$/.test(tx))o=o.replace(/((?:<\/[a-z]+>)*)$/,'.$1')}
-  return o}
-const rdTitle=t=>{t=String(t||'').trim();return esc(rdP.fmt?t.replace(/^([^\p{L}\p{N}]*)([a-z])/u,(m,a,b)=>a+b.toUpperCase()):t)};
-function rdBody(e){let b=[];
-  try{if(e.html&&String(e.html).trim()){rdBlocks(new DOMParser().parseFromString(String(e.html),'text/html').body,b)}}catch(_){b=[]}
-  if(!b.length)b=rdTextBlocks(e.text||'');
-  let h='',first=true;
-  b.forEach((x,i)=>{
-    const nx=b[i+1];
-    if(x.t==='p'){const tx=x.h.replace(/<[^>]+>/g,'').trim();
-      const boldOnly=/^<b>[^<]*<\/b>$/.test(x.h)&&tx.length<=80&&!/[.।]$/.test(tx);
-      const lead=rdP.fmt&&tx.length<=60&&!/[.!?।,]$/.test(tx)&&nx&&(nx.t==='ul'||nx.t==='ol'||/:$/.test(tx));
-      if(boldOnly||lead||(rdP.fmt&&/:$/.test(tx)&&tx.length<=70)){h+=`<h4>${rdFmt(x.h.replace(/<\/?b>/g,'')).replace(/:$/,'')}</h4>`}
-      else{const c=(x.al==='center'&&tx.length<=70)?'ct':(first&&/^[A-Za-z]/i.test(tx)&&tx.length>140)?'dc':'';h+=`<p${c?` class="${c}"`:''}>${rdFmt(x.h,!c)}</p>`}}
-    else if(x.t==='h')h+=`<h4>${rdFmt(x.h)}</h4>`;
-    else if(x.t==='ul'||x.t==='ol')h+=`<${x.t}>${x.items.map(i=>`<li>${rdFmt(i)}</li>`).join('')}</${x.t}>`;
-    else if(x.t==='q')h+=`<blockquote>${rdFmt(x.h)}</blockquote>`;
-    else if(x.t==='hr')h+='<hr>';
-    first=false});
-  return h}
-const rdWords=e=>(String(e.text||'').trim().match(/\S+/g)||[]).length;
+function rdApply(){const r=$('rd');RDTH.forEach(t=>r.classList.toggle('th-'+t[0],t[0]===rdP.th));r.classList.toggle('sans',rdP.ff==='sans');r.style.setProperty('--rfs',RDFS[rdP.fs]);
+  $('rdPan').innerHTML=`<div class="rrow"><span>थीम</span><div>${RDTH.map(t=>`<button class="${t[0]===rdP.th?'on':''}" onclick="rdPref('th','${t[0]}')">${t[1]}</button>`).join('')}</div></div>`
+  +`<div class="rrow"><span>अक्षर</span><div><button ${rdP.fs<1?'disabled':''} onclick="rdPref('fs',${rdP.fs-1})" aria-label="छोटा">A−</button><button ${rdP.fs>=RDFS.length-1?'disabled':''} onclick="rdPref('fs',${rdP.fs+1})" aria-label="बड़ा">A+</button></div></div>`
+  +`<div class="rrow"><span>शैली</span><div><button class="${rdP.ff==='serif'?'on':''}" onclick="rdPref('ff','serif')">सेरिफ़</button><button class="${rdP.ff==='sans'?'on':''}" onclick="rdPref('ff','sans')">सादा</button></div></div>`}
+function rdPref(k,v){rdP[k]=v;rdSaveP();rdApply()}
+function rdPanel(f){const p=$('rdPan'),o=f===undefined?!p.classList.contains('on'):f;p.classList.toggle('on',o);$('rdAa').setAttribute('aria-expanded',o)}
+function rdOrder(){rdPanel(false);rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'पुराने से नए':'नए से पुराने')}
+function rdJump(id){rdPanel(false);const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function rdScr(){const s=$('rdSc');$('rd').classList.toggle('rd-sc',s.scrollTop>700)}
+/* standardise whatever the editor saved: drop inline fonts/colours/alignment, one paragraph per line, uniform lists */
+function rdClean(h){
+  const t=document.createElement('div');t.innerHTML=String(h).replace(/&nbsp;|\u00a0/g,' ');
+  t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(!(n.tagName==='IMG'&&(a.name==='src'||a.name==='alt')))n.removeAttribute(a.name)}));
+  t.querySelectorAll('font,span').forEach(n=>n.replaceWith(...n.childNodes));
+  t.querySelectorAll('div').forEach(n=>{if(n.querySelector('p,ul,ol,h1,h2,h3,h4,h5,h6,div,blockquote')){n.replaceWith(...n.childNodes)}else{const p=document.createElement('p');p.append(...n.childNodes);n.replaceWith(p)}});
+  const o=document.createElement('div');let run=null;
+  [...t.childNodes].forEach(n=>{if(n.nodeType===1&&/^(P|UL|OL|H[1-6]|BLOCKQUOTE|TABLE|HR)$/.test(n.tagName)){run=null;o.append(n)}else{if(!run){run=document.createElement('p');o.append(run)}run.append(n)}});
+  o.querySelectorAll('p').forEach(p=>{const parts=p.innerHTML.split(/(?:<br\s*\/?>\s*)+/i).map(x=>x.trim()).filter(x=>x.replace(/<[^>]*>/g,'').trim()||/<img/i.test(x));
+    p.replaceWith(...parts.map(x=>{const q=document.createElement('p');q.innerHTML=x;return q}))});
+  o.querySelectorAll('li:empty').forEach(n=>n.remove());
+  return o.innerHTML}
+function rdBody(e){
+  if(e.html&&String(e.html).trim())return rdClean(sanitize(e.html));
+  let h='',ul=false;
+  String(e.text||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach(x=>{const m=x.match(/^[-•*]\s+(.*)/);
+    if(m){if(!ul){h+='<ul>';ul=true}h+='<li>'+esc(m[1])+'</li>'}else{if(ul){h+='</ul>';ul=false}h+='<p>'+esc(x)+'</p>'}});
+  return h+(ul?'</ul>':'')}
 function rdBuild(){
   const all=Object.values(entries).sort((a,b)=>a.date.localeCompare(b.date)||(a.ts||0)-(b.ts||0));
   const pgN=new Map();all.forEach((e,i)=>pgN.set(e.id,i+1));
   const months=[];all.forEach(e=>{const k=e.date.slice(0,7);let m=months[months.length-1];if(!m||m.k!==k){m={k,list:[]};months.push(m)}m.list.push(e)});
   if(rdP.ord==='desc'){months.reverse();months.forEach(m=>m.list.reverse())}
-  const name=(auth.currentUser&&(auth.currentUser.displayName||auth.currentUser.email.split('@')[0])||'').split(' ')[0];
-  const fm=d=>new Date(d+'T00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
-  const ml=k=>new Date(k+'-01T00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  const nf=n=>n.toLocaleString('en-IN'),tw=all.reduce((n,e)=>n+rdWords(e),0),days=new Set(all.map(e=>e.date)).size;
-  let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>पन्ने</small></div><div><b>${nf(tw)}</b><small>शब्द</small></div><div><b>${nf(days)}</b><small>दिन</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
-  h+=`<section class="bkt" id="rdToc"><h2>अनुक्रम</h2>`+months.map(m=>`<a onclick="rdJump('m-${m.k}')"><span>${ml(m.k)}</span><i></i><b>${m.list.length}</b></a>`).join('')+`</section>`;
+  const name=(auth.currentUser&&(auth.currentUser.displayName||(auth.currentUser.email||'').split('@')[0])||'').split(' ')[0];
+  const L='hi-IN',dt=d=>new Date(d+'T00:00');
+  const fm=d=>dt(d).toLocaleDateString(L,{day:'numeric',month:'long',year:'numeric'});
+  const ml=k=>dt(k+'-01').toLocaleDateString(L,{month:'long',year:'numeric'});
+  const f0=all[0].date,f1=all[all.length-1].date;
+  let h=`<section class="rcov"><div class="orn">❦</div><h1>My Diary</h1>${name?`<div class="rsub">${esc(name)}</div>`:''}<div class="rln"></div><p>${f0===f1?fm(f0):fm(f0)+' से '+fm(f1)+' तक'}<br>${all.length} पन्ने</p></section>`;
+  h+=`<section class="rtoc" id="rdToc"><h2>अनुक्रम</h2>`+months.map(m=>`<button type="button" onclick="rdJump('m-${m.k}')"><span>${ml(m.k)}</span><i></i><b>${m.list.length}</b></button>`).join('')+`</section>`;
   months.forEach((m,mi)=>{
-    const mw=m.list.reduce((n,e)=>n+rdWords(e),0);
-    h+=`<section><div class="bkm" id="m-${m.k}"><small>अध्याय ${rdP.ord==='asc'?mi+1:months.length-mi}</small><h2>${ml(m.k)}</h2><p>${m.list.length} पन्ने · ${nf(mw)} शब्द</p><div class="rl">❦</div></div>`;
-    m.list.forEach(e=>{const d=new Date(e.date+'T00:00'),ph=(e.photos||[]).filter(Boolean),w=rdWords(e),tm=e.ts?new Date(e.ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
-      h+=`<article class="bkp" id="p-${e.id}"><div class="bkh"><span class="bkd">${d.getDate()}</span><div class="bkw"><b>${d.toLocaleDateString('en-US',{weekday:'long'})}</b>${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}${tm?' · '+tm:''}</div>${e.mood?`<span class="bke">${e.mood}</span>`:''}</div>`
-      +(e.title?`<h3>${rdTitle(e.title)}</h3>`:'')+`<div class="bkb">${rdBody(e)}</div>`
-      +(ph.length?`<div class="bkf${ph.length>1?' bk2':''}">${ph.map(s=>`<img loading="lazy" src="${esc(s)}">`).join('')}</div>`:'')
-      +((e.tags||[]).length?`<div class="bkg">${e.tags.map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`:'')
-      +`<div class="bkn"><span>पन्ना ${pgN.get(e.id)}${w?` · ${nf(w)} शब्द · ~${Math.max(1,Math.ceil(w/180))} मिनट`:''}</span><button onclick="rdEdit('${e.id}')">✎ Badlein</button></div><div class="bko">✦ ✦ ✦</div></article>`});
+    h+=`<section><div class="rmh" id="m-${m.k}"><small>अध्याय ${rdP.ord==='asc'?mi+1:months.length-mi}</small><h2>${ml(m.k)}</h2></div>`;
+    m.list.forEach(e=>{const d=dt(e.date),ph=(e.photos||[]).filter(Boolean);
+      h+=`<article class="rpg" id="p-${e.id}"><div class="rhd"><span class="dd">${d.getDate()}</span><div class="dm"><b>${d.toLocaleDateString(L,{weekday:'long'})}</b>${ml(e.date.slice(0,7))}</div>${e.mood?`<em>${e.mood}</em>`:''}</div>`
+      +(e.title?`<h3>${esc(e.title)}</h3>`:'')+`<div class="rbd">${rdBody(e)}</div>`
+      +(ph.length?`<div class="rph">${ph.map(s=>`<img loading="lazy" alt="डायरी की तस्वीर" src="${s}">`).join('')}</div>`:'')
+      +`<div class="rft"><span>पन्ना ${pgN.get(e.id)}</span><button type="button" onclick="rdEdit('${e.id}')">✎ संपादित करें</button></div><div class="orn">✦ ✦ ✦</div></article>`});
     h+='</section>'});
-  h+=`<div class="bkz">~ ${rdP.ord==='asc'?'abhi tak ki kahani':'kahani ki shuruaat'} ~</div>`;
+  h+=`<div class="rend">~ ${rdP.ord==='asc'?'अब तक की कहानी':'कहानी की शुरुआत'} ~</div>`;
   $('rdBk').innerHTML=h}
-function openReader(){if(!Object.keys(entries).length){toast('Diary abhi khali hai 🌸');return}
-  rdApply();rdBuild();const r=$('rd');r.classList.add('on');document.documentElement.classList.add('ed-lock');$('rdSc').scrollTop=0;rdScr();history.pushState({rd:1},'')}
-function rdHide(){$('rd').classList.remove('on');document.documentElement.classList.remove('ed-lock');$('rdBk').innerHTML=''}
+function openReader(){if(!Object.keys(entries).length){toast('डायरी अभी खाली है 🌸');return}
+  rdApply();rdPanel(false);rdBuild();const r=$('rd');r.classList.add('on');document.documentElement.classList.add('ed-lock');$('rdSc').scrollTop=0;rdScr();history.pushState({rd:1},'')}
+function rdHide(){rdPanel(false);$('rd').classList.remove('on');document.documentElement.classList.remove('ed-lock');$('rdBk').innerHTML=''}
 function rdEdit(id){history.back();setTimeout(()=>openEd(id),80)}
+$('rdSc').addEventListener('pointerdown',()=>rdPanel(false),{passive:true});
 </script>
 </body>
 </html>
