@@ -437,9 +437,9 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkt a b{color:var(--acc);font:600 14px 'Hind',sans-serif}
 #rd .bkt a:active span{color:var(--acc)}
 /* chapter */
-#rd .bkm{text-align:center;padding:40px 20px 6px;border-top:1px solid var(--rule);scroll-margin-top:4px}
+#rd .bkm{margin:18px 14px 0;padding:14px 16px;text-align:center;background:var(--chip);border:1px solid var(--rule);border-radius:16px;box-shadow:inset 4px 0 0 var(--acc);scroll-margin-top:4px}
 #rd .bkm small{display:block;font:600 13px 'Hind',sans-serif;color:var(--soft)}
-#rd .bkm h2{font-size:clamp(28px,7vw,38px);margin:6px 0 4px}
+#rd .bkm h2{font-size:clamp(22px,6vw,28px);margin:0}
 #rd .bkm p{margin:0;font:500 12.5px 'Hind',sans-serif;color:var(--soft)}
 #rd .bkm .rl{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--acc);margin-top:12px;opacity:.7}
 #rd .bkm .rl::before,#rd .bkm .rl::after{content:'';height:1px;width:56px;background:var(--acc);opacity:.5}
@@ -1125,7 +1125,7 @@ function rdBuild(){
   let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>पन्ने</small></div><div><b>${nf(tw)}</b><small>शब्द</small></div><div><b>${nf(days)}</b><small>दिन</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
   months.forEach((m,mi)=>{
     const mw=m.list.reduce((n,e)=>n+rdWords(e),0);
-    h+=`<section><div id="m-${m.k}"></div>`;
+    h+=`<section><div class="bkm" id="m-${m.k}"><h2>${ml(m.k)}</h2></div>`;
     m.list.forEach(e=>{const d=new Date(e.date+'T00:00'),ph=(e.photos||[]).filter(Boolean),w=rdWords(e),tm=e.ts?new Date(e.ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
       h+=`<article class="bkp" id="p-${e.id}"><div class="bkh"><span class="bkd">${d.getDate()}</span><div class="bkw"><b>${d.toLocaleDateString('en-US',{weekday:'long'})}</b>${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}${tm?' · '+tm:''}</div>${e.mood?`<span class="bke">${e.mood}</span>`:''}</div>`
       +(e.title?`<h3>${rdTitle(e.title)}</h3>`:'')+`<div class="bkb">${rdBody(e)}</div>`
