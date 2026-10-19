@@ -431,13 +431,16 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkc .bkrg{margin-top:20px;font:500 13px 'Hind','Quicksand',sans-serif;color:var(--soft)}
 /* contents */
 #rd .bkt{padding:8px 18px 28px}
-#rd .bkt h2,#rd .bkm h2{font:700 24px 'Playfair Display','Hind',serif;margin:18px 0 12px;color:var(--ink);text-align:center}
+#rd .bkt h2,#rd .bkm h2{flex:none;display:flex;align-items:center;gap:9px;margin:0;padding:7px 18px;background:var(--chip);border:1px solid var(--acc);border-radius:999px;font:700 16px 'Playfair Display','Hind',serif;letter-spacing:.04em;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#rd .bkm h2 span{font-size:9px;color:var(--acc)}
 #rd .bkt a{display:flex;align-items:baseline;gap:8px;padding:10px 0;cursor:pointer;color:var(--ink);font-size:16px;-webkit-tap-highlight-color:transparent}
 #rd .bkt a i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
 #rd .bkt a b{color:var(--acc);font:600 14px 'Hind',sans-serif}
 #rd .bkt a:active span{color:var(--acc)}
 /* chapter */
-#rd .bkm{margin:18px 14px 0;padding:14px 16px;text-align:center;background:var(--chip);border:1px solid var(--rule);border-radius:16px;box-shadow:inset 4px 0 0 var(--acc);scroll-margin-top:4px}
+#rd .bkm{display:flex;align-items:center;gap:12px;margin:22px 18px 0;scroll-margin-top:4px}
+#rd .bkm::before,#rd .bkm::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--acc));opacity:.45}
+#rd .bkm::after{transform:scaleX(-1)}
 #rd .bkm small{display:block;font:600 13px 'Hind',sans-serif;color:var(--soft)}
 #rd .bkm h2{font-size:clamp(22px,6vw,28px);margin:0}
 #rd .bkm p{margin:0;font:500 12.5px 'Hind',sans-serif;color:var(--soft)}
@@ -1125,7 +1128,7 @@ function rdBuild(){
   let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>पन्ने</small></div><div><b>${nf(tw)}</b><small>शब्द</small></div><div><b>${nf(days)}</b><small>दिन</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
   months.forEach((m,mi)=>{
     const mw=m.list.reduce((n,e)=>n+rdWords(e),0);
-    h+=`<section><div class="bkm" id="m-${m.k}"><h2>${ml(m.k)}</h2></div>`;
+    h+=`<section><div class="bkm" id="m-${m.k}"><h2><span>✦</span>${ml(m.k)}<span>✦</span></h2></div>`;
     m.list.forEach(e=>{const d=new Date(e.date+'T00:00'),ph=(e.photos||[]).filter(Boolean),w=rdWords(e),tm=e.ts?new Date(e.ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
       h+=`<article class="bkp" id="p-${e.id}"><div class="bkh"><span class="bkd">${d.getDate()}</span><div class="bkw"><b>${d.toLocaleDateString('en-US',{weekday:'long'})}</b>${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}${tm?' · '+tm:''}</div>${e.mood?`<span class="bke">${e.mood}</span>`:''}</div>`
       +(e.title?`<h3>${rdTitle(e.title)}</h3>`:'')+`<div class="bkb">${rdBody(e)}</div>`
