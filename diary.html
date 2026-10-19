@@ -381,9 +381,12 @@ nav .rdb:active{transform:scale(.92)}
 #rd.t-night{--bg:#0c0f1c;--pg:#151a2c;--ink:#dedaf0;--soft:#8f8bb0;--acc:#c1adff;--rule:#262c4a;--bar:rgba(21,26,44,.96);--chip:#1e2440}
 #rd.t-night .bkb *{color:inherit!important}
 #rd *{box-sizing:border-box}
-#rd .rtb{flex:none;display:flex;align-items:center;gap:2px;margin:calc(8px + env(safe-area-inset-top,0px)) 8px 0;padding:5px 6px 5px 5px;background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);position:relative;overflow:hidden;z-index:3}
-#rd.t-night .rtb,#rd.t-night .rbk{box-shadow:0 6px 22px rgba(0,0,0,.45),inset 5px 0 0 var(--acc)}
-#rd .rtb b{flex:1;min-width:0;font:700 18px 'Playfair Display','Hind',serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
+#rd .rtb{flex:none;display:flex;align-items:center;gap:2px;width:calc(100% - 16px);max-width:880px;margin:calc(8px + env(safe-area-inset-top,0px)) auto 0;padding:5px 6px 5px 5px;background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);position:relative;overflow:hidden;z-index:3}
+#rd.t-night .rtb,#rd.t-night .rcard{box-shadow:0 6px 22px rgba(0,0,0,.45),inset 5px 0 0 var(--acc)}
+#rd .rtb b.rtt{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:2px 0 2px 14px;line-height:1.1;position:relative}
+#rd .rtt span{font:700 21px 'Playfair Display',Georgia,serif;font-style:italic;letter-spacing:.03em;color:var(--ink);white-space:nowrap}
+#rd .rtt em{font:600 9px 'Quicksand',sans-serif;font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin-top:3px;white-space:nowrap}
+#rd .rtt i{position:absolute;left:3px;top:50%;width:5px;height:5px;margin-top:-3px;background:var(--acc);transform:rotate(45deg);border-radius:1px}
 #rd .rtb button{flex:none;width:42px;height:42px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 #rd .rtb button:active{background:var(--rule)}
 #rd .rtb button.on{background:var(--chip);box-shadow:inset 0 0 0 1.5px var(--acc)}
@@ -409,8 +412,9 @@ nav .rdb:active{transform:scale(.92)}
 #rd .rsw .tg.on::after{transform:translateX(20px)}
 #rd .rtb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #rd .rpr{position:absolute;left:0;bottom:0;height:3px;border-radius:0 3px 3px 0;width:0;background:var(--acc);transition:width .15s}
-#rd .rsc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;padding:10px 8px calc(44px + env(safe-area-inset-bottom,0px))}
-#rd .rbk{max-width:880px;margin:0 auto;background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);font-family:'Merriweather','Hind',Georgia,serif;text-align:left;overflow:hidden}
+#rd .rcard{flex:1;min-height:0;width:calc(100% - 16px);max-width:880px;margin:10px auto calc(8px + env(safe-area-inset-bottom,0px));background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);overflow:hidden;position:relative}
+#rd .rsc{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;border-radius:18px}
+#rd .rbk{font-family:'Merriweather','Hind',Georgia,serif;text-align:left;padding-bottom:40px}
 #rd .bko{text-align:center;color:var(--acc);opacity:.65;letter-spacing:10px;font-size:15px;margin:26px 0 8px}
 /* cover */
 #rd .bkc{text-align:center;padding:20px 14px 26px 18px}
@@ -572,8 +576,7 @@ nav .rdb:active{transform:scale(.92)}
 <div id="toast"></div>
 <div id="rd" role="dialog" aria-label="Padhne ka mode">
   <div class="rtb">
-    <button onclick="history.back()" aria-label="Band karein"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <b>मेरी डायरी</b>
+    <b class="rtt"><i></i><span>My Diary</span><em>Personal Journal</em></b>
     <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
     <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
     <button id="rdSet" onclick="rdPanel()" aria-label="Padhne ki settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
@@ -588,7 +591,7 @@ nav .rdb:active{transform:scale(.92)}
     <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')"><i style="background:#fcf8ef"></i>Paper</button><button onclick="rdSetTh('lav')"><i style="background:#fbf9ff;border-color:#bba9f3"></i>Lavender</button><button onclick="rdSetTh('night')"><i style="background:#151a2c"></i>Night</button></div>
     <div class="rsw"><div><b>✨ Auto-format</b><small>Likhawat saaf aur standard dikhegi (sirf padhte waqt, aapki entry nahi badalti)</small></div><button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
   </div>
-  <div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div>
+  <div class="rcard"><div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div></div>
   <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
 </div>
 
