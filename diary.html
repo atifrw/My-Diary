@@ -383,10 +383,9 @@ nav .rdb:active{transform:scale(.92)}
 #rd *{box-sizing:border-box}
 #rd .rtb{flex:none;display:flex;align-items:center;gap:2px;width:calc(100% - 16px);max-width:880px;margin:calc(8px + env(safe-area-inset-top,0px)) auto 0;padding:5px 6px 5px 5px;background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);position:relative;overflow:hidden;z-index:3}
 #rd.t-night .rtb,#rd.t-night .rcard{box-shadow:0 6px 22px rgba(0,0,0,.45),inset 5px 0 0 var(--acc)}
-#rd .rtb b.rtt{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:2px 0 2px 14px;line-height:1.1;position:relative}
-#rd .rtt span{font:700 21px 'Playfair Display',Georgia,serif;font-style:italic;letter-spacing:.03em;color:var(--ink);white-space:nowrap}
-#rd .rtt em{font:600 9px 'Quicksand',sans-serif;font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin-top:3px;white-space:nowrap}
-#rd .rtt i{position:absolute;left:3px;top:50%;width:5px;height:5px;margin-top:-3px;background:var(--acc);transform:rotate(45deg);border-radius:1px}
+#rd .rtb b.rtt{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:0 0 0 14px;line-height:1;position:relative}
+#rd .rtt span{font:700 23px 'Playfair Display',Georgia,serif;font-style:italic;letter-spacing:.03em;color:var(--ink);white-space:nowrap}
+
 #rd .rtb button{flex:none;width:42px;height:42px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:700 16px 'Quicksand',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 #rd .rtb button:active{background:var(--rule)}
 #rd .rtb button.on{background:var(--chip);box-shadow:inset 0 0 0 1.5px var(--acc)}
@@ -412,9 +411,9 @@ nav .rdb:active{transform:scale(.92)}
 #rd .rsw .tg.on::after{transform:translateX(20px)}
 #rd .rtb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #rd .rpr{position:absolute;left:0;bottom:0;height:3px;border-radius:0 3px 3px 0;width:0;background:var(--acc);transition:width .15s}
-#rd .rcard{flex:1;min-height:0;width:calc(100% - 16px);max-width:880px;margin:10px auto calc(8px + env(safe-area-inset-bottom,0px));background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);overflow:hidden;position:relative}
+#rd .rcard{flex:1;min-height:0;width:calc(100% - 16px);max-width:880px;margin:10px auto calc(6px + env(safe-area-inset-bottom,0px));background:var(--pg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 6px 22px rgba(50,35,15,.14),inset 5px 0 0 var(--acc);overflow:hidden;position:relative}
 #rd .rsc{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-behavior:smooth;border-radius:18px}
-#rd .rbk{font-family:'Merriweather','Hind',Georgia,serif;text-align:left;padding-bottom:40px}
+#rd .rbk{font-family:'Merriweather','Hind',Georgia,serif;text-align:left;padding-bottom:0}
 #rd .bko{text-align:center;color:var(--acc);opacity:.65;letter-spacing:10px;font-size:15px;margin:26px 0 8px}
 /* cover */
 #rd .bkc{text-align:center;padding:20px 14px 26px 18px}
@@ -475,7 +474,7 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkn{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--rule);font:500 12.5px 'Hind',sans-serif;color:var(--soft)}
 #rd .bkn button{flex:none;border:1px solid var(--rule);background:transparent;color:var(--acc);border-radius:14px;padding:6px 13px;font:600 12.5px 'Hind',sans-serif;cursor:pointer}
 #rd .bkn button:active{background:var(--chip)}
-#rd .bkz{text-align:center;padding:12px 20px 40px;font:700 26px 'Caveat',cursive;color:var(--soft)}
+#rd .bkz{text-align:center;padding:4px 20px 10px;font:700 26px 'Caveat',cursive;color:var(--soft)}
 #rd .rto{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;cursor:pointer}
 #rd.on.rsd .rto{display:flex}
 </style>
@@ -576,7 +575,7 @@ nav .rdb:active{transform:scale(.92)}
 <div id="toast"></div>
 <div id="rd" role="dialog" aria-label="Padhne ka mode">
   <div class="rtb">
-    <b class="rtt"><i></i><span>My Diary</span><em>Personal Journal</em></b>
+    <b class="rtt"><span>My Diary</span></b>
     <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
     <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
     <button id="rdSet" onclick="rdPanel()" aria-label="Padhne ki settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
