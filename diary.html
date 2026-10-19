@@ -450,8 +450,8 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkw{flex:1;min-width:0;font:500 13px/1.45 'Hind','Quicksand',sans-serif;color:var(--soft)}
 #rd .bkw b{display:block;color:var(--ink);font:600 15.5px 'Hind','Quicksand',sans-serif}
 #rd .bke{flex:none;width:46px;height:46px;border-radius:50%;background:var(--chip);display:flex;align-items:center;justify-content:center;font-size:25px}
-#rd .bkp h3{font:700 calc(24px*var(--rfs))/1.3 'Playfair Display','Hind',serif;margin:2px 0 14px;color:var(--ink);text-align:left}
-#rd .bkp h3::after{content:'';display:block;width:42px;height:2px;background:var(--acc);opacity:.6;margin-top:10px;border-radius:2px}
+#rd .bkp h3{display:table;max-width:100%;font:700 calc(24px*var(--rfs))/1.3 'Playfair Display','Hind',serif;margin:2px 0 14px;color:var(--ink);text-align:left}
+#rd .bkp h3::after{content:'';display:block;width:100%;height:2px;background:var(--acc);opacity:.6;margin-top:10px;border-radius:2px}
 #rd .bkb{font-size:calc(17px*var(--rfs));line-height:1.95;color:var(--ink);overflow-wrap:anywhere;word-break:break-word;text-align:left;hyphens:auto}
 #rd .bkb p{margin:0 0 1em}
 #rd .bkb p.dc::first-letter{font:700 3.3em/.8 'Playfair Display',serif;float:left;padding:.08em .1em 0 0;color:var(--acc)}
@@ -576,7 +576,6 @@ nav .rdb:active{transform:scale(.92)}
 <div id="rd" role="dialog" aria-label="Padhne ka mode">
   <div class="rtb">
     <b class="rtt"><span>My Diary</span></b>
-    <button onclick="rdJump('rdToc')" aria-label="Anukram"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
     <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
     <button id="rdSet" onclick="rdPanel()" aria-label="Padhne ki settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     
@@ -1124,16 +1123,15 @@ function rdBuild(){
   const ml=k=>new Date(k+'-01T00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const nf=n=>n.toLocaleString('en-IN'),tw=all.reduce((n,e)=>n+rdWords(e),0),days=new Set(all.map(e=>e.date)).size;
   let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>पन्ने</small></div><div><b>${nf(tw)}</b><small>शब्द</small></div><div><b>${nf(days)}</b><small>दिन</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
-  h+=`<section class="bkt" id="rdToc"><h2>अनुक्रम</h2>`+months.map(m=>`<a onclick="rdJump('m-${m.k}')"><span>${ml(m.k)}</span><i></i><b>${m.list.length}</b></a>`).join('')+`</section>`;
   months.forEach((m,mi)=>{
     const mw=m.list.reduce((n,e)=>n+rdWords(e),0);
-    h+=`<section><div class="bkm" id="m-${m.k}"><small>अध्याय ${rdP.ord==='asc'?mi+1:months.length-mi}</small><h2>${ml(m.k)}</h2><p>${m.list.length} पन्ने · ${nf(mw)} शब्द</p><div class="rl">❦</div></div>`;
+    h+=`<section><div id="m-${m.k}"></div>`;
     m.list.forEach(e=>{const d=new Date(e.date+'T00:00'),ph=(e.photos||[]).filter(Boolean),w=rdWords(e),tm=e.ts?new Date(e.ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
       h+=`<article class="bkp" id="p-${e.id}"><div class="bkh"><span class="bkd">${d.getDate()}</span><div class="bkw"><b>${d.toLocaleDateString('en-US',{weekday:'long'})}</b>${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}${tm?' · '+tm:''}</div>${e.mood?`<span class="bke">${e.mood}</span>`:''}</div>`
       +(e.title?`<h3>${rdTitle(e.title)}</h3>`:'')+`<div class="bkb">${rdBody(e)}</div>`
       +(ph.length?`<div class="bkf${ph.length>1?' bk2':''}">${ph.map(s=>`<img loading="lazy" src="${esc(s)}">`).join('')}</div>`:'')
       +((e.tags||[]).length?`<div class="bkg">${e.tags.map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`:'')
-      +`<div class="bkn"><span>पन्ना ${pgN.get(e.id)}${w?` · ${nf(w)} शब्द · ~${Math.max(1,Math.ceil(w/180))} मिनट`:''}</span><button onclick="rdEdit('${e.id}')">✎ Badlein</button></div><div class="bko">✦ ✦ ✦</div></article>`});
+      +`<div class="bkn"><span>पन्ना ${pgN.get(e.id)}${w?` · ${nf(w)} शब्द · ~${Math.max(1,Math.ceil(w/180))} मिनट`:''}</span><button onclick="rdEdit('${e.id}')">✎ Edit</button></div><div class="bko">✦ ✦ ✦</div></article>`});
     h+='</section>'});
   h+=`<div class="bkz">~ ${rdP.ord==='asc'?'abhi tak ki kahani':'kahani ki shuruaat'} ~</div>`;
   $('rdBk').innerHTML=h}
