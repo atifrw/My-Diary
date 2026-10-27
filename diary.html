@@ -410,23 +410,30 @@ nav .rdb:active{transform:scale(.92)}
 #rd .rsw .tg::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transition:transform .2s}
 #rd .rsw .tg.on{background:var(--acc)}
 #rd .rsw .tg.on::after{transform:translateX(20px)}
-#rd .rpn{width:min(300px,calc(100% - 16px));padding:14px 14px 6px;border-radius:18px;background:var(--pg)}
-#rd .rpn .rpt{font:700 16px 'Playfair Display','Hind',serif;margin:0 0 6px;padding:0 0 10px;border-bottom:1px solid var(--rule);color:var(--ink)}
-#rd .rrw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;border-bottom:1px solid var(--rule)}
-#rd .rrw:last-child{border-bottom:0}
-#rd .rpn .lb{margin:0;font:600 13px 'Hind',sans-serif;letter-spacing:0;text-transform:none;color:var(--ink);display:block}
-#rd .rpn .lb::after{display:none}
-#rd .rfl,#rd .rsz,#rd .rth{display:inline-flex;gap:2px;padding:3px;background:var(--chip);border:0;border-radius:11px}
-#rd .rfl button,#rd .rsz button,#rd .rth button{display:flex;align-items:center;justify-content:center;gap:4px;height:30px;min-width:0;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--soft);font:600 12.5px 'Hind',sans-serif;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s,color .15s}
-#rd .rfl button em{font:600 10px 'Quicksand',sans-serif;font-style:normal;opacity:.7}
-#rd .rsz button{padding:0;width:26px;font-family:'Merriweather',serif}
-#rd .rth button{padding:0;width:34px}
-#rd .rth button i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,0,0,.2);display:block;box-shadow:none}
-#rd .rfl button.on,#rd .rsz button.on,#rd .rth button.on{background:var(--pg);color:var(--acc);box-shadow:0 1px 4px rgba(0,0,0,.18),inset 0 0 0 1px var(--acc)}
-#rd .rrw>.tg{flex:none;width:44px;height:26px;border-radius:13px;border:0;background:var(--rule);position:relative;cursor:pointer;transition:background .2s}
-#rd .rrw>.tg::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .2s}
-#rd .rrw>.tg.on{background:var(--acc)}
-#rd .rrw>.tg.on::after{transform:translateX(18px)}
+#rd .rpn{width:min(290px,calc(100% - 16px));padding:14px 14px 14px;border-radius:20px;background:var(--pg)}
+#rd .rpn .rpt{font:700 16px 'Playfair Display','Hind',serif;margin:0 0 2px;color:var(--ink)}
+#rd .rpn .lb{display:flex;align-items:center;gap:8px;margin:12px 0 6px;font:700 10px 'Quicksand',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+#rd .rpn .lb::after{content:'';flex:1;height:1px;background:var(--rule)}
+#rd .rfl,#rd .rth{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#rd .rsz{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:3px;background:var(--chip);border:1px solid var(--rule);border-radius:12px}
+#rd .rfl button,#rd .rth button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;height:auto;padding:6px 2px 5px;border:1.5px solid var(--rule);border-radius:12px;background:transparent;color:var(--ink);font:600 11.5px 'Hind',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#rd .rfl button i{font-style:normal;font-size:15px;line-height:1.2}
+#rd .rfl button b{font:700 11.5px 'Hind',sans-serif}
+#rd .rfl button em{font:600 9.5px 'Quicksand',sans-serif;font-style:normal;color:var(--soft)}
+#rd .rth button{gap:3px}
+#rd .rth button i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,0,0,.2);display:block}
+#rd .rsz button{height:30px;border:0;border-radius:9px;background:transparent;color:var(--soft);font-family:'Merriweather',serif;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#rd .rfl button.on,#rd .rth button.on{border-color:var(--acc);background:var(--chip);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc)}
+#rd .rfl button.on em{color:var(--acc)}
+#rd .rsz button.on{background:var(--acc);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+#rd .rsw{display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;border:1.5px solid var(--rule);border-radius:12px;background:var(--pg)}
+#rd .rsw div{flex:1;min-width:0}
+#rd .rsw b{display:block;font:600 13px 'Hind',sans-serif}
+#rd .rsw small{display:block;font:400 11px 'Hind',sans-serif;color:var(--soft);margin-top:1px}
+#rd .rsw .tg{flex:none;width:42px;height:25px;border-radius:13px;border:0;background:var(--rule);position:relative;cursor:pointer;transition:background .2s}
+#rd .rsw .tg::after{content:'';position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .2s}
+#rd .rsw .tg.on{background:var(--acc)}
+#rd .rsw .tg.on::after{transform:translateX(17px)}
 #rd .rem{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:90px 30px}
 #rd .rem i{font-style:normal;font-size:44px}
 #rd .rem b{font:700 19px 'Playfair Display','Hind',serif;color:var(--ink)}
@@ -609,14 +616,13 @@ nav .rdb:active{transform:scale(.92)}
   <div class="rpb" onclick="rdPanel(false)"></div>
   <div class="rpn" id="rdPn" role="dialog" aria-label="Settings">
     <div class="rpt">Settings</div>
-    <div class="rrw"><span class="lb">Show</span>
-      <div class="rfl" id="rdFl"><button data-f="all" onclick="rdSetFl('all')">All<em>0</em></button><button data-f="pin" onclick="rdSetFl('pin')">Pin<em>0</em></button><button data-f="sav" onclick="rdSetFl('sav')">Save<em>0</em></button></div></div>
-    <div class="rrw"><span class="lb">Text size</span>
-      <div class="rsz" id="rdSz"><button onclick="rdSetFs(0)" aria-label="Smallest"><span style="font-size:11px">A</span></button><button onclick="rdSetFs(1)" aria-label="Small"><span style="font-size:13px">A</span></button><button onclick="rdSetFs(2)" aria-label="Medium"><span style="font-size:15px">A</span></button><button onclick="rdSetFs(3)" aria-label="Large"><span style="font-size:18px">A</span></button><button onclick="rdSetFs(4)" aria-label="Largest"><span style="font-size:21px">A</span></button></div></div>
-    <div class="rrw"><span class="lb">Theme</span>
-      <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')" aria-label="Paper"><i style="background:#fcf8ef"></i></button><button onclick="rdSetTh('lav')" aria-label="Lavender"><i style="background:#fbf9ff;border-color:#bba9f3"></i></button><button onclick="rdSetTh('night')" aria-label="Night"><i style="background:#151a2c"></i></button></div></div>
-    <div class="rrw"><span class="lb">Auto-format</span>
-      <button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
+    <span class="lb">Show</span>
+    <div class="rfl" id="rdFl"><button data-f="all" onclick="rdSetFl('all')"><i>📖</i><b>All</b><em>0</em></button><button data-f="pin" onclick="rdSetFl('pin')"><i>📌</i><b>Pin</b><em>0</em></button><button data-f="sav" onclick="rdSetFl('sav')"><i>🔖</i><b>Save</b><em>0</em></button></div>
+    <span class="lb">Text size</span>
+    <div class="rsz" id="rdSz"><button onclick="rdSetFs(0)" aria-label="Smallest"><span style="font-size:11px">A</span></button><button onclick="rdSetFs(1)" aria-label="Small"><span style="font-size:13px">A</span></button><button onclick="rdSetFs(2)" aria-label="Medium"><span style="font-size:15px">A</span></button><button onclick="rdSetFs(3)" aria-label="Large"><span style="font-size:18px">A</span></button><button onclick="rdSetFs(4)" aria-label="Largest"><span style="font-size:21px">A</span></button></div>
+    <span class="lb">Theme</span>
+    <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')"><i style="background:#fcf8ef"></i>Paper</button><button onclick="rdSetTh('lav')"><i style="background:#fbf9ff;border-color:#bba9f3"></i>Lavender</button><button onclick="rdSetTh('night')"><i style="background:#151a2c"></i>Night</button></div>
+    <div class="rsw"><div><b>✨ Auto-format</b><small>Cleaner text while reading</small></div><button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
   </div>
   <div class="rcard"><div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div></div>
   <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
