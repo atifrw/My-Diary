@@ -510,6 +510,11 @@ nav .rdb:active{transform:scale(.92)}
 #rd .bkz{text-align:center;padding:4px 20px 10px;font:700 26px 'Caveat',cursive;color:var(--soft)}
 #rd .rto{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;cursor:pointer}
 #rd.on.rsd .rto{display:flex}
+
+.txt img{max-width:100%;height:auto;border-radius:12px;-webkit-user-drag:none}
+.txt img.sel{outline:3px solid #7c6cf0;outline-offset:2px}
+.txt img[data-m="f"].sel{touch-action:none;cursor:move}
+.txt::after{content:"";display:block;clear:both}
 </style>
 </head>
 <body>
@@ -591,8 +596,9 @@ nav .rdb:active{transform:scale(.92)}
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('emo')">😊</button>
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('font')">Tт</button>
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('list')">☰</button>
-    <button class="pb" id="micB" onmousedown="event.preventDefault()" onclick="mic()">🎤</button>
+    <button class="pb" id="imgB" onmousedown="event.preventDefault()" onclick="openSheet('img')">🖼️</button>
   </div>
+  <input type="file" id="imgIn" accept="image/*" multiple style="display:none" onchange="insImgs(this)">
   <div id="sheet"><div class="sht"><span id="shT"></span><button class="shx" onmousedown="event.preventDefault()" onclick="xSheet()" aria-label="Close">✕</button></div><div id="shB"></div></div>
 </div>
 <div id="tsk"><div class="tkc">
@@ -862,7 +868,7 @@ function mdAdd(){const inp=$('mdIn'),v=inp.value;if(!v.trim())return;
   inp.value='';if(n){mdSave();toast(n+' emoji jud gaya');mdEdit=false;mdPage=Math.ceil(MOODS.length/MDPER)-1;mdPages()}else toast('Ye emoji pehle se hai');inp.focus()}
 function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();mdPages()}
 plainField($('edTitle'));renderMdPop();
-function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
+function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('img.sel').forEach(n=>{n.classList.remove('sel');if(!n.getAttribute('class'))n.removeAttribute('class')});t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){if(titleFocus){$('edTitle').focus();return}$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
 const TAGFMT={bold:1,italic:1,underline:1,strikeThrough:1};
@@ -901,7 +907,7 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   if(cur&&cur.pinned)e.pinned=true;if(cur&&cur.saved)e.saved=true;
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
-function closeEd(quiet){if($('ed').style.display!=='flex')return;if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
+function closeEd(quiet){if($('ed').style.display!=='flex')return;if(selImg){selImg.classList.remove('sel');selImg=null}const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
 window.onpopstate=()=>{if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
@@ -1032,12 +1038,78 @@ function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';
     shTabGo(shTab)}
   else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
+  else if(t==='img'){$('shT').textContent='Image';imgPanel()}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
   refreshSheet()}
-function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Is browser mein voice typing nahi hai');
-  if(rec){rec.stop();return}rec=new R();rec.lang='hi-IN';rec.continuous=true;rec.interimResults=false;
-  rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript;rs();document.execCommand('insertText',false,t+' ')};
-  rec.onend=()=>{rec=null;$('micB').classList.remove('on')};rec.start();$('micB').classList.add('on');toast('Bolna shuru karein 🎤')}
+/* ---- Image feature ---- */
+let selImg=null;
+const IMG_MODES={c:'display:block;margin:10px auto;',l:'float:left;margin:4px 12px 6px 0;',r:'float:right;margin:4px 0 6px 12px;',i:'display:inline-block;vertical-align:middle;margin:2px 4px;'};
+function imgModeStyle(im,m){
+  const E=$('edText'),w=im.style.width||'60%';
+  im.style.cssText='width:'+w+';';
+  if(m==='f'){
+    const a=im.getBoundingClientRect(),b=E.getBoundingClientRect();
+    const x=Math.max(0,(a.left-b.left)/b.width*100),y=Math.max(0,a.top-b.top);
+    im.style.cssText='width:'+w+';position:absolute;margin:0;z-index:2;left:'+Math.min(x,90).toFixed(1)+'%;top:'+Math.round(y)+'px;';
+  }else im.style.cssText='width:'+w+';'+IMG_MODES[m];
+  im.dataset.m=m;
+}
+function selectImg(im){
+  if(selImg&&selImg!==im)selImg.classList.remove('sel');
+  selImg=im;if(im)im.classList.add('sel');
+}
+function imgPanelOpen(){return $('sheet').style.display==='block'&&$('shT').textContent==='Image'}
+function imgPanel(){
+  const m='onmousedown="event.preventDefault()"',im=selImg;
+  let h=`<div class="rw"><button class="sb" ${m} onclick="$('imgIn').click()" style="flex:2 1 0">📷 Gallery se image jodein</button>${im?`<button class="sb" ${m} onclick="imgDel()" style="color:#d9486b">🗑️ Hatayein</button>`:''}</div>`;
+  if(im){
+    const w=parseInt(im.style.width)||60,md=im.dataset.m||'c';
+    const MB=[['l','⬅','Left + text wrap'],['c','↔','Beech mein'],['r','➡','Right + text wrap'],['i','▭','Text ke beech'],['f','✥','Free: kahin bhi drag karein']];
+    h+=`<div class="lb">Size: <b id="imgSzV">${w}%</b></div><div class="rw"><button class="sb" ${m} onclick="imgSize(-10)">−</button><input type="range" id="imgSz" min="10" max="100" step="1" value="${w}" oninput="imgSizeSet(this.value)" style="flex:4 1 0;accent-color:#7c6cf0"><button class="sb" ${m} onclick="imgSize(10)">+</button></div>`;
+    h+=`<div class="lb">Position</div><div class="rw">${MB.map(x=>`<button class="sb${md===x[0]?' on':''}" ${m} title="${x[2]}" onclick="imgMode('${x[0]}')">${x[1]}</button>`).join('')}</div>`;
+    h+=`<div class="lb" style="font-weight:500">${md==='f'?'Image ko ungli se drag karke kahin bhi rakhein':'✥ dabayein to image ko screen par kahin bhi drag kar sakte hain'}</div>`;
+  }else h+=`<div class="lb" style="font-weight:500">Text mein kisi image par tap karein — size aur position badalne ke liye</div>`;
+  $('shB').innerHTML=h;
+}
+function imgSizeSet(v){if(!selImg)return;v=Math.max(10,Math.min(100,+v));selImg.style.width=v+'%';const t=$('imgSzV');if(t)t.textContent=v+'%';touch()}
+function imgSize(d){if(!selImg)return;const v=(parseInt(selImg.style.width)||60)+d;imgSizeSet(v);imgPanel()}
+function imgMode(m){if(!selImg)return;imgModeStyle(selImg,m);touch();imgPanel()}
+function imgDel(){if(!selImg)return;selImg.remove();selImg=null;touch();imgPanel()}
+function shrinkImg(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78))};im.onerror=()=>res(null);im.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(file)})}
+async function insImgs(inp){
+  const files=[...inp.files];inp.value='';
+  for(const f of files){
+    const d=await shrinkImg(f);if(!d){toast('Image load nahi hui');continue}
+    titleFocus=false;rs();
+    document.execCommand('insertHTML',false,`<img src="${d}" data-new="1" data-m="c" style="width:60%;${IMG_MODES.c}"><br>`);
+    const n=$('edText').querySelector('img[data-new]');
+    if(n){n.removeAttribute('data-new');selectImg(n)}
+    touch();
+  }
+  if(imgPanelOpen())imgPanel();else openSheet('img');
+}
+let imgDrag=null;
+(function(){
+  const ed=$('ed');
+  ed.addEventListener('pointerdown',e=>{
+    const E=$('edText'),im=e.target.closest?e.target.closest('img'):null;
+    if(im&&E.contains(im)){
+      selectImg(im);
+      if(!imgPanelOpen())openSheet('img');else imgPanel();
+      if(im.dataset.m==='f'){imgDrag={im,x:e.clientX,y:e.clientY,l:im.offsetLeft,t:im.offsetTop};try{im.setPointerCapture(e.pointerId)}catch(_){}}
+    }else if(selImg&&!e.target.closest('#sheet')&&!e.target.closest('.pill')){
+      selImg.classList.remove('sel');selImg=null;if(imgPanelOpen())imgPanel();
+    }
+  });
+  ed.addEventListener('pointermove',e=>{
+    if(!imgDrag)return;e.preventDefault();
+    const E=$('edText'),im=imgDrag.im,W=E.clientWidth;
+    const l=Math.max(0,Math.min(W-im.offsetWidth,imgDrag.l+e.clientX-imgDrag.x)),t=Math.max(0,imgDrag.t+e.clientY-imgDrag.y);
+    im.style.left=(l/W*100).toFixed(1)+'%';im.style.top=Math.round(t)+'px';touch();
+  });
+  const up=()=>{imgDrag=null};
+  ed.addEventListener('pointerup',up);ed.addEventListener('pointercancel',up);
+})();
 function copyTxt(){navigator.clipboard&&navigator.clipboard.writeText($('edText').innerText.replace(/\u200b/g,'')).then(()=>toast('Text copy ho gaya'));$('mnu').style.display='none'}
 function renderPh(){$('ph').innerHTML=photos.map((p,i)=>`<div><img src="${p}"><button onclick="photos.splice(${i},1);renderPh()">✕</button></div>`).join('')}
 function addPh(inp){[...inp.files].slice(0,5-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photos.push(c.toDataURL('image/jpeg',.65));renderPh()};im.src=r.result};r.readAsDataURL(f)});inp.value=''}
@@ -1090,7 +1162,7 @@ function rdInl(n){
   if(n.nodeType!==1)return'';
   const t=n.tagName.toLowerCase();
   if(t==='br')return'<br>';
-  if(t==='img'){const s=n.getAttribute('src')||'';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}">`:''}
+  if(t==='img'){const s=n.getAttribute('src')||'';const w=(n.style&&n.style.width)||'';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}"${/^\d+(\.\d+)?%$/.test(w)?` style="width:${w};max-width:100%;height:auto"`:''}>`:''}
   if(/^(script|style|iframe|object|embed|link|svg)$/.test(t))return'';
   let c='';n.childNodes.forEach(k=>{c+=rdInl(k)});
   if(!c)return'';
