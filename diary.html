@@ -410,26 +410,23 @@ nav .rdb:active{transform:scale(.92)}
 #rd .rsw .tg::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transition:transform .2s}
 #rd .rsw .tg.on{background:var(--acc)}
 #rd .rsw .tg.on::after{transform:translateX(20px)}
-#rd .rpn{max-height:calc(100% - 84px);overflow-y:auto;padding:18px 16px 16px;border-radius:22px;background:linear-gradient(180deg,var(--pg),var(--chip))}
-#rd .rpn .rpt{display:flex;flex-direction:column;gap:2px;margin:0 0 4px;padding-bottom:12px;border-bottom:1px solid var(--rule);position:relative}
-#rd .rpn .rpt span{font:700 19px 'Playfair Display','Hind',serif}
-#rd .rpn .rpt small{font:600 10px 'Quicksand',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
-#rd .rpn .lb{display:flex;align-items:center;gap:8px;font:700 10.5px 'Quicksand',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:16px 0 8px}
-#rd .rpn .lb::after{content:'';flex:1;height:1px;background:var(--rule)}
-#rd .rfl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-#rd .rfl button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 9px;border:1.5px solid var(--rule);border-radius:16px;background:var(--pg);color:var(--ink);cursor:pointer;font-family:'Hind',sans-serif;-webkit-tap-highlight-color:transparent;transition:transform .12s,box-shadow .2s}
-#rd .rfl button:active{transform:scale(.96)}
-#rd .rfl button i{font-style:normal;font-size:20px;line-height:1.2}
-#rd .rfl button b{font:700 13px 'Hind',sans-serif}
-#rd .rfl button em{font:600 10.5px 'Quicksand',sans-serif;font-style:normal;color:var(--soft)}
-#rd .rfl button.on{border-color:var(--acc);background:var(--chip);box-shadow:0 4px 12px rgba(0,0,0,.12),inset 0 0 0 1px var(--acc);color:var(--acc)}
-#rd .rfl button.on em{color:var(--acc)}
-#rd .rsz{background:var(--pg);border:1.5px solid var(--rule);border-radius:16px;padding:4px;gap:2px}
-#rd .rsz button{border:0;border-radius:12px;height:40px}
-#rd .rsz button.on{background:var(--acc);color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.2)}
-#rd .rth button{border-radius:16px;background:var(--pg)}
-#rd .rth button i{box-shadow:0 2px 6px rgba(0,0,0,.15)}
-#rd .rsw{margin-top:16px;padding:12px 14px;border:1.5px solid var(--rule);border-radius:16px;background:var(--pg)}
+#rd .rpn{width:min(300px,calc(100% - 16px));padding:14px 14px 6px;border-radius:18px;background:var(--pg)}
+#rd .rpn .rpt{font:700 16px 'Playfair Display','Hind',serif;margin:0 0 6px;padding:0 0 10px;border-bottom:1px solid var(--rule);color:var(--ink)}
+#rd .rrw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;border-bottom:1px solid var(--rule)}
+#rd .rrw:last-child{border-bottom:0}
+#rd .rpn .lb{margin:0;font:600 13px 'Hind',sans-serif;letter-spacing:0;text-transform:none;color:var(--ink);display:block}
+#rd .rpn .lb::after{display:none}
+#rd .rfl,#rd .rsz,#rd .rth{display:inline-flex;gap:2px;padding:3px;background:var(--chip);border:0;border-radius:11px}
+#rd .rfl button,#rd .rsz button,#rd .rth button{display:flex;align-items:center;justify-content:center;gap:4px;height:30px;min-width:0;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--soft);font:600 12.5px 'Hind',sans-serif;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s,color .15s}
+#rd .rfl button em{font:600 10px 'Quicksand',sans-serif;font-style:normal;opacity:.7}
+#rd .rsz button{padding:0;width:26px;font-family:'Merriweather',serif}
+#rd .rth button{padding:0;width:34px}
+#rd .rth button i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,0,0,.2);display:block;box-shadow:none}
+#rd .rfl button.on,#rd .rsz button.on,#rd .rth button.on{background:var(--pg);color:var(--acc);box-shadow:0 1px 4px rgba(0,0,0,.18),inset 0 0 0 1px var(--acc)}
+#rd .rrw>.tg{flex:none;width:44px;height:26px;border-radius:13px;border:0;background:var(--rule);position:relative;cursor:pointer;transition:background .2s}
+#rd .rrw>.tg::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .2s}
+#rd .rrw>.tg.on{background:var(--acc)}
+#rd .rrw>.tg.on::after{transform:translateX(18px)}
 #rd .rem{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:90px 30px}
 #rd .rem i{font-style:normal;font-size:44px}
 #rd .rem b{font:700 19px 'Playfair Display','Hind',serif;color:var(--ink)}
@@ -605,20 +602,21 @@ nav .rdb:active{transform:scale(.92)}
 <div id="rd" role="dialog" aria-label="Padhne ka mode">
   <div class="rtb">
     <b class="rtt"><span>My Diary</span></b>
-    <button id="rdOrd" onclick="rdOrder()" aria-label="Kram badlein"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
-    <button id="rdSet" onclick="rdPanel()" aria-label="Padhne ki settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+    <button id="rdOrd" onclick="rdOrder()" aria-label="Sort order"><svg viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 20l3-3M16 20V4M16 4l-3 3M16 4l3 3"/></svg></button>
+    <button id="rdSet" onclick="rdPanel()" aria-label="Settings" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     
   </div>
   <div class="rpb" onclick="rdPanel(false)"></div>
-  <div class="rpn" id="rdPn" role="dialog" aria-label="Padhne ki settings">
-    <div class="rpt"><span>Padhne ki settings</span><small>Apne hisaab se banayein</small></div>
-    <span class="lb">Dikhayein</span>
-    <div class="rfl" id="rdFl"><button data-f="all" onclick="rdSetFl('all')"><i>📖</i><b>All</b><em>0</em></button><button data-f="pin" onclick="rdSetFl('pin')"><i>📌</i><b>Pin</b><em>0</em></button><button data-f="sav" onclick="rdSetFl('sav')"><i>🔖</i><b>Save</b><em>0</em></button></div>
-    <span class="lb">Akshar ka size</span>
-    <div class="rsz" id="rdSz"><button onclick="rdSetFs(0)" aria-label="Size 1"><span style="font-size:12px;line-height:1">A</span></button><button onclick="rdSetFs(1)" aria-label="Size 2"><span style="font-size:15px;line-height:1">A</span></button><button onclick="rdSetFs(2)" aria-label="Size 3"><span style="font-size:17px;line-height:1">A</span></button><button onclick="rdSetFs(3)" aria-label="Size 4"><span style="font-size:20px;line-height:1">A</span></button><button onclick="rdSetFs(4)" aria-label="Size 5"><span style="font-size:22px;line-height:1">A</span></button></div>
-    <span class="lb">Theme</span>
-    <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')"><i style="background:#fcf8ef"></i>Paper</button><button onclick="rdSetTh('lav')"><i style="background:#fbf9ff;border-color:#bba9f3"></i>Lavender</button><button onclick="rdSetTh('night')"><i style="background:#151a2c"></i>Night</button></div>
-    <div class="rsw"><div><b>✨ Auto-format</b><small>Likhawat saaf aur standard dikhegi (sirf padhte waqt, aapki entry nahi badalti)</small></div><button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
+  <div class="rpn" id="rdPn" role="dialog" aria-label="Settings">
+    <div class="rpt">Settings</div>
+    <div class="rrw"><span class="lb">Show</span>
+      <div class="rfl" id="rdFl"><button data-f="all" onclick="rdSetFl('all')">All<em>0</em></button><button data-f="pin" onclick="rdSetFl('pin')">Pin<em>0</em></button><button data-f="sav" onclick="rdSetFl('sav')">Save<em>0</em></button></div></div>
+    <div class="rrw"><span class="lb">Text size</span>
+      <div class="rsz" id="rdSz"><button onclick="rdSetFs(0)" aria-label="Smallest"><span style="font-size:11px">A</span></button><button onclick="rdSetFs(1)" aria-label="Small"><span style="font-size:13px">A</span></button><button onclick="rdSetFs(2)" aria-label="Medium"><span style="font-size:15px">A</span></button><button onclick="rdSetFs(3)" aria-label="Large"><span style="font-size:18px">A</span></button><button onclick="rdSetFs(4)" aria-label="Largest"><span style="font-size:21px">A</span></button></div></div>
+    <div class="rrw"><span class="lb">Theme</span>
+      <div class="rth" id="rdTs"><button onclick="rdSetTh('paper')" aria-label="Paper"><i style="background:#fcf8ef"></i></button><button onclick="rdSetTh('lav')" aria-label="Lavender"><i style="background:#fbf9ff;border-color:#bba9f3"></i></button><button onclick="rdSetTh('night')" aria-label="Night"><i style="background:#151a2c"></i></button></div></div>
+    <div class="rrw"><span class="lb">Auto-format</span>
+      <button class="tg" id="rdFmS" role="switch" aria-label="Auto-format" onclick="rdFmtT()"></button></div>
   </div>
   <div class="rcard"><div class="rsc" id="rdSc" onscroll="rdScr()"><div class="rbk" id="rdBk"></div></div></div>
   <button class="rto" onclick="$('rdSc').scrollTo({top:0})" aria-label="Upar">↑</button>
@@ -1075,7 +1073,7 @@ function rdSetFl(f){rdP.flt=f;rdSaveP();rdApply();rdBuild();$('rdSc').scrollTo({
 function rdSetTh(t){rdP.th=t;rdSaveP();rdApply()}
 function rdSetFs(i){rdP.fs=i;rdSaveP();rdApply()}
 function rdFmtT(){const sc=$('rdSc'),y=sc.scrollTop;rdP.fmt=!rdP.fmt;rdSaveP();rdApply();rdBuild();sc.scrollTo({top:y,behavior:'auto'})}
-function rdOrder(){rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'Purane se naye':'Naye se purane')}
+function rdOrder(){rdP.ord=rdP.ord==='asc'?'desc':'asc';rdSaveP();rdBuild();$('rdSc').scrollTo({top:0,behavior:'auto'});toast(rdP.ord==='asc'?'Oldest first':'Newest first')}
 function rdJump(id){const el=document.getElementById(id),sc=$('rdSc');if(!el||!sc)return;const y=el.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-6;sc.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
 function rdScr(){const s=$('rdSc'),m=s.scrollHeight-s.clientHeight;$('rd').classList.toggle('rsd',s.scrollTop>700)}
 
@@ -1151,7 +1149,7 @@ function rdBody(e){let b=[];
 const rdWords=e=>(String(e.text||'').trim().match(/\S+/g)||[]).length;
 function rdBuild(){
   const all=Object.values(entries).filter(e=>rdP.flt==='pin'?e.pinned:rdP.flt==='sav'?e.saved:true).sort((a,b)=>a.date.localeCompare(b.date)||(a.ts||0)-(b.ts||0));
-  if(!all.length){const m={pin:['📌','Koi pinned note nahi hai','Kisi note ko press-hold karke Pin karein'],sav:['🔖','Koi saved note nahi hai','Kisi note ko press-hold karke Save karein']}[rdP.flt]||['📖','Diary abhi khali hai',''];$('rdBk').innerHTML=`<div class="rem"><i>${m[0]}</i><b>${m[1]}</b><small>${m[2]}</small></div>`;return}
+  if(!all.length){const m={pin:['📌','No pinned notes','Press and hold a note, then choose Pin'],sav:['🔖','No saved notes','Press and hold a note, then choose Save']}[rdP.flt]||['📖','Your diary is empty',''];$('rdBk').innerHTML=`<div class="rem"><i>${m[0]}</i><b>${m[1]}</b><small>${m[2]}</small></div>`;return}
   const pgN=new Map();all.forEach((e,i)=>pgN.set(e.id,i+1));
   const months=[];all.forEach(e=>{const k=e.date.slice(0,7);let m=months[months.length-1];if(!m||m.k!==k){m={k,list:[]};months.push(m)}m.list.push(e)});
   if(rdP.ord==='desc'){months.reverse();months.forEach(m=>m.list.reverse())}
@@ -1159,7 +1157,7 @@ function rdBuild(){
   const fm=d=>new Date(d+'T00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
   const ml=k=>new Date(k+'-01T00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const nf=n=>n.toLocaleString('en-IN'),tw=all.reduce((n,e)=>n+rdWords(e),0),days=new Set(all.map(e=>e.date)).size;
-  let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>पन्ने</small></div><div><b>${nf(tw)}</b><small>शब्द</small></div><div><b>${nf(days)}</b><small>दिन</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
+  let h=`<section class="bkc"><div class="fr"><div><div class="mk">A Personal Journal</div><h1>My Diary</h1><div class="nm">${esc(name)}</div><div class="ln"></div><div class="st"><div><b>${nf(all.length)}</b><small>Pages</small></div><div><b>${nf(tw)}</b><small>Words</small></div><div><b>${nf(days)}</b><small>Days</small></div></div><div class="bkrg">${fm(all[0].date)} — ${fm(all[all.length-1].date)}</div></div></div></section>`;
   months.forEach((m,mi)=>{
     const mw=m.list.reduce((n,e)=>n+rdWords(e),0);
     h+=`<section><div class="bkm" id="m-${m.k}"><h2><span>✦</span>${ml(m.k)}<span>✦</span></h2></div>`;
@@ -1168,7 +1166,7 @@ function rdBuild(){
       +(e.title?`<h3>${rdTitle(e.title)}</h3>`:'')+`<div class="bkb">${rdBody(e)}</div>`
       +(ph.length?`<div class="bkf${ph.length>1?' bk2':''}">${ph.map(s=>`<img loading="lazy" src="${esc(s)}">`).join('')}</div>`:'')
       +((e.tags||[]).length?`<div class="bkg">${e.tags.map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`:'')
-      +`<div class="bkn"><span>पन्ना ${pgN.get(e.id)}${w?` · ${nf(w)} शब्द · ~${Math.max(1,Math.ceil(w/180))} मिनट`:''}</span><button onclick="rdEdit('${e.id}')">✎ Edit</button></div><div class="bko">✦ ✦ ✦</div></article>`});
+      +`<div class="bkn"><span>Page ${pgN.get(e.id)}${w?` · ${nf(w)} words · ${Math.max(1,Math.ceil(w/180))} min read`:''}</span><button onclick="rdEdit('${e.id}')">✎ Edit</button></div><div class="bko">✦ ✦ ✦</div></article>`});
     h+='</section>'});
   h+=`<div class="bkz">~ ${rdP.ord==='asc'?'abhi tak ki kahani':'kahani ki shuruaat'} ~</div>`;
   $('rdBk').innerHTML=h}
