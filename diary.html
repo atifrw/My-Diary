@@ -513,7 +513,14 @@ nav .rdb:active{transform:scale(.92)}
 
 .txt img{max-width:100%;height:auto;border-radius:12px;-webkit-user-drag:none}
 .txt img.sel{outline:3px solid #7c6cf0;outline-offset:2px}
-.txt img[data-m="f"].sel{touch-action:none;cursor:move}
+.txt img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.txt img.mv{opacity:.8;box-shadow:0 10px 26px rgba(80,60,140,.35)}
+#imgOv{position:absolute;display:none;border:2px solid #7c6cf0;border-radius:12px;pointer-events:none;z-index:5;box-sizing:border-box}
+#imgOv .ih{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center}
+#imgOv .ih::after{content:"";background:#fff;border:2px solid #7c6cf0;box-sizing:border-box;border-radius:50%;width:15px;height:15px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+#imgOv .n::after,#imgOv .s::after{width:26px;height:9px;border-radius:6px}#imgOv .w::after,#imgOv .e::after{width:9px;height:26px;border-radius:6px}
+#imgOv .nw{left:0;top:0}#imgOv .ne{left:100%;top:0}#imgOv .sw{left:0;top:100%}#imgOv .se{left:100%;top:100%}
+#imgOv .n{left:50%;top:0}#imgOv .s{left:50%;top:100%}#imgOv .w{left:0;top:50%}#imgOv .e{left:100%;top:50%}
+#imgOv .ix{position:absolute;right:-4px;top:-44px;width:34px;height:34px;border:none;border-radius:50%;background:#d9486b;color:#fff;font-size:16px;line-height:1;pointer-events:auto;cursor:pointer;box-shadow:0 3px 10px rgba(217,72,107,.45)}
 .txt::after{content:"";display:block;clear:both}
 </style>
 </head>
@@ -596,7 +603,7 @@ nav .rdb:active{transform:scale(.92)}
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('emo')">😊</button>
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('font')">Tт</button>
     <button class="pb" onmousedown="event.preventDefault()" onclick="openSheet('list')">☰</button>
-    <button class="pb" id="imgB" onmousedown="event.preventDefault()" onclick="openSheet('img')">🖼️</button>
+    <button class="pb" id="imgB" onmousedown="event.preventDefault()" onclick="$('imgIn').click()">🖼️</button>
   </div>
   <input type="file" id="imgIn" accept="image/*" multiple style="display:none" onchange="insImgs(this)">
   <div id="sheet"><div class="sht"><span id="shT"></span><button class="shx" onmousedown="event.preventDefault()" onclick="xSheet()" aria-label="Close">✕</button></div><div id="shB"></div></div>
@@ -907,7 +914,7 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   if(cur&&cur.pinned)e.pinned=true;if(cur&&cur.saved)e.saved=true;
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
-function closeEd(quiet){if($('ed').style.display!=='flex')return;if(selImg){selImg.classList.remove('sel');selImg=null}const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
+function closeEd(quiet){if($('ed').style.display!=='flex')return;imgDesel();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(!quiet&&history.state&&history.state.ed)history.back()}
 window.onpopstate=()=>{if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
@@ -1038,78 +1045,100 @@ function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';
     shTabGo(shTab)}
   else if(t==='list'){$('shT').textContent='List';b.innerHTML=`<div class="lg">${LISTS.map(l=>B('lst',l[1],l[0],`setList('${l[1]}')`)).join('')}</div><div class="rw" style="margin-top:10px"><button class="sb" ${m} onclick="noList()">✕ List hatayein</button></div>`}
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
-  else if(t==='img'){$('shT').textContent='Image';imgPanel()}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
   refreshSheet()}
-/* ---- Image feature ---- */
-let selImg=null;
-const IMG_MODES={c:'display:block;margin:10px auto;',l:'float:left;margin:4px 12px 6px 0;',r:'float:right;margin:4px 0 6px 12px;',i:'display:inline-block;vertical-align:middle;margin:2px 4px;'};
-function imgModeStyle(im,m){
-  const E=$('edText'),w=im.style.width||'60%';
-  im.style.cssText='width:'+w+';';
-  if(m==='f'){
-    const a=im.getBoundingClientRect(),b=E.getBoundingClientRect();
-    const x=Math.max(0,(a.left-b.left)/b.width*100),y=Math.max(0,a.top-b.top);
-    im.style.cssText='width:'+w+';position:absolute;margin:0;z-index:2;left:'+Math.min(x,90).toFixed(1)+'%;top:'+Math.round(y)+'px;';
-  }else im.style.cssText='width:'+w+';'+IMG_MODES[m];
-  im.dataset.m=m;
+/* ---- Image feature: sab kuch image par hi (long-press move, corner/edge resize, ✕ delete) ---- */
+let selImg=null,imgOp=null;
+const IMG_FLOW='display:block;margin:10px auto;';
+const ov=document.createElement('div');ov.id='imgOv';
+ov.innerHTML=['nw','ne','sw','se','n','s','w','e'].map(h=>`<b class="ih ${h}" data-h="${h}"></b>`).join('')+'<button class="ix" aria-label="Image hatayein">✕</button>';
+$('ed').appendChild(ov);
+function imgPlace(){
+  if(!selImg||!selImg.isConnected||$('ed').style.display!=='flex'){ov.style.display='none';return}
+  const r=selImg.getBoundingClientRect(),b=$('ed').getBoundingClientRect();
+  ov.style.display='block';ov.style.left=(r.left-b.left-2)+'px';ov.style.top=(r.top-b.top-2)+'px';ov.style.width=(r.width+4)+'px';ov.style.height=(r.height+4)+'px';
 }
-function selectImg(im){
-  if(selImg&&selImg!==im)selImg.classList.remove('sel');
-  selImg=im;if(im)im.classList.add('sel');
+(function loop(){imgPlace();requestAnimationFrame(loop)})();
+function selectImg(im){if(selImg&&selImg!==im)selImg.classList.remove('sel');selImg=im;if(im)im.classList.add('sel')}
+function imgDesel(){if(selImg)selImg.classList.remove('sel');selImg=null;imgOp=null;ov.style.display='none'}
+function imgFree(im){ /* flow se free-position mein badlo */
+  if(im.dataset.m==='f')return;
+  const E=$('edText'),a=im.getBoundingClientRect(),b=E.getBoundingClientRect(),W=E.clientWidth;
+  const w=im.offsetWidth,h=im.style.height;
+  im.style.cssText='width:'+(w/W*100).toFixed(1)+'%;'+(h?'height:'+h+';object-fit:cover;':'')+'position:absolute;margin:0;z-index:2;left:'+Math.max(0,(a.left-b.left)/W*100).toFixed(1)+'%;top:'+Math.max(0,Math.round(a.top-b.top))+'px;';
+  im.dataset.m='f';
 }
-function imgPanelOpen(){return $('sheet').style.display==='block'&&$('shT').textContent==='Image'}
-function imgPanel(){
-  const m='onmousedown="event.preventDefault()"',im=selImg;
-  let h=`<div class="rw"><button class="sb" ${m} onclick="$('imgIn').click()" style="flex:2 1 0">📷 Gallery se image jodein</button>${im?`<button class="sb" ${m} onclick="imgDel()" style="color:#d9486b">🗑️ Hatayein</button>`:''}</div>`;
-  if(im){
-    const w=parseInt(im.style.width)||60,md=im.dataset.m||'c';
-    const MB=[['l','⬅','Left + text wrap'],['c','↔','Beech mein'],['r','➡','Right + text wrap'],['i','▭','Text ke beech'],['f','✥','Free: kahin bhi drag karein']];
-    h+=`<div class="lb">Size: <b id="imgSzV">${w}%</b></div><div class="rw"><button class="sb" ${m} onclick="imgSize(-10)">−</button><input type="range" id="imgSz" min="10" max="100" step="1" value="${w}" oninput="imgSizeSet(this.value)" style="flex:4 1 0;accent-color:#7c6cf0"><button class="sb" ${m} onclick="imgSize(10)">+</button></div>`;
-    h+=`<div class="lb">Position</div><div class="rw">${MB.map(x=>`<button class="sb${md===x[0]?' on':''}" ${m} title="${x[2]}" onclick="imgMode('${x[0]}')">${x[1]}</button>`).join('')}</div>`;
-    h+=`<div class="lb" style="font-weight:500">${md==='f'?'Image ko ungli se drag karke kahin bhi rakhein':'✥ dabayein to image ko screen par kahin bhi drag kar sakte hain'}</div>`;
-  }else h+=`<div class="lb" style="font-weight:500">Text mein kisi image par tap karein — size aur position badalne ke liye</div>`;
-  $('shB').innerHTML=h;
-}
-function imgSizeSet(v){if(!selImg)return;v=Math.max(10,Math.min(100,+v));selImg.style.width=v+'%';const t=$('imgSzV');if(t)t.textContent=v+'%';touch()}
-function imgSize(d){if(!selImg)return;const v=(parseInt(selImg.style.width)||60)+d;imgSizeSet(v);imgPanel()}
-function imgMode(m){if(!selImg)return;imgModeStyle(selImg,m);touch();imgPanel()}
-function imgDel(){if(!selImg)return;selImg.remove();selImg=null;touch();imgPanel()}
+function imgDelete(){if(!selImg)return;const n=selImg;imgDesel();n.remove();touch();phCheck()}
+ov.querySelector('.ix').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();imgDelete()});
+ov.querySelector('.ix').addEventListener('mousedown',e=>e.preventDefault());
+/* resize handles */
+ov.querySelectorAll('.ih').forEach(h=>{
+  h.addEventListener('pointerdown',e=>{
+    if(!selImg)return;e.preventDefault();e.stopPropagation();
+    const im=selImg,E=$('edText');
+    imgOp={k:h.dataset.h,x:e.clientX,y:e.clientY,w:im.offsetWidth,h:im.offsetHeight,l:im.offsetLeft,t:im.offsetTop,W:E.clientWidth,im};
+    try{h.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  h.addEventListener('pointermove',e=>{
+    const o=imgOp;if(!o||o.im!==selImg)return;e.preventDefault();
+    const k=o.k,dx=e.clientX-o.x,dy=e.clientY-o.y,im=o.im,free=im.dataset.m==='f',MIN=40;
+    const sx=k.includes('e')?1:k.includes('w')?-1:0,sy=k.includes('s')?1:k.includes('n')?-1:0;
+    let nw=o.w,nh=o.h;
+    if(sx&&sy){ /* corner: proportional */
+      nw=Math.max(MIN,Math.min(o.W,o.w+(Math.abs(dx)>Math.abs(dy)*o.w/o.h?sx*dx:sy*dy*o.w/o.h)));
+      nh=o.h*nw/o.w;
+    }else if(sx){nw=Math.max(MIN,Math.min(o.W,o.w+sx*dx));nh=o.h}
+    else{nh=Math.max(MIN,o.h+sy*dy);nw=o.w}
+    im.style.width=(nw/o.W*100).toFixed(1)+'%';
+    if(sx&&sy){if(im.style.height)im.style.height=Math.round(nh)+'px'}
+    else{im.style.height=Math.round(nh)+'px';im.style.objectFit='cover'} /* edge = crop-style resize */
+    if(free){
+      if(k.includes('w'))im.style.left=(Math.max(0,o.l+o.w-nw)/o.W*100).toFixed(1)+'%';
+      if(k.includes('n'))im.style.top=Math.max(0,Math.round(o.t+o.h-nh))+'px';
+    }
+    touch();
+  });
+  const end=()=>{imgOp=null};h.addEventListener('pointerup',end);h.addEventListener('pointercancel',end);
+});
+/* long-press + drag to move */
+(function(){
+  const E=$('edText');let lp=null;
+  E.addEventListener('touchstart',e=>{
+    const im=e.target.closest&&e.target.closest('img');
+    if(!im){imgDesel();return}
+    selectImg(im);if(e.touches.length!==1)return;
+    const t=e.touches[0];
+    lp={im,x:t.clientX,y:t.clientY,on:false};
+    lp.timer=setTimeout(()=>{
+      if(!lp)return;lp.on=true;imgFree(im);
+      lp.l=im.offsetLeft;lp.t=im.offsetTop;lp.W=E.clientWidth;im.classList.add('mv');
+      if(navigator.vibrate)navigator.vibrate(30);
+    },350);
+  },{passive:true});
+  E.addEventListener('touchmove',e=>{
+    if(!lp)return;const t=e.touches[0];
+    if(!lp.on){if(Math.hypot(t.clientX-lp.x,t.clientY-lp.y)>10){clearTimeout(lp.timer);lp=null}return}
+    e.preventDefault();
+    const im=lp.im,l=Math.max(0,Math.min(lp.W-im.offsetWidth,lp.l+t.clientX-lp.x)),tp=Math.max(0,lp.t+t.clientY-lp.y);
+    im.style.left=(l/lp.W*100).toFixed(1)+'%';im.style.top=Math.round(tp)+'px';touch();
+  },{passive:false});
+  const done=()=>{if(lp){clearTimeout(lp.timer);lp.im.classList.remove('mv');lp=null}};
+  E.addEventListener('touchend',done);E.addEventListener('touchcancel',done);
+  E.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG')e.preventDefault()});
+  E.addEventListener('click',e=>{if(e.target.tagName==='IMG')selectImg(e.target);else if(!e.target.closest('#imgOv'))imgDesel()});
+})();
 function shrinkImg(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78))};im.onerror=()=>res(null);im.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(file)})}
 async function insImgs(inp){
   const files=[...inp.files];inp.value='';
   for(const f of files){
     const d=await shrinkImg(f);if(!d){toast('Image load nahi hui');continue}
     titleFocus=false;rs();
-    document.execCommand('insertHTML',false,`<img src="${d}" data-new="1" data-m="c" style="width:60%;${IMG_MODES.c}"><br>`);
+    document.execCommand('insertHTML',false,`<img src="${d}" data-new="1" data-m="c" draggable="false" style="width:60%;${IMG_FLOW}"><br>`);
     const n=$('edText').querySelector('img[data-new]');
     if(n){n.removeAttribute('data-new');selectImg(n)}
     touch();
   }
-  if(imgPanelOpen())imgPanel();else openSheet('img');
 }
-let imgDrag=null;
-(function(){
-  const ed=$('ed');
-  ed.addEventListener('pointerdown',e=>{
-    const E=$('edText'),im=e.target.closest?e.target.closest('img'):null;
-    if(im&&E.contains(im)){
-      selectImg(im);
-      if(!imgPanelOpen())openSheet('img');else imgPanel();
-      if(im.dataset.m==='f'){imgDrag={im,x:e.clientX,y:e.clientY,l:im.offsetLeft,t:im.offsetTop};try{im.setPointerCapture(e.pointerId)}catch(_){}}
-    }else if(selImg&&!e.target.closest('#sheet')&&!e.target.closest('.pill')){
-      selImg.classList.remove('sel');selImg=null;if(imgPanelOpen())imgPanel();
-    }
-  });
-  ed.addEventListener('pointermove',e=>{
-    if(!imgDrag)return;e.preventDefault();
-    const E=$('edText'),im=imgDrag.im,W=E.clientWidth;
-    const l=Math.max(0,Math.min(W-im.offsetWidth,imgDrag.l+e.clientX-imgDrag.x)),t=Math.max(0,imgDrag.t+e.clientY-imgDrag.y);
-    im.style.left=(l/W*100).toFixed(1)+'%';im.style.top=Math.round(t)+'px';touch();
-  });
-  const up=()=>{imgDrag=null};
-  ed.addEventListener('pointerup',up);ed.addEventListener('pointercancel',up);
-})();
 function copyTxt(){navigator.clipboard&&navigator.clipboard.writeText($('edText').innerText.replace(/\u200b/g,'')).then(()=>toast('Text copy ho gaya'));$('mnu').style.display='none'}
 function renderPh(){$('ph').innerHTML=photos.map((p,i)=>`<div><img src="${p}"><button onclick="photos.splice(${i},1);renderPh()">✕</button></div>`).join('')}
 function addPh(inp){[...inp.files].slice(0,5-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photos.push(c.toDataURL('image/jpeg',.65));renderPh()};im.src=r.result};r.readAsDataURL(f)});inp.value=''}
