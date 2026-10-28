@@ -525,6 +525,11 @@ nav .rdb:active{transform:scale(.92)}
 .txt img{height:auto}
 .txt img.mv{position:relative;z-index:3;opacity:.85;box-shadow:0 10px 26px rgba(80,60,140,.35)}
 #imgOv .ix{right:-16px;top:-16px;width:28px;height:28px;font-size:14px}
+#imgOv .tg{position:absolute;left:50%;top:100%;margin-top:24px;transform:translateX(-50%);height:30px;padding:0 14px;border:none;border-radius:15px;background:#7c6cf0;color:#fff;font-size:13px;font-weight:600;white-space:nowrap;pointer-events:auto;cursor:pointer;box-shadow:0 3px 10px rgba(124,108,240,.45)}
+#imgOv[data-m="r"] .n::after,#imgOv[data-m="r"] .s::after,#imgOv[data-m="r"] .w::after,#imgOv[data-m="r"] .e::after{width:15px;height:15px;border-radius:50%}
+#imgOv[data-m="c"]{border-color:#f59e0b}#imgOv[data-m="c"] .ih::after{border-color:#f59e0b}
+#imgOv[data-m="c"] .n::after,#imgOv[data-m="c"] .s::after{width:26px;height:9px;border-radius:6px}#imgOv[data-m="c"] .w::after,#imgOv[data-m="c"] .e::after{width:9px;height:26px;border-radius:6px}
+#imgOv[data-m="c"] .tg{background:#f59e0b}
 </style>
 </head>
 <body>
@@ -1051,20 +1056,26 @@ function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
   refreshSheet()}
 /* ---- Image feature v3: text image ke aaspaas wrap hota hai; long-press move; corner=resize; side=crop; ✕=delete ---- */
-let selImg=null,imgOp=null;
+let selImg=null,imgOp=null,imgMode='r';
 const ov=document.createElement('div');ov.id='imgOv';
-ov.innerHTML=['nw','sw','se','n','s','w','e'].map(h=>`<b class="ih ${h}" data-h="${h}"></b>`).join('')+'<button class="ix" aria-label="Image hatayein">✕</button>';
+ov.innerHTML=['nw','sw','se','n','s','w','e'].map(h=>`<b class="ih ${h}" data-h="${h}"></b>`).join('')+'<button class="ix" aria-label="Image hatayein">✕</button><button class="tg" aria-label="Crop / Size badlein">✂ Crop</button>';
+ov.dataset.m='r';
 $('ed').appendChild(ov);
+(function(){const tg=ov.querySelector('.tg');
+  tg.addEventListener('mousedown',e=>e.preventDefault());
+  tg.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();imgMode=imgMode==='r'?'c':'r';ov.dataset.m=imgMode;tg.textContent=imgMode==='r'?'✂ Crop':'⤢ Size'});
+})();
 const gnum=(im,k,d)=>{const v=parseFloat(im.dataset[k]);return isNaN(v)?(d||0):v};
 function imgBox(){const E=$('edText'),cs=getComputedStyle(E),pl=parseFloat(cs.paddingLeft)||0,pr=parseFloat(cs.paddingRight)||0,r=E.getBoundingClientRect();return{x0:r.left+pl,W:Math.max(50,E.clientWidth-pl-pr),r}}
 function imgApply(im){
   const w=Math.max(5,Math.min(100,gnum(im,'w',60))),s=im.dataset.s||'c',mt=gnum(im,'mt'),cl=gnum(im,'cl'),ct=gnum(im,'ct'),cr=gnum(im,'cr'),cb=gnum(im,'cb');
   let x=gnum(im,'x',(100-w)/2);x=Math.max(0,Math.min(100-w,x));
   let css='width:'+w.toFixed(2)+'%;';
-  if(cl||ct||cr||cb){
-    const ar=((im.naturalWidth||1)/(im.naturalHeight||1))*(1-cl-cr)/(1-ct-cb);
+  const st=gnum(im,'st',1);
+  if(cl||ct||cr||cb||Math.abs(st-1)>.001){
+    const ar=((im.naturalWidth||1)/(im.naturalHeight||1))*(1-cl-cr)/(1-ct-cb)*st;
     im.dataset.ar=ar.toFixed(4);
-    css+='aspect-ratio:'+ar.toFixed(4)+';object-view-box:inset('+(ct*100).toFixed(2)+'% '+(cr*100).toFixed(2)+'% '+(cb*100).toFixed(2)+'% '+(cl*100).toFixed(2)+'%);';
+    css+='aspect-ratio:'+ar.toFixed(4)+';object-fit:fill;object-view-box:inset('+(ct*100).toFixed(2)+'% '+(cr*100).toFixed(2)+'% '+(cb*100).toFixed(2)+'% '+(cl*100).toFixed(2)+'%);';
   }else delete im.dataset.ar;
   const T=(s==='c'?10:4)+mt;
   if(s==='l')css+=`float:left;margin:${T}px 12px 6px ${x.toFixed(2)}%;`;
@@ -1121,21 +1132,25 @@ ov.querySelectorAll('.ih').forEach(h=>{
     const o=imgOp;if(!o||o.im!==selImg)return;e.preventDefault();
     const im=o.im,k=o.k,dx=e.clientX-o.x,dy=e.clientY-o.y,MIN=40,W=o.W;
     const sx=k.includes('e')?1:k.includes('w')?-1:0,sy=k.includes('s')?1:k.includes('n')?-1:0,R0=o.L+o.w;
-    let nw=o.w,nh=o.h,L=o.L,cl=o.cl,ct=o.ct,cr=o.cr,cb=o.cb;
-    if(sx&&sy){ /* corner: poori image ek saath chhoti-badi (smooth, diagonal ke hisaab se) */
+    let nw=o.w,nh=o.h,L=o.L,cl=o.cl,ct=o.ct,cr=o.cr,cb=o.cb,st=gnum(im,'st',1);
+    const nat=(im.naturalWidth||1)/(im.naturalHeight||1),ar0=nat*(1-cl-cr)/(1-ct-cb);
+    if(sx&&sy&&imgMode==='r'){ /* corner: poori image proportional chhoti-badi */
       const D=o.w*o.w+o.h*o.h,kk=1+((sx*dx*o.w+sy*dy*o.h)/D);
       nw=Math.max(MIN,Math.min(sx>0?W-o.L:R0,o.w*kk));nh=o.h*nw/o.w;L=sx>0?o.L:R0-nw;
-    }else if(sx){ /* left/right line: sirf usi side se crop */
-      const mf=MIN/o.Wf;
-      if(sx<0)cl=Math.max(0,Math.min(1-cr-mf,o.cl+dx/o.Wf));else cr=Math.max(0,Math.min(1-cl-mf,o.cr-dx/o.Wf));
-      nw=o.Wf*(1-cl-cr);L=sx<0?R0-nw:o.L;
-    }else{ /* upar/neeche line */
-      const mf=MIN/o.Hf;
-      if(sy<0)ct=Math.max(0,Math.min(1-cb-mf,o.ct+dy/o.Hf));else cb=Math.max(0,Math.min(1-ct-mf,o.cb-dy/o.Hf));
-      nh=o.Hf*(1-ct-cb);
+    }else if(imgMode==='r'){ /* side: image kate nahi, sirf us taraf se kheench-sikud jaye (Google Docs jaisa) */
+      if(sx){nw=Math.max(MIN,Math.min(sx>0?W-o.L:R0,o.w+sx*dx));L=sx>0?o.L:R0-nw}
+      else nh=Math.max(MIN,o.h+sy*dy);
+      st=(nw/nh)/ar0;
+    }else{ /* crop mode: line/corner jis side ka ho sirf usi side se crop */
+      if(sx){const mf=MIN/o.Wf;
+        if(sx<0)cl=Math.max(0,Math.min(1-cr-mf,o.cl+dx/o.Wf));else cr=Math.max(0,Math.min(1-cl-mf,o.cr-dx/o.Wf));
+        nw=o.Wf*(1-cl-cr);L=sx<0?R0-nw:o.L}
+      if(sy){const mf=MIN/o.Hf;
+        if(sy<0)ct=Math.max(0,Math.min(1-cb-mf,o.ct+dy/o.Hf));else cb=Math.max(0,Math.min(1-ct-mf,o.cb-dy/o.Hf));
+        nh=o.Hf*(1-ct-cb)}
     }
     let mt=o.mt;if(sy<0)mt=Math.max(0,o.mt+(o.h-nh));
-    im.dataset.w=(nw/W*100).toFixed(2);im.dataset.x=Math.max(0,L/W*100).toFixed(2);im.dataset.mt=mt.toFixed(1);
+    im.dataset.st=st.toFixed(4);im.dataset.w=(nw/W*100).toFixed(2);im.dataset.x=Math.max(0,L/W*100).toFixed(2);im.dataset.mt=mt.toFixed(1);
     im.dataset.cl=cl.toFixed(4);im.dataset.ct=ct.toFixed(4);im.dataset.cr=cr.toFixed(4);im.dataset.cb=cb.toFixed(4);
     imgApply(im);touch();
   });
@@ -1239,7 +1254,7 @@ function rdInl(n){
   if(n.nodeType!==1)return'';
   const t=n.tagName.toLowerCase();
   if(t==='br')return'<br>';
-  if(t==='img'){const s=n.getAttribute('src')||'';const d=n.dataset||{},wv=parseFloat(d.w)||parseFloat(n.style&&n.style.width)||0;let st='';if(wv)st='width:'+Math.min(100,wv)+'%;max-width:100%;height:auto;display:block;margin:8px auto;';const cl=+d.cl||0,ct=+d.ct||0,cr=+d.cr||0,cb=+d.cb||0;if((cl||ct||cr||cb)&&+d.ar)st+='aspect-ratio:'+(+d.ar)+';object-view-box:inset('+ct*100+'% '+cr*100+'% '+cb*100+'% '+cl*100+'%);';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}"${st?` style="${st}"`:''}>`:''}
+  if(t==='img'){const s=n.getAttribute('src')||'';const d=n.dataset||{},wv=parseFloat(d.w)||parseFloat(n.style&&n.style.width)||0;let st='';if(wv)st='width:'+Math.min(100,wv)+'%;max-width:100%;height:auto;display:block;margin:8px auto;';const cl=+d.cl||0,ct=+d.ct||0,cr=+d.cr||0,cb=+d.cb||0;if((cl||ct||cr||cb||(+d.st&&Math.abs(+d.st-1)>.001))&&+d.ar)st+='aspect-ratio:'+(+d.ar)+';object-fit:fill;object-view-box:inset('+ct*100+'% '+cr*100+'% '+cb*100+'% '+cl*100+'%);';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}"${st?` style="${st}"`:''}>`:''}
   if(/^(script|style|iframe|object|embed|link|svg)$/.test(t))return'';
   let c='';n.childNodes.forEach(k=>{c+=rdInl(k)});
   if(!c)return'';
