@@ -522,6 +522,9 @@ nav .rdb:active{transform:scale(.92)}
 #imgOv .n{left:50%;top:0}#imgOv .s{left:50%;top:100%}#imgOv .w{left:0;top:50%}#imgOv .e{left:100%;top:50%}
 #imgOv .ix{position:absolute;right:-4px;top:-44px;width:34px;height:34px;border:none;border-radius:50%;background:#d9486b;color:#fff;font-size:16px;line-height:1;pointer-events:auto;cursor:pointer;box-shadow:0 3px 10px rgba(217,72,107,.45)}
 .txt::after{content:"";display:block;clear:both}
+.txt img{height:auto}
+.txt img.mv{position:relative;z-index:3;opacity:.85;box-shadow:0 10px 26px rgba(80,60,140,.35)}
+#imgOv .ix{right:-16px;top:-16px;width:28px;height:28px;font-size:14px}
 </style>
 </head>
 <body>
@@ -875,7 +878,7 @@ function mdAdd(){const inp=$('mdIn'),v=inp.value;if(!v.trim())return;
   inp.value='';if(n){mdSave();toast(n+' emoji jud gaya');mdEdit=false;mdPage=Math.ceil(MOODS.length/MDPER)-1;mdPages()}else toast('Ye emoji pehle se hai');inp.focus()}
 function mdDel(i){if(MOODS.length<=1){toast('Kam se kam ek emoji rakhein');return}const m=MOODS[i];MOODS.splice(i,1);if(mood===m[0]){mood='';setMd();touch()}mdSave();mdPages()}
 plainField($('edTitle'));renderMdPop();
-function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('img.sel').forEach(n=>{n.classList.remove('sel');if(!n.getAttribute('class'))n.removeAttribute('class')});t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
+function sanitize(h){const t=document.createElement('div');t.innerHTML=String(h).replace(/\u200b/g,'');t.querySelectorAll('b,i,u,s,strike,span,font').forEach(n=>{if(!n.textContent.length&&!n.querySelector('img,br'))n.remove()});t.querySelectorAll('script,iframe,object,embed,style,link').forEach(n=>n.remove());t.querySelectorAll('img.sel,img.mv').forEach(n=>{n.classList.remove('sel','mv');if(!n.getAttribute('class'))n.removeAttribute('class')});t.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML}
 document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&$('edText').contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();if($('sheet').style.display==='block')refreshSoon()});
 function rs(){if(titleFocus){$('edTitle').focus();return}$('edText').focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}}
 const TAGFMT={bold:1,italic:1,underline:1,strikeThrough:1};
@@ -1047,85 +1050,130 @@ function openSheet(t){const b=$('shB'),m='onmousedown="event.preventDefault()"';
   else if(t==='bg'){$('shT').textContent='Background';b.innerHTML=`<div class="bgs">${BGS.map((c,i)=>`<i data-k="bg" data-v="${i}" style="background:${c||'linear-gradient(165deg,#f7f8ff,#eef1ff 55%,#f3efff)'}" onclick="bg=BGS[${i}];applyBg();touch();refreshSheet()"></i>`).join('')}</div>`}
   else{$('shT').textContent='Emoji';b.innerHTML=`<div class="lg" style="grid-template-columns:repeat(6,1fr)">${EMO.map(e=>`<button class="sb" ${m} onclick="ex('insertText','${e}')">${e}</button>`).join('')}</div>`}
   refreshSheet()}
-/* ---- Image feature: sab kuch image par hi (long-press move, corner/edge resize, ✕ delete) ---- */
+/* ---- Image feature v3: text image ke aaspaas wrap hota hai; long-press move; corner=resize; side=crop; ✕=delete ---- */
 let selImg=null,imgOp=null;
-const IMG_FLOW='display:block;margin:10px auto;';
 const ov=document.createElement('div');ov.id='imgOv';
-ov.innerHTML=['nw','ne','sw','se','n','s','w','e'].map(h=>`<b class="ih ${h}" data-h="${h}"></b>`).join('')+'<button class="ix" aria-label="Image hatayein">✕</button>';
+ov.innerHTML=['nw','sw','se','n','s','w','e'].map(h=>`<b class="ih ${h}" data-h="${h}"></b>`).join('')+'<button class="ix" aria-label="Image hatayein">✕</button>';
 $('ed').appendChild(ov);
+const gnum=(im,k,d)=>{const v=parseFloat(im.dataset[k]);return isNaN(v)?(d||0):v};
+function imgBox(){const E=$('edText'),cs=getComputedStyle(E),pl=parseFloat(cs.paddingLeft)||0,pr=parseFloat(cs.paddingRight)||0,r=E.getBoundingClientRect();return{x0:r.left+pl,W:Math.max(50,E.clientWidth-pl-pr),r}}
+function imgApply(im){
+  const w=Math.max(5,Math.min(100,gnum(im,'w',60))),s=im.dataset.s||'c',mt=gnum(im,'mt'),cl=gnum(im,'cl'),ct=gnum(im,'ct'),cr=gnum(im,'cr'),cb=gnum(im,'cb');
+  let x=gnum(im,'x',(100-w)/2);x=Math.max(0,Math.min(100-w,x));
+  let css='width:'+w.toFixed(2)+'%;';
+  if(cl||ct||cr||cb){
+    const ar=((im.naturalWidth||1)/(im.naturalHeight||1))*(1-cl-cr)/(1-ct-cb);
+    im.dataset.ar=ar.toFixed(4);
+    css+='aspect-ratio:'+ar.toFixed(4)+';object-view-box:inset('+(ct*100).toFixed(2)+'% '+(cr*100).toFixed(2)+'% '+(cb*100).toFixed(2)+'% '+(cl*100).toFixed(2)+'%);';
+  }else delete im.dataset.ar;
+  const T=(s==='c'?10:4)+mt;
+  if(s==='l')css+=`float:left;margin:${T}px 12px 6px ${x.toFixed(2)}%;`;
+  else if(s==='r')css+=`float:right;margin:${T}px ${Math.max(0,100-x-w).toFixed(2)}% 6px 12px;`;
+  else css+=`display:block;margin:${T}px 0 10px ${x.toFixed(2)}%;`;
+  im.style.cssText=css;
+}
+/* rect ke hisaab se side (left/right/beech) aur position tay karo */
+function imgClassify(im,r){
+  const {x0,W}=imgBox(),wp=Math.min(100,r.width/W*100);
+  let x=Math.max(0,Math.min(100-wp,(r.left-x0)/W*100));
+  const s=wp>70?'c':(x+wp/2<50?'l':'r');
+  if(x<3)x=0;if(100-wp-x<3)x=100-wp;
+  im.dataset.w=wp.toFixed(2);im.dataset.x=x.toFixed(2);im.dataset.s=s;
+}
+function imgInit(im){ /* purani images ko naye format mein badlo */
+  if(im.dataset.s)return;
+  const {W}=imgBox(),r=im.getBoundingClientRect(),m=im.dataset.m;
+  const w=parseFloat(im.style.width)||(r.width/W*100);
+  im.dataset.w=w;im.style.height='';im.style.objectFit='';
+  if(m==='f')imgClassify(im,r);
+  else if(m==='l'){im.dataset.s='l';im.dataset.x=0}
+  else if(m==='r'){im.dataset.s='r';im.dataset.x=100-w}
+  else{im.dataset.s='c';im.dataset.x=(100-w)/2}
+  imgApply(im);
+}
 function imgPlace(){
   if(!selImg||!selImg.isConnected||$('ed').style.display!=='flex'){ov.style.display='none';return}
   const r=selImg.getBoundingClientRect(),b=$('ed').getBoundingClientRect();
   ov.style.display='block';ov.style.left=(r.left-b.left-2)+'px';ov.style.top=(r.top-b.top-2)+'px';ov.style.width=(r.width+4)+'px';ov.style.height=(r.height+4)+'px';
 }
 (function loop(){imgPlace();requestAnimationFrame(loop)})();
-function selectImg(im){if(selImg&&selImg!==im)selImg.classList.remove('sel');selImg=im;if(im)im.classList.add('sel')}
+function selectImg(im){if(selImg&&selImg!==im)selImg.classList.remove('sel');selImg=im;if(im){imgInit(im);im.classList.add('sel')}}
 function imgDesel(){if(selImg)selImg.classList.remove('sel');selImg=null;imgOp=null;ov.style.display='none'}
-function imgFree(im){ /* flow se free-position mein badlo */
-  if(im.dataset.m==='f')return;
-  const E=$('edText'),a=im.getBoundingClientRect(),b=E.getBoundingClientRect(),W=E.clientWidth;
-  const w=im.offsetWidth,h=im.style.height;
-  im.style.cssText='width:'+(w/W*100).toFixed(1)+'%;'+(h?'height:'+h+';object-fit:cover;':'')+'position:absolute;margin:0;z-index:2;left:'+Math.max(0,(a.left-b.left)/W*100).toFixed(1)+'%;top:'+Math.max(0,Math.round(a.top-b.top))+'px;';
-  im.dataset.m='f';
-}
 function imgDelete(){if(!selImg)return;const n=selImg;imgDesel();n.remove();touch();phCheck()}
 ov.querySelector('.ix').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();imgDelete()});
 ov.querySelector('.ix').addEventListener('mousedown',e=>e.preventDefault());
-/* resize handles */
+function imgSnap(im){
+  let w=gnum(im,'w',60),x=gnum(im,'x',0);
+  if(im.dataset.s!=='c'&&w>70)im.dataset.s='c';
+  if(x<3)x=0;if(100-w-x<3)x=Math.max(0,100-w);
+  im.dataset.x=x.toFixed(2);imgApply(im);
+}
+/* corner = resize, side = crop */
 ov.querySelectorAll('.ih').forEach(h=>{
   h.addEventListener('pointerdown',e=>{
     if(!selImg)return;e.preventDefault();e.stopPropagation();
-    const im=selImg,E=$('edText');
-    imgOp={k:h.dataset.h,x:e.clientX,y:e.clientY,w:im.offsetWidth,h:im.offsetHeight,l:im.offsetLeft,t:im.offsetTop,W:E.clientWidth,im};
+    const im=selImg;imgInit(im);
+    const {x0,W}=imgBox(),r=im.getBoundingClientRect(),cl=gnum(im,'cl'),ct=gnum(im,'ct'),cr=gnum(im,'cr'),cb=gnum(im,'cb');
+    imgOp={k:h.dataset.h,x:e.clientX,y:e.clientY,im,W,w:r.width,h:r.height,L:r.left-x0,mt:gnum(im,'mt'),cl,ct,cr,cb,Wf:r.width/(1-cl-cr),Hf:r.height/(1-ct-cb)};
     try{h.setPointerCapture(e.pointerId)}catch(_){}
   });
   h.addEventListener('pointermove',e=>{
     const o=imgOp;if(!o||o.im!==selImg)return;e.preventDefault();
-    const k=o.k,dx=e.clientX-o.x,dy=e.clientY-o.y,im=o.im,free=im.dataset.m==='f',MIN=40;
-    const sx=k.includes('e')?1:k.includes('w')?-1:0,sy=k.includes('s')?1:k.includes('n')?-1:0;
-    let nw=o.w,nh=o.h;
-    if(sx&&sy){ /* corner: proportional */
-      nw=Math.max(MIN,Math.min(o.W,o.w+(Math.abs(dx)>Math.abs(dy)*o.w/o.h?sx*dx:sy*dy*o.w/o.h)));
-      nh=o.h*nw/o.w;
-    }else if(sx){nw=Math.max(MIN,Math.min(o.W,o.w+sx*dx));nh=o.h}
-    else{nh=Math.max(MIN,o.h+sy*dy);nw=o.w}
-    im.style.width=(nw/o.W*100).toFixed(1)+'%';
-    if(sx&&sy){if(im.style.height)im.style.height=Math.round(nh)+'px'}
-    else{im.style.height=Math.round(nh)+'px';im.style.objectFit='cover'} /* edge = crop-style resize */
-    if(free){
-      if(k.includes('w'))im.style.left=(Math.max(0,o.l+o.w-nw)/o.W*100).toFixed(1)+'%';
-      if(k.includes('n'))im.style.top=Math.max(0,Math.round(o.t+o.h-nh))+'px';
+    const im=o.im,k=o.k,dx=e.clientX-o.x,dy=e.clientY-o.y,MIN=40,W=o.W;
+    const sx=k.includes('e')?1:k.includes('w')?-1:0,sy=k.includes('s')?1:k.includes('n')?-1:0,R0=o.L+o.w;
+    let nw=o.w,nh=o.h,L=o.L,cl=o.cl,ct=o.ct,cr=o.cr,cb=o.cb;
+    if(sx&&sy){ /* corner: poori image ek saath chhoti-badi (smooth, diagonal ke hisaab se) */
+      const D=o.w*o.w+o.h*o.h,kk=1+((sx*dx*o.w+sy*dy*o.h)/D);
+      nw=Math.max(MIN,Math.min(sx>0?W-o.L:R0,o.w*kk));nh=o.h*nw/o.w;L=sx>0?o.L:R0-nw;
+    }else if(sx){ /* left/right line: sirf usi side se crop */
+      const mf=MIN/o.Wf;
+      if(sx<0)cl=Math.max(0,Math.min(1-cr-mf,o.cl+dx/o.Wf));else cr=Math.max(0,Math.min(1-cl-mf,o.cr-dx/o.Wf));
+      nw=o.Wf*(1-cl-cr);L=sx<0?R0-nw:o.L;
+    }else{ /* upar/neeche line */
+      const mf=MIN/o.Hf;
+      if(sy<0)ct=Math.max(0,Math.min(1-cb-mf,o.ct+dy/o.Hf));else cb=Math.max(0,Math.min(1-ct-mf,o.cb-dy/o.Hf));
+      nh=o.Hf*(1-ct-cb);
     }
-    touch();
+    let mt=o.mt;if(sy<0)mt=Math.max(0,o.mt+(o.h-nh));
+    im.dataset.w=(nw/W*100).toFixed(2);im.dataset.x=Math.max(0,L/W*100).toFixed(2);im.dataset.mt=mt.toFixed(1);
+    im.dataset.cl=cl.toFixed(4);im.dataset.ct=ct.toFixed(4);im.dataset.cr=cr.toFixed(4);im.dataset.cb=cb.toFixed(4);
+    imgApply(im);touch();
   });
-  const end=()=>{imgOp=null};h.addEventListener('pointerup',end);h.addEventListener('pointercancel',end);
+  const end=()=>{if(imgOp){imgSnap(imgOp.im)}imgOp=null};h.addEventListener('pointerup',end);h.addEventListener('pointercancel',end);
 });
-/* long-press + drag to move */
+/* image ko chhodte hi: text ke us jagah mein daalo, text aaspaas wrap */
+function imgDrop(im){
+  const E=$('edText'),{x0,r:Er}=imgBox(),r=im.getBoundingClientRect();
+  im.style.transform='';im.classList.remove('mv');
+  imgClassify(im,r);im.dataset.mt=0;
+  let rg=null;im.remove();
+  try{rg=document.caretRangeFromPoint(x0+3,Math.max(Er.top+2,Math.min(r.top+2,innerHeight-2)))}catch(_){}
+  if(!rg||!E.contains(rg.startContainer)){rg=document.createRange();rg.selectNodeContents(E);rg.collapse(r.top<Er.top+10)}
+  rg.insertNode(im);imgApply(im);touch();phCheck();
+}
 (function(){
   const E=$('edText');let lp=null;
+  const scroller=el=>{while(el&&el!==document.body){const cs=getComputedStyle(el);if(/(auto|scroll)/.test(cs.overflowY)&&el.scrollHeight>el.clientHeight)return el;el=el.parentElement}return null};
   E.addEventListener('touchstart',e=>{
     const im=e.target.closest&&e.target.closest('img');
     if(!im){imgDesel();return}
+    if(e.cancelable)e.preventDefault(); /* system ka copy/select menu na aaye */
     selectImg(im);if(e.touches.length!==1)return;
     const t=e.touches[0];
-    lp={im,x:t.clientX,y:t.clientY,on:false};
-    lp.timer=setTimeout(()=>{
-      if(!lp)return;lp.on=true;imgFree(im);
-      lp.l=im.offsetLeft;lp.t=im.offsetTop;lp.W=E.clientWidth;im.classList.add('mv');
-      if(navigator.vibrate)navigator.vibrate(30);
-    },350);
-  },{passive:true});
+    lp={im,x:t.clientX,y:t.clientY,ly:t.clientY,on:false,sc:false,sr:scroller(E)};
+    lp.timer=setTimeout(()=>{if(!lp||lp.sc)return;lp.on=true;im.classList.add('mv');if(navigator.vibrate)navigator.vibrate(30)},350);
+  },{passive:false});
   E.addEventListener('touchmove',e=>{
     if(!lp)return;const t=e.touches[0];
-    if(!lp.on){if(Math.hypot(t.clientX-lp.x,t.clientY-lp.y)>10){clearTimeout(lp.timer);lp=null}return}
-    e.preventDefault();
-    const im=lp.im,l=Math.max(0,Math.min(lp.W-im.offsetWidth,lp.l+t.clientX-lp.x)),tp=Math.max(0,lp.t+t.clientY-lp.y);
-    im.style.left=(l/lp.W*100).toFixed(1)+'%';im.style.top=Math.round(tp)+'px';touch();
-  },{passive:false});
-  const done=()=>{if(lp){clearTimeout(lp.timer);lp.im.classList.remove('mv');lp=null}};
+    if(lp.on){lp.im.style.transform=`translate(${t.clientX-lp.x}px,${t.clientY-lp.y}px)`;return}
+    if(!lp.sc&&Math.hypot(t.clientX-lp.x,t.clientY-lp.y)>10){clearTimeout(lp.timer);lp.sc=true}
+    if(lp.sc&&lp.sr){lp.sr.scrollTop-=t.clientY-lp.ly}
+    lp.ly=t.clientY;
+  },{passive:true});
+  const done=()=>{if(!lp)return;clearTimeout(lp.timer);const l=lp;lp=null;if(l.on)imgDrop(l.im)};
   E.addEventListener('touchend',done);E.addEventListener('touchcancel',done);
   E.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG')e.preventDefault()});
-  E.addEventListener('click',e=>{if(e.target.tagName==='IMG')selectImg(e.target);else if(!e.target.closest('#imgOv'))imgDesel()});
+  E.addEventListener('click',e=>{if(e.target.tagName==='IMG')selectImg(e.target);else imgDesel()});
 })();
 function shrinkImg(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78))};im.onerror=()=>res(null);im.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(file)})}
 async function insImgs(inp){
@@ -1133,9 +1181,9 @@ async function insImgs(inp){
   for(const f of files){
     const d=await shrinkImg(f);if(!d){toast('Image load nahi hui');continue}
     titleFocus=false;rs();
-    document.execCommand('insertHTML',false,`<img src="${d}" data-new="1" data-m="c" draggable="false" style="width:60%;${IMG_FLOW}"><br>`);
+    document.execCommand('insertHTML',false,`<img src="${d}" data-new="1" data-s="c" data-w="60" data-x="20" draggable="false"><br>`);
     const n=$('edText').querySelector('img[data-new]');
-    if(n){n.removeAttribute('data-new');selectImg(n)}
+    if(n){n.removeAttribute('data-new');imgApply(n);selectImg(n)}
     touch();
   }
 }
@@ -1191,7 +1239,7 @@ function rdInl(n){
   if(n.nodeType!==1)return'';
   const t=n.tagName.toLowerCase();
   if(t==='br')return'<br>';
-  if(t==='img'){const s=n.getAttribute('src')||'';const w=(n.style&&n.style.width)||'';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}"${/^\d+(\.\d+)?%$/.test(w)?` style="width:${w};max-width:100%;height:auto"`:''}>`:''}
+  if(t==='img'){const s=n.getAttribute('src')||'';const d=n.dataset||{},wv=parseFloat(d.w)||parseFloat(n.style&&n.style.width)||0;let st='';if(wv)st='width:'+Math.min(100,wv)+'%;max-width:100%;height:auto;display:block;margin:8px auto;';const cl=+d.cl||0,ct=+d.ct||0,cr=+d.cr||0,cb=+d.cb||0;if((cl||ct||cr||cb)&&+d.ar)st+='aspect-ratio:'+(+d.ar)+';object-view-box:inset('+ct*100+'% '+cr*100+'% '+cb*100+'% '+cl*100+'%);';return /^(data:image|https?:)/i.test(s)?`<img src="${esc(s)}"${st?` style="${st}"`:''}>`:''}
   if(/^(script|style|iframe|object|embed|link|svg)$/.test(t))return'';
   let c='';n.childNodes.forEach(k=>{c+=rdInl(k)});
   if(!c)return'';
