@@ -730,7 +730,8 @@ nav .rdb:active{transform:scale(.92)}
     <h3 style="margin-top:18px">Page</h3>
     <div class="nvact">
       <button onclick="nvEdit()">✏️ Edit</button>
-      <button onclick="nvPin()" id="nvPinB">📌 Pin karein</button>
+      <button onclick="nvPin()" id="nvPinB">📌 Pin</button>
+      <button onclick="nvSave()" id="nvSaveB">🔖 Save</button>
       <button onclick="nvCopy()">📋 Text copy karein</button>
       <button class="dg" onclick="nvDel()">🗑️ Delete</button>
     </div>
@@ -1402,11 +1403,12 @@ function nvAfterEd(quiet){
 function nvMarkTh(){document.querySelectorAll('#nvSt .nvths button').forEach(b=>b.classList.toggle('on',b.dataset.th===nvTh))}
 function nvSet(o){
   const sh=$('nvSt'),on=sh.classList.contains('on');
-  if(o){if(on)return;nvMarkTh();const e=entries[nvId];$('nvPinB').textContent=e&&e.pinned?'📌 Unpin karein':'📌 Pin karein';sh.classList.add('on');history.pushState({nvs:1},'')}
+  if(o){if(on)return;nvMarkTh();const e=entries[nvId];$('nvPinB').textContent=e&&e.pinned?'📌 Unpin':'📌 Pin';$('nvSaveB').textContent=e&&e.saved?'🔖 Unsave':'🔖 Save';sh.classList.add('on');history.pushState({nvs:1},'')}
   else{if(!on)return;sh.classList.remove('on');if(history.state&&history.state.nvs){nvPop=()=>{};history.back()}}
 }
 function nvTheme(t){nvTh=t;try{localStorage.setItem('diary_nvth',t)}catch(_){}nvMarkTh();const e=entries[nvId];if(e)nvRender(e,true)}
 function nvPin(){const e=entries[nvId];nvSet(false);if(!e)return;const v=!e.pinned;e.pinned=v;db.ref(base()+'/entries/'+nvId+'/pinned').set(v?true:null).catch(x=>toast('Sync nahi hua: '+x.message));toast(v?'Pin ho gaya 📌':'Unpin ho gaya');render()}
+function nvSave(){const e=entries[nvId];nvSet(false);if(!e)return;const v=!e.saved;e.saved=v;db.ref(base()+'/entries/'+nvId+'/saved').set(v?true:null).catch(x=>toast('Sync nahi hua: '+x.message));toast(v?'Save ho gaya 🔖':'Unsave ho gaya');render()}
 function nvCopy(){const e=entries[nvId];nvSet(false);if(e&&navigator.clipboard)navigator.clipboard.writeText((e.title?e.title+'\n\n':'')+(e.text||'')).then(()=>toast('Text copy ho gaya'))}
 function nvDel(){
   const e=entries[nvId];if(!e||!confirm('Ye page hamesha ke liye hata dein?'))return;
