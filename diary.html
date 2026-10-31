@@ -542,6 +542,7 @@ nav .rdb:active{transform:scale(.92)}
 /* floating controls */
 #nv .nvfab:active{transform:scale(.92)}
 #nv .nvfab{position:fixed;right:20px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:5;width:60px;height:60px;border-radius:50%;border:0;background:var(--nvfab);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 14px 30px rgba(0,0,0,.28),inset 0 0 0 2px rgba(255,255,255,.3);-webkit-tap-highlight-color:transparent;transition:transform .15s}
+@media(max-width:600px){#nv button.nvfab{width:46px;height:46px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px))}#nv button.nvfab svg{width:21px;height:21px}}
 #nv .nvfab svg{width:27px;height:27px;fill:none;stroke:var(--nvfabi);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* header (theme 1 = centered) */
 #nv .nvh{text-align:center;position:relative;padding-bottom:4px}
@@ -573,10 +574,10 @@ nav .rdb:active{transform:scale(.92)}
 #nv .nvft .tgs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px}
 #nv .nvft .tgs span{font:700 12.5px 'Quicksand',sans-serif;color:var(--nva);background:var(--nvpill);padding:6px 13px;border-radius:999px}
 #nv .nvft .end{color:var(--nva);letter-spacing:.7em;font-size:13px;opacity:.7}
-#nv .nvedw{display:flex;justify-content:center;margin-top:30px}
-#nv .nved{display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;padding:14px 28px;border-radius:999px;background:var(--nvfab);color:var(--nvfabi);font:700 15px 'Quicksand','Hind',sans-serif;letter-spacing:.02em;box-shadow:0 12px 26px rgba(0,0,0,.22),inset 0 0 0 1.5px rgba(255,255,255,.3);-webkit-tap-highlight-color:transparent;transition:transform .15s}
+#nv .nvedw{display:flex;justify-content:flex-end;margin-top:26px;padding-top:12px;border-top:1px dashed var(--nvr)}
+#nv .nved{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--nvr);cursor:pointer;padding:6px 14px;border-radius:14px;background:transparent;color:var(--nva);font:600 12.5px 'Quicksand','Hind',sans-serif;-webkit-tap-highlight-color:transparent;transition:transform .15s}
 #nv .nved:active{transform:scale(.95)}
-#nv .nved svg{width:19px;height:19px;fill:none;stroke:var(--nvfabi);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#nv .nved svg{width:14px;height:14px;fill:none;stroke:var(--nva);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 /* theme 1 dark note background */
 #nv.dark{--nvi:#f1ecff;--nvs:#b9afdc;--nva:#c1adff;--nvr:rgba(255,255,255,.16);--nvbody:#e6e1f7;--nvgl:rgba(255,255,255,.14);--nvglb:rgba(255,255,255,.2);--nvpill:rgba(255,255,255,.12);color:#f1ecff}
 
@@ -711,8 +712,8 @@ nav .rdb:active{transform:scale(.92)}
       </header>
       <div class="nvb" id="nvB"></div>
       <div class="nvph" id="nvPh"></div>
+      <div class="nvedw"><button class="nved" onclick="nvEdit()"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button></div>
       <footer class="nvft" id="nvFt"></footer>
-      <div class="nvedw"><button class="nved" onclick="nvEdit()"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit karein</button></div>
     </article>
   </div>
   <button class="nvfab" onclick="nvSet(true)" aria-label="View settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.3"/><circle cx="8" cy="17" r="2.3"/></svg></button>
@@ -728,7 +729,7 @@ nav .rdb:active{transform:scale(.92)}
     </div>
     <h3 style="margin-top:18px">Page</h3>
     <div class="nvact">
-      <button onclick="nvEdit()">✏️ Edit karein</button>
+      <button onclick="nvEdit()">✏️ Edit</button>
       <button onclick="nvPin()" id="nvPinB">📌 Pin karein</button>
       <button onclick="nvCopy()">📋 Text copy karein</button>
       <button class="dg" onclick="nvDel()">🗑️ Delete</button>
