@@ -540,12 +540,8 @@ nav .rdb:active{transform:scale(.92)}
 #nv .nvsc{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(130px + env(safe-area-inset-bottom,0px))}
 #nv .nvart{max-width:720px;margin:0 auto;padding:calc(34px + env(safe-area-inset-top,0px)) 24px 0}
 /* floating controls */
-#nv .nvcb{position:fixed;z-index:5;width:48px;height:48px;border-radius:50%;background:var(--nvgl);border:1px solid var(--nvglb);color:var(--nva);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(60,40,120,.16);-webkit-tap-highlight-color:transparent;transition:transform .15s}
-#nv .nvcb:active,#nv .nvfab:active{transform:scale(.92)}
-#nv .nvcb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-#nv .nvbk{left:18px;bottom:calc(29px + env(safe-area-inset-bottom,0px))}
-#nv .nvst{right:27px;bottom:calc(100px + env(safe-area-inset-bottom,0px))}
-#nv .nvfab{position:fixed;right:20px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:5;width:62px;height:62px;border-radius:50%;border:0;background:var(--nvfab);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 14px 30px rgba(0,0,0,.28),inset 0 0 0 2px rgba(255,255,255,.3);-webkit-tap-highlight-color:transparent;transition:transform .15s}
+#nv .nvfab:active{transform:scale(.92)}
+#nv .nvfab{position:fixed;right:20px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:5;width:60px;height:60px;border-radius:50%;border:0;background:var(--nvfab);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 14px 30px rgba(0,0,0,.28),inset 0 0 0 2px rgba(255,255,255,.3);-webkit-tap-highlight-color:transparent;transition:transform .15s}
 #nv .nvfab svg{width:27px;height:27px;fill:none;stroke:var(--nvfabi);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* header (theme 1 = centered) */
 #nv .nvh{text-align:center;position:relative;padding-bottom:4px}
@@ -577,6 +573,10 @@ nav .rdb:active{transform:scale(.92)}
 #nv .nvft .tgs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px}
 #nv .nvft .tgs span{font:700 12.5px 'Quicksand',sans-serif;color:var(--nva);background:var(--nvpill);padding:6px 13px;border-radius:999px}
 #nv .nvft .end{color:var(--nva);letter-spacing:.7em;font-size:13px;opacity:.7}
+#nv .nvedw{display:flex;justify-content:center;margin-top:30px}
+#nv .nved{display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;padding:14px 28px;border-radius:999px;background:var(--nvfab);color:var(--nvfabi);font:700 15px 'Quicksand','Hind',sans-serif;letter-spacing:.02em;box-shadow:0 12px 26px rgba(0,0,0,.22),inset 0 0 0 1.5px rgba(255,255,255,.3);-webkit-tap-highlight-color:transparent;transition:transform .15s}
+#nv .nved:active{transform:scale(.95)}
+#nv .nved svg{width:19px;height:19px;fill:none;stroke:var(--nvfabi);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 /* theme 1 dark note background */
 #nv.dark{--nvi:#f1ecff;--nvs:#b9afdc;--nva:#c1adff;--nvr:rgba(255,255,255,.16);--nvbody:#e6e1f7;--nvgl:rgba(255,255,255,.14);--nvglb:rgba(255,255,255,.2);--nvpill:rgba(255,255,255,.12);color:#f1ecff}
 
@@ -712,11 +712,10 @@ nav .rdb:active{transform:scale(.92)}
       <div class="nvb" id="nvB"></div>
       <div class="nvph" id="nvPh"></div>
       <footer class="nvft" id="nvFt"></footer>
+      <div class="nvedw"><button class="nved" onclick="nvEdit()"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit karein</button></div>
     </article>
   </div>
-  <button class="nvcb nvbk" onclick="nvClose()" aria-label="Wapas"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <button class="nvcb nvst" onclick="nvSet(true)" aria-label="View settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg></button>
-  <button class="nvfab" onclick="nvEdit()" aria-label="Edit karein"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+  <button class="nvfab" onclick="nvSet(true)" aria-label="View settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.3"/><circle cx="8" cy="17" r="2.3"/></svg></button>
 </div>
 <div id="nvSt" onclick="if(event.target===this)nvSet(false)">
   <div class="sh">
@@ -729,6 +728,7 @@ nav .rdb:active{transform:scale(.92)}
     </div>
     <h3 style="margin-top:18px">Page</h3>
     <div class="nvact">
+      <button onclick="nvEdit()">✏️ Edit karein</button>
       <button onclick="nvPin()" id="nvPinB">📌 Pin karein</button>
       <button onclick="nvCopy()">📋 Text copy karein</button>
       <button class="dg" onclick="nvDel()">🗑️ Delete</button>
@@ -1069,7 +1069,7 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;imgDesel();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();nvAfterEd(quiet)}
-window.onpopstate=()=>{if(nvPend){const i=nvPend;nvPend=null;if(entries[i])nvShow(i);else history.back();return}if($('nv').classList.contains('on')){nvHide();return}if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(nvRet){const i=nvRet;nvRet=null;if(entries[i])nvShow(i);else history.back()}}};
+window.onpopstate=()=>{if(nvPop){const f=nvPop;nvPop=null;f();return}if($('nvSt').classList.contains('on')){$('nvSt').classList.remove('on');return}if(nvPend){const i=nvPend;nvPend=null;if(entries[i])nvShow(i);else history.back();return}if($('nv').classList.contains('on')){nvHide();return}if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(nvRet){const i=nvRet;nvRet=null;if(entries[i])nvShow(i);else history.back()}}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
@@ -1349,7 +1349,7 @@ async function insImgs(inp){
   }
 }
 /* ===== Note view mode ===== */
-let nvId=null,nvRet=null,nvPend=null,nvTh='1';
+let nvId=null,nvRet=null,nvPend=null,nvPop=null,nvTh='1';
 try{nvTh=localStorage.getItem('diary_nvth')||'1'}catch(_){}
 if(!['1','2','3'].includes(nvTh))nvTh='1';
 function nvRender(e,keep){
@@ -1387,18 +1387,33 @@ function nvShow(id){const e=entries[id];if(!e)return false;nvId=id;nvRender(e);$
 function openNote(id){if(!entries[id]){openEd(id);return}nvShow(id);history.pushState({nv:1},'')}
 function nvHide(keep){$('nv').classList.remove('on');$('nv').setAttribute('aria-hidden','true');$('nvSt').classList.remove('on');$('nvLb').classList.remove('on');if(!keep){document.documentElement.classList.remove('ed-lock');document.body.classList.remove('editing')}}
 function nvClose(){if(history.state&&history.state.nv)history.back();else nvHide()}
-function nvEdit(){const id=nvId;if(!id||!entries[id])return;nvRet=id;nvHide(true);openEd(id)}
+function nvEdit(){
+  const id=nvId;if(!id||!entries[id])return;nvRet=id;
+  const go=()=>{nvHide(true);openEd(id)};
+  if($('nvSt').classList.contains('on')&&history.state&&history.state.nvs){$('nvSt').classList.remove('on');nvPop=go;history.back()}
+  else{$('nvSt').classList.remove('on');go()}
+}
 function nvAfterEd(quiet){
   const id=nvRet;nvRet=null;const back=!quiet&&history.state&&history.state.ed;
   if(id){if(back){nvPend=id;history.back()}else if(entries[id])nvShow(id)}
   else if(back)history.back();
 }
 function nvMarkTh(){document.querySelectorAll('#nvSt .nvths button').forEach(b=>b.classList.toggle('on',b.dataset.th===nvTh))}
-function nvSet(o){const sh=$('nvSt');sh.classList.toggle('on',!!o);if(o){nvMarkTh();const e=entries[nvId];$('nvPinB').textContent=e&&e.pinned?'📌 Unpin karein':'📌 Pin karein'}}
+function nvSet(o){
+  const sh=$('nvSt'),on=sh.classList.contains('on');
+  if(o){if(on)return;nvMarkTh();const e=entries[nvId];$('nvPinB').textContent=e&&e.pinned?'📌 Unpin karein':'📌 Pin karein';sh.classList.add('on');history.pushState({nvs:1},'')}
+  else{if(!on)return;sh.classList.remove('on');if(history.state&&history.state.nvs){nvPop=()=>{};history.back()}}
+}
 function nvTheme(t){nvTh=t;try{localStorage.setItem('diary_nvth',t)}catch(_){}nvMarkTh();const e=entries[nvId];if(e)nvRender(e,true)}
 function nvPin(){const e=entries[nvId];nvSet(false);if(!e)return;const v=!e.pinned;e.pinned=v;db.ref(base()+'/entries/'+nvId+'/pinned').set(v?true:null).catch(x=>toast('Sync nahi hua: '+x.message));toast(v?'Pin ho gaya 📌':'Unpin ho gaya');render()}
 function nvCopy(){const e=entries[nvId];nvSet(false);if(e&&navigator.clipboard)navigator.clipboard.writeText((e.title?e.title+'\n\n':'')+(e.text||'')).then(()=>toast('Text copy ho gaya'))}
-function nvDel(){const e=entries[nvId];nvSet(false);if(!e||!confirm('Ye page hamesha ke liye hata dein?'))return;const id=nvId;delete entries[id];db.ref(base()+'/entries/'+id).remove();nvClose();render();toast('Page hata diya')}
+function nvDel(){
+  const e=entries[nvId];if(!e||!confirm('Ye page hamesha ke liye hata dein?'))return;
+  const id=nvId;delete entries[id];db.ref(base()+'/entries/'+id).remove();
+  const fin=()=>{nvClose();render();toast('Page hata diya')};
+  if($('nvSt').classList.contains('on')&&history.state&&history.state.nvs){$('nvSt').classList.remove('on');nvPop=fin;history.back()}
+  else{$('nvSt').classList.remove('on');fin()}
+}
 function nvLb(src){const l=$('nvLb');l.querySelector('img').src=src;l.classList.add('on')}
 (function(){
   const pick=ev=>{const i=ev.target.closest&&ev.target.closest('img');if(i)nvLb(i.src)};
