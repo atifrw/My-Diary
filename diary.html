@@ -619,6 +619,31 @@ nav .rdb:active{transform:scale(.92)}
 #nv[data-th="3"] .nvph img{border:1px solid rgba(232,194,122,.35);box-shadow:0 10px 26px rgba(0,0,0,.5)}
 #nv[data-th="3"] .nvft .tgs span{background:transparent;border:1px solid var(--nvr);color:var(--nva)}
 
+/* ---------- Premium card layer (all view themes) ---------- */
+#nv{--nvcard:rgba(255,255,255,.74);--nvcb:rgba(255,255,255,.95);--nvsh:0 24px 60px rgba(110,80,220,.18),0 2px 6px rgba(110,80,220,.08)}
+#nv .nvsc{padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(110px + env(safe-area-inset-bottom,0px))}
+#nv .nvart{position:relative;max-width:720px;margin:0 auto;padding:34px 22px 22px;background:var(--nvcard);border:1px solid var(--nvcb);border-radius:28px;box-shadow:var(--nvsh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:hidden}
+@media(min-width:700px){#nv .nvart{padding:44px 48px 30px}}
+/* Theme 1 — Lavender */
+#nv:not([data-th="2"]):not([data-th="3"]){background-image:radial-gradient(70% 38% at 12% 0%,rgba(168,140,255,.35),transparent 70%),radial-gradient(60% 34% at 100% 22%,rgba(255,160,220,.3),transparent 70%),var(--nvbg)}
+#nv:not([data-th="2"]):not([data-th="3"]) .nvart::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#8b7cf6,#d36bf0,#ff9ad0)}
+#nv:not([data-th="2"]):not([data-th="3"]) .nvh h1{background:linear-gradient(100deg,#2b2066,#6a4be0 70%,#b04fe0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-size:35px}
+#nv.dark:not([data-th="2"]):not([data-th="3"]) .nvh h1{background:none;-webkit-text-fill-color:currentColor;color:var(--nvi)}
+#nv.dark{--nvcard:rgba(20,16,44,.5);--nvcb:rgba(255,255,255,.16);--nvsh:0 24px 60px rgba(0,0,0,.4)}
+#nv:not([data-th="2"]):not([data-th="3"]) .nvmeta span{background:rgba(124,92,240,.1);box-shadow:inset 0 0 0 1px rgba(124,92,240,.14)}
+#nv:not([data-th="2"]):not([data-th="3"]) .nvb{margin-top:6px}
+/* Theme 2 — Ivory Journal (paper sheet) */
+#nv[data-th="2"]{--nvbg:linear-gradient(180deg,#e6d8bd,#d9c7a4);--nvcard:#fffaf0;--nvcb:rgba(169,120,43,.35);--nvsh:0 1px 0 #d8c7a3,0 6px 0 -2px #f4ead4,0 7px 0 -2px #d8c7a3,0 12px 0 -4px #efe3c8,0 13px 0 -4px #d8c7a3,0 30px 44px rgba(80,55,20,.3)}
+#nv[data-th="2"] .nvart{border-radius:10px;backdrop-filter:none;-webkit-backdrop-filter:none;background:#fffaf0 repeating-linear-gradient(180deg,transparent 0 33px,rgba(169,120,43,.06) 33px 34px)}
+#nv[data-th="2"] .nvart::before{content:"";position:absolute;inset:9px;border:1px solid rgba(169,120,43,.35);border-radius:5px;pointer-events:none}
+#nv[data-th="2"] .nvart>*{position:relative}
+#nv[data-th="2"] .nvmd{right:4px;top:6px}
+#nv[data-th="2"] .nvedw{border-top-style:solid}
+/* Theme 3 — Midnight Gold (glass) */
+#nv[data-th="3"]{--nvcard:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));--nvcb:rgba(232,194,122,.4);--nvsh:0 30px 70px rgba(0,0,0,.55),0 0 50px rgba(232,194,122,.1),inset 0 1px 0 rgba(255,255,255,.12)}
+#nv[data-th="3"] .nvart{background:var(--nvcard)}
+#nv[data-th="3"] .nvart::before{content:"";position:absolute;left:12%;right:12%;top:0;height:1px;background:linear-gradient(90deg,transparent,#f6dca0,transparent)}
+
 /* settings sheet */
 #nvSt{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;background:rgba(20,14,40,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 #nvSt.on{display:flex;animation:nvFade .2s}
