@@ -812,6 +812,7 @@ nav .rdb:active{transform:scale(.92)}
 </div>
 <div id="tsk"><div class="tkc">
   <div class="sht2"><b id="tkH">नया लक्ष्य</b><button class="xb" onclick="tkClose()" aria-label="Close">✕</button></div>
+  <div class="hint" id="tkSc" style="display:none;margin:0 0 10px"></div>
   <input id="tkT" class="in" autocomplete="off" autocorrect="off" spellcheck="false"  placeholder="क्या करना है? (जैसे: Physics Ch-5 पढ़ना)">
   <textarea id="tkN" class="in" autocomplete="off" autocorrect="off" spellcheck="false"  rows="2" placeholder="विषय / नोट (optional)"></textarea>
   <div class="lb">श्रेणी</div><div class="rw2" id="tkC"></div>
@@ -957,14 +958,15 @@ function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lo
   <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
 
 /* ---------- TARGETS (लक्ष्य) ---------- */
-let tasks={},fcLog={},tgtDay=iso(new Date()),tgtF='all',tkEd=null,tkDay=null,tkCat='study',tkPri='m',tkRep='once',tkEv=5,fcT=null,fcEnd=0,fcLen=1500,fcRun=false;
+let tkAt=null,tkDi='',tasks={},fcLog={},tgtDay=iso(new Date()),tgtF='all',tkEd=null,tkCat='study',tkPri='m',tkRep='once',tkEv=5,fcT=null,fcEnd=0,fcLen=1500,fcRun=false;
 const CATS=[['study','📚','पढ़ाई','#dbeafe'],['work','💼','काम','#fde68a'],['health','🏃','सेहत','#c4f5d0'],['home','🏠','घर','#ffd6a5'],['other','✨','अन्य','#e9d5ff']];
 const CHK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const addD=(d,n)=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+n);return iso(x)};
 const dowOf=d=>new Date(d+'T00:00').getDay();
 const SPACED=[1,3,7,15,30];
 const dayK=(t,d)=>Math.round((new Date(d+'T00:00')-new Date(t.date+'T00:00'))/864e5);
-function onDay(t,d){if(d<t.date)return false;if(t.from&&d<t.from)return false;if(t.until&&d>t.until)return false;const k=dayK(t,d);
+const effS=t=>t.from&&t.from>t.date?t.from:t.date;
+function onDay(t,d){if(d<t.date||(t.from&&d<t.from)||(t.end&&d>t.end))return false;const k=dayK(t,d);
   if(t.rep==='daily')return true;if(t.rep==='weekly')return k%7===0;if(t.rep==='every')return k%Math.max(1,t.ev||1)===0;
   if(t.rep==='spaced')return k===0||SPACED.includes(k)||(k>30&&k%30===0);return t.date===d}
 function repLabel(t,d){if(t.rep==='daily')return '<span>🔁 रोज़</span>';if(t.rep==='weekly')return '<span>🔁 साप्ताहिक</span>';if(t.rep==='every')return `<span>📆 हर ${t.ev||1} दिन</span>`;
@@ -988,38 +990,31 @@ function tkChips(){tkXr();
   $('tkC').innerHTML=CATS.map(c=>`<button class="ch2 ${tkCat===c[0]?'on':''}" onclick="tkCat='${c[0]}';tkChips()">${c[1]} ${c[2]}</button>`).join('');
   $('tkP').innerHTML=[['h','🔴 ज़रूरी'],['m','🟣 सामान्य'],['l','🟢 आसान']].map(c=>`<button class="ch2 ${tkPri===c[0]?'on':''}" onclick="tkPri='${c[0]}';tkChips()">${c[1]}</button>`).join('');
   $('tkR').innerHTML=[['once','एक बार'],['daily','🔁 रोज़'],['weekly','🔁 हर हफ्ते'],['every','📆 हर N दिन'],['spaced','🧠 Revision']].map(c=>`<button class="ch2 ${tkRep===c[0]?'on':''}" onclick="tkRep='${c[0]}';tkChips()">${c[1]}</button>`).join('')}
-function tkOpen(id){tkEd=id||null;tkDay=tgtDay;const t=id?tasks[id]:null;tkCat=t?t.cat||'other':'study';tkPri=t?t.pri||'m':'m';tkRep=t?t.rep||'once':'once';tkEv=t&&t.ev?t.ev:5;
+function tkOpen(id){tkEd=id||null;const t=id?tasks[id]:null;tkCat=t?t.cat||'other':'study';tkPri=t?t.pri||'m':'m';tkRep=t?t.rep||'once':'once';tkEv=t&&t.ev?t.ev:5;
   $('tkH').textContent=t?'लक्ष्य बदलें':'नया लक्ष्य';$('tkT').value=t?t.title:(($('qi')||{}).value||'').trim();$('tkN').value=t?t.note||'':'';
-  $('tkD').value=t?t.date:tgtDay;$('tkTm').value=t?t.time||'':'';$('tkDel').style.display=t?'block':'none';tkChips();
+  tkAt=tgtDay;$('tkD').value=(t&&!(t.rep!=='once'&&tgtDay>effS(t)))?t.date:tgtDay;tkDi=$('tkD').value;$('tkTm').value=t?t.time||'':'';$('tkDel').style.display=t?'block':'none';
+  const part=!!(t&&t.rep!=='once'&&tgtDay>effS(t)),fd=new Date(tgtDay+'T00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  $('tkSc').style.display=part?'block':'none';$('tkSc').textContent=part?'ℹ️ बदलाव या हटाना सिर्फ़ '+fd+' और उसके आगे के दिनों पर लागू होगा। इससे पहले के दिन जैसे हैं वैसे ही रहेंगे।':'';
+  $('tkDel').textContent=part?'🗑️ '+fd+' से आगे हटाएं':'🗑️ हटाएं';tkChips();
   $('tsk').style.display='flex';history.pushState({tk:1},'');if(!t)setTimeout(()=>$('tkT').focus(),120)}
 function tkClose(){$('tsk').style.display='none';if(history.state&&history.state.tk)history.back()}
 function tkSave(){const title=$('tkT').value.trim();if(!title)return toast('Pehle lakshya likhein ✍️');
-  const id=tkEd||db.ref(tPath('x')).parent.push().key,o=tasks[id]||{};
-  const t={id,title,note:$('tkN').value.trim(),cat:tkCat,pri:tkPri,rep:tkRep,time:$('tkTm').value||'',date:$('tkD').value||tgtDay,created:o.created||Date.now()};
+  const o=tkEd?tasks[tkEd]||{}:{},dv=$('tkD').value||tgtDay,split=!!(tkEd&&o.rep&&o.rep!=='once'&&tkAt>effS(o));
+  const id=(tkEd&&!split)?tkEd:db.ref(tPath('x')).parent.push().key;
+  const t={id,title,note:$('tkN').value.trim(),cat:tkCat,pri:tkPri,rep:tkRep,time:$('tkTm').value||'',date:dv,created:o.created||Date.now()};
   if(tkRep==='every')t.ev=Math.max(2,Math.min(365,tkEv||5));
-  const D=tkDay||tgtDay;
-  if(tkEd&&o.rep&&o.rep!=='once'&&D>(o.from||o.date)){
-    /* repeating task: change sirf is din (D) se aage; pehle wale din purane task me hi rahenge */
-    const nid=db.ref(tPath('x')).parent.push().key,nd={},od={};
-    Object.keys(o.done||{}).forEach(k=>{(k>=D?nd:od)[k]=1});
-    t.id=nid;t.from=D;if(o.until)t.until=o.until;if(Object.keys(nd).length)t.done=nd;
-    o.until=addD(D,-1);o.done=od;
-    db.ref(tPath(id)+'/until').set(o.until);Object.keys(nd).forEach(k=>db.ref(tPath(id)+'/done/'+k).remove());
-    tasks[nid]=t;db.ref(tPath(nid)).set(t).catch(x=>toast('Sync nahi hua: '+x.message));
-  }else{
-    if(o.done)t.done=o.done;if(o.from)t.from=o.from;if(o.until)t.until=o.until;
-    tasks[id]=t;db.ref(tPath(id)).set(t).catch(x=>toast('Sync nahi hua: '+x.message));
-  }
-  tgtDay=t.rep==='once'?t.date:tgtDay;if($('qi'))$('qi').value='';tkClose();renderTgt();toast('लक्ष्य जुड़ गया 🎯')}
-function tkDelete(){if(!tkEd)return;const t=tasks[tkEd],D=tkDay||tgtDay;
-  if(t&&t.rep&&t.rep!=='once'&&D>(t.from||t.date)){
-    if(!confirm('Ye lakshya sirf '+D+' aur uske baad ke dino se hatega.\nPehle ke dino ka record waisa hi rahega. Theek hai?'))return;
-    t.until=addD(D,-1);db.ref(tPath(tkEd)+'/until').set(t.until);
-    Object.keys(t.done||{}).forEach(k=>{if(k>=D){delete t.done[k];db.ref(tPath(tkEd)+'/done/'+k).remove()}});
-  }else{
-    if(!confirm('Ye lakshya hata dein?'))return;delete tasks[tkEd];db.ref(tPath(tkEd)).remove();
-  }
-  tkClose();renderTgt();toast('लक्ष्य हटा दिया')}
+  if(split){
+    if(dv===tkDi&&tkRep===o.rep)t.date=o.date;
+    t.from=tkAt;
+    if(o.done){const dn={};Object.keys(o.done).forEach(k=>{if(k>=tkAt)dn[k]=1});if(Object.keys(dn).length)t.done=dn}
+    o.end=addD(tkAt,-1);tasks[o.id].end=o.end;db.ref(tPath(o.id)+'/end').set(o.end);
+  }else{if(o.done)t.done=o.done;if(o.from)t.from=o.from;if(o.end)t.end=o.end}
+  tasks[id]=t;db.ref(tPath(id)).set(t).catch(x=>toast('Sync nahi hua: '+x.message));
+  tgtDay=t.rep==='once'?t.date:tgtDay;if($('qi'))$('qi').value='';tkClose();renderTgt();toast(split?'इस दिन और आगे के लिए बदल गया ✓':tkEd?'लक्ष्य बदल गया ✓':'लक्ष्य जुड़ गया 🎯')}
+function tkDelete(){const t=tasks[tkEd];if(!t)return;const part=t.rep!=='once'&&tkAt>effS(t);
+  if(!confirm(part?'Is din aur uske baad ke sabhi din se ye lakshya hata dein? (pehle ke din waise hi rahenge)':'Ye lakshya hata dein?'))return;
+  if(part){t.end=addD(tkAt,-1);db.ref(tPath(t.id)+'/end').set(t.end)}else{delete tasks[tkEd];db.ref(tPath(tkEd)).remove()}
+  tkClose();renderTgt();toast(part?'इस दिन से आगे हटा दिया':'लक्ष्य हटा दिया')}
 let hisR='7',hisOpen={};
 function histHTML(){const td=iso(new Date()),ds=Object.values(tasks).map(t=>t.date).sort();let tot=0;const rows=[];
   if(ds.length){const first=ds[0],back=hisR==='all'?730:+hisR;
