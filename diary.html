@@ -684,6 +684,33 @@ nav .rdb:active{transform:scale(.92)}
 
 #nvLb{position:fixed;inset:0;z-index:95;background:rgba(10,8,24,.93);display:none;align-items:center;justify-content:center}
 #nvLb.on{display:flex}#nvLb img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:10px}
+
+/* ===== premium lock screen ===== */
+#lock{display:none;flex-direction:column;align-items:center;justify-content:center;padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(18px + env(safe-area-inset-bottom,0px));overflow-y:auto;
+  background:radial-gradient(70% 40% at 15% 0%,rgba(168,140,255,.55),transparent 70%),radial-gradient(60% 38% at 100% 30%,rgba(255,160,220,.5),transparent 70%),radial-gradient(70% 40% at 0% 100%,rgba(150,205,255,.55),transparent 70%),linear-gradient(165deg,#fbe4f5,#e7dcff 50%,#d6ebff)}
+#lock .lkc{position:relative;width:min(380px,100%);margin:auto;padding:30px 22px 22px;border-radius:34px;text-align:center;background:linear-gradient(160deg,rgba(255,255,255,.82),rgba(255,255,255,.52));border:1.5px solid rgba(255,255,255,.95);box-shadow:0 30px 70px rgba(120,90,210,.28),0 2px 8px rgba(120,90,210,.1),inset 0 1px 0 #fff;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);overflow:hidden;animation:lkIn .5s cubic-bezier(.2,.9,.3,1) both}
+#lock .lkc::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#8b7cf6,#d36bf0,#ff9ad0)}
+@keyframes lkIn{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+#lock .lkic{width:78px;height:78px;margin:0 auto 14px;border-radius:26px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#7c6cf5,#d36bf0);box-shadow:0 14px 30px rgba(140,100,240,.45),inset 0 0 0 3px rgba(255,255,255,.35)}
+#lock .lkic svg{width:38px;height:38px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#lock .lkbr{font:700 46px/1 'Caveat',cursive;background:linear-gradient(100deg,#2b2066,#6a4be0 70%,#b04fe0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+#lock .lksub{font:600 12.5px 'Hind',sans-serif;color:#7d73a8;margin:4px 0 4px;letter-spacing:.04em}
+#lock .lkt{font:700 15px 'Quicksand','Hind',sans-serif;color:#4a3f6b;margin:10px 0 0}
+#lock .dots{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;min-height:46px;margin:16px 6px 14px;padding:12px 16px;border-radius:20px;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1.5px rgba(124,92,240,.14)}
+#lock .dots i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(124,92,240,.35);background:transparent;transition:transform .15s,background .15s}
+#lock .dots i.on{background:linear-gradient(135deg,#8b7cf6,#d36bf0);border-color:transparent;animation:lkPop .18s ease}
+#lock .dots.sm i{width:10px;height:10px;border-width:0}
+@keyframes lkPop{50%{transform:scale(1.35)}}
+#lock .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:290px;margin:0 auto}
+#lock .pad button{height:62px;width:100%;border-radius:22px;border:1.5px solid #fff;background:linear-gradient(160deg,#fff,#f4efff);font:700 25px 'Quicksand',sans-serif;color:#3b3270;cursor:pointer;box-shadow:0 6px 16px rgba(130,100,210,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s,background .1s}
+#lock .pad button:active{transform:scale(.93);background:#ece5ff}
+#lock .pad button.bk{font-size:21px;color:#8f84b3}
+#lock .lkgo{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:290px;margin:16px auto 0;padding:16px;border:0;border-radius:22px;cursor:pointer;font:700 17px 'Quicksand','Hind',sans-serif;color:#fff;background:linear-gradient(135deg,#7c6cf5,#d36bf0);box-shadow:0 12px 26px rgba(140,100,240,.45);-webkit-tap-highlight-color:transparent;transition:transform .12s,opacity .2s}
+#lock .lkgo i{font-style:normal;font-size:24px;line-height:1}
+#lock .lkgo:active{transform:scale(.97)}
+#lock .lkgo:disabled{opacity:.45;box-shadow:none}
+#lock .link{margin-top:14px}
+@media(max-height:700px){#lock .lkc{padding:20px 18px 16px}#lock .lkic{width:60px;height:60px;margin-bottom:8px}#lock .pad button{height:52px}#lock .lkbr{font-size:38px}}
 </style>
 </head>
 <body>
@@ -723,11 +750,16 @@ nav .rdb:active{transform:scale(.92)}
 </div></div>
 
 <div id="lock">
-  <div style="font-size:44px">🔒</div><div id="lockT" class="hand" style="font-size:30px">PIN daalein</div>
-  <div class="dots" id="dots"></div>
-  <div class="pad" id="pad"></div>
-  <button id="lockX" class="link" onclick="closeLock()" style="display:none">Cancel</button>
-  <button id="lockF" class="link" onclick="forgotPin()">PIN bhool gaye?</button>
+  <div class="lkc">
+    <div class="lkic"><svg viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="3.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></div>
+    <div class="lkbr">My Diary</div>
+    <div class="lksub">सोचो ✦ लिखो ✦ महसूस करो</div>
+    <div id="lockT" class="lkt" style="display:none"></div>
+    <div class="dots" id="dots"></div>
+    <div class="pad" id="pad"></div>
+    <button id="lockGo" class="lkgo" onclick="pinDone()"><span id="lockGoT">खोलें</span><i>›</i></button>
+    <button id="lockX" class="link" onclick="closeLock()" style="display:none">Cancel</button>
+  </div>
 </div>
 
 <div id="app">
@@ -887,23 +919,24 @@ auth.onAuthStateChanged(u=>{mark('auth');
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
 
 /* ---------- PIN LOCK ---------- */
-$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':`<button onclick="key('${k==='⌫'?'b':k}')">${k}</button>`).join('');
-function dots(){$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<pinBuf.length?'on':''}"></i>`).join('')}
-function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';$('lockT').textContent=title;$('lockX').style.display=cancel?'block':'none';$('lockF').style.display=mode==='unlock'?'block':'none';$('lock').style.display='flex';dots()}
+$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':`<button${k==='⌫'?' class="bk" aria-label="Delete"':''} onclick="key('${k==='⌫'?'b':k}')">${k}</button>`).join('');
+const PINMAX=32,PINMIN=4;
+function dots(){const d=$('dots'),n=pinBuf.length;d.classList.toggle('sm',n>12);d.innerHTML=n?Array.from({length:n},()=>'<i class="on"></i>').join(''):'<i></i><i></i><i></i><i></i>';$('lockGo').disabled=!n}
+function lockTitle(t){const e=$('lockT');t=(t&&t!=='PIN daalein')?t:'';e.textContent=t;e.style.display=t?'block':'none'}
+function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';lockTitle(title);$('lockGoT').textContent=(mode==='set1'||mode==='set2')?'Aage badhein':'खोलें';$('lockX').style.display=cancel?'block':'none';$('lock').style.display='flex';dots()}
 function closeLock(){$('lock').style.display='none';pinBuf=''}
-function key(k){if(k==='b')pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;dots();if(pinBuf.length===4)setTimeout(pinDone,140)}
+function key(k){if(k==='b')pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<PINMAX)pinBuf+=k;dots()}
+document.addEventListener('keydown',e=>{if($('lock').style.display!=='flex')return;if(/^\d$/.test(e.key)){key(e.key);e.preventDefault()}else if(e.key==='Backspace'){key('b');e.preventDefault()}else if(e.key==='Enter'){pinDone();e.preventDefault()}});
 async function sha(p){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p+uid));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 function shake(){$('dots').classList.add('sh');setTimeout(()=>$('dots').classList.remove('sh'),400)}
-async function pinDone(){const p=pinBuf;pinBuf='';dots();
-  if(lockMode==='set1'){tmpPin=p;lockMode='set2';$('lockT').textContent='PIN dobara daalein';return}
-  if(lockMode==='set2'){if(p!==tmpPin){shake();lockMode='set1';$('lockT').textContent='Match nahi hua, naya PIN daalein';return}
+async function pinDone(){const p=pinBuf;if(!p)return;
+  if((lockMode==='set1'||lockMode==='set2')&&p.length<PINMIN&&lockMode==='set1'){toast('Kam se kam '+PINMIN+' digit ka PIN rakhein');shake();return}
+  pinBuf='';dots();
+  if(lockMode==='set1'){tmpPin=p;lockMode='set2';lockTitle('PIN dobara daalein');return}
+  if(lockMode==='set2'){if(p!==tmpPin){shake();lockMode='set1';lockTitle('Match nahi hua, naya PIN daalein');return}
     pinHash=await sha(p);db.ref(base()+'/pin').set(pinHash);closeLock();toast('PIN set ho gaya 🔒');if(view==='set')render();return}
   if(await sha(p)===pinHash){const cb=lockCb;closeLock();if(cb)cb()}else shake()}
-async function forgotPin(){try{const u=auth.currentUser;
-  if(u.providerData[0].providerId==='password'){const p=prompt('PIN reset ke liye account ka password likhein:');if(!p)return;await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,p))}
-  else await u.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider());
-  pinHash=null;db.ref(base()+'/pin').remove();closeLock();toast('PIN hata diya, Settings se naya set karein')}catch(e){alert('Verify nahi hua: '+e.message)}}
-function setPin(){openLock('set1',null,'Naya 4-digit PIN daalein',true)}
+function setPin(){openLock('set1',null,'Naya PIN daalein (kam se kam 4 digit)',true)}
 function changePin(){openLock('verify',()=>setPin(),'Purana PIN daalein',true)}
 function removePin(){openLock('verify',()=>{pinHash=null;db.ref(base()+'/pin').remove();toast('PIN hata diya');render()},'PIN daalein',true)}
 
@@ -953,7 +986,7 @@ function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce
   $('main').innerHTML=`<div class="sg"><div class="glass sc"><b>${a.length}</b><small>कुल पन्ने</small></div><div class="glass sc"><b>${words}</b><small>कुल शब्द</small></div><div class="glass sc"><b>🔥 ${s.cur}</b><small>अभी की streak</small></div><div class="glass sc"><b>${s.best}</b><small>सबसे लंबी streak</small></div></div>
   <div class="glass set"><h3 class="hand" style="font-size:26px">Mood ka safar</h3>${Object.keys(mc).length?[...MOODS,...Object.keys(mc).filter(k=>!MOODS.some(m=>m[0]===k)).map(k=>[k,'','#e7def8'])].filter(m=>mc[m[0]]).map(m=>`<div class="bar"><span style="width:62px">${m[0]} ${m[1]}</span><i style="width:${mc[m[0]]/mx*55}%;background:${m[2]}"></i>${mc[m[0]]}</div>`).join(''):'<div class="empty">Entry mein mood chunein, yahan dikhega.</div>'}</div>
   <div class="glass set"><h3 class="hand" style="font-size:26px">Aapke tags</h3>${top.length?`<div class="tg">${top.map(t=>`<span>#${esc(t[0])} · ${t[1]}</span>`).join('')}</div>`:'<div class="empty">Abhi koi tag nahi.</div>'}</div>`}
-function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN laga hua hai. Diary 1 minute baad band hone par dobara lock hogi.':'Abhi PIN nahi hai. 4-digit PIN lagakar diary ko private rakhein.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">PIN badlein</button><button class="btn red" onclick="removePin()">PIN hatayein</button>':'<button class="btn" onclick="setPin()">PIN set karein</button>'}</div>
+function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN laga hua hai. Diary 1 minute baad band hone par dobara lock hogi.':'Abhi PIN nahi hai. PIN lagakar diary ko private rakhein.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">PIN badlein</button><button class="btn red" onclick="removePin()">PIN hatayein</button>':'<button class="btn" onclick="setPin()">PIN set karein</button>'}</div>
   <div class="glass set"><h3>💾 Backup & PDF</h3><button class="btn" onclick="printAll()">📄 Poori diary PDF banayein</button><button class="btn alt" onclick="exportJson()">📤 Backup download</button><button class="btn alt" onclick="document.getElementById('imp').click()">📥 Backup restore</button><input id="imp" type="file" accept=".json" style="display:none" onchange="importJson(event)"></div>
   <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
 
