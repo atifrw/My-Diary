@@ -725,6 +725,23 @@ nav .rdb:active{transform:scale(.92)}
 #lock .pad button.ok{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(124,108,245,.92),rgba(211,107,240,.92));border-color:rgba(255,255,255,.7);box-shadow:0 10px 24px rgba(124,92,240,.5),inset 0 1px 0 rgba(255,255,255,.55)}
 #lock .pad button.ok svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 #lock .link{color:#5b4fa0}
+
+/* ===== smooth lock interactions ===== */
+#lock .dots{position:relative;--dw:14px;-webkit-backdrop-filter:none;backdrop-filter:none}
+#lock .dots.sm{--dw:10px}
+#lock .dots .gh{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none;transition:opacity .28s ease,transform .28s cubic-bezier(.3,.9,.3,1)}
+#lock .dots .gh.hid{opacity:0;transform:scale(.7)}
+#lock .dots .gh i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(90,67,201,.4)}
+#lock .dots i.on{width:var(--dw);height:var(--dw);flex:none;border:0;background:linear-gradient(135deg,#8b7cf6,#d36bf0);box-shadow:0 3px 10px rgba(139,108,246,.45);animation:dIn .34s cubic-bezier(.34,1.56,.64,1) both;will-change:transform}
+#lock .dots i.on.out{animation:dOut .2s cubic-bezier(.4,0,.8,.4) both}
+@keyframes dIn{from{width:0;margin:0 -5px;opacity:0;transform:scale(.2)}60%{opacity:1}to{width:var(--dw);margin:0;opacity:1;transform:scale(1)}}
+@keyframes dOut{from{width:var(--dw);margin:0;opacity:1;transform:scale(1)}to{width:0;margin:0 -5px;opacity:0;transform:scale(.2)}}
+#lock .pad button{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-backdrop-filter:none;backdrop-filter:none;will-change:transform;
+  transition:transform .32s cubic-bezier(.3,1.5,.5,1),background-color .35s ease,box-shadow .35s ease}
+#lock .pad button.pr{transform:scale(.9);transition:transform .08s ease-out,background-color .08s,box-shadow .08s;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(235,226,255,.8));box-shadow:0 2px 8px rgba(80,60,170,.2),inset 0 1px 0 #fff,0 0 0 4px rgba(139,124,246,.18)}
+#lock .pad button.ok.pr{background:linear-gradient(135deg,#6f5ef0,#c050e8);box-shadow:0 4px 12px rgba(124,92,240,.5),0 0 0 4px rgba(139,124,246,.25)}
+#lock .lkc .dots{-webkit-backdrop-filter:none;backdrop-filter:none}
+@media(prefers-reduced-motion:reduce){#lock .dots i.on,#lock .dots i.on.out{animation-duration:.01s}}
 </style>
 </head>
 <body>
@@ -930,9 +947,24 @@ auth.onAuthStateChanged(u=>{mark('auth');
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
 
 /* ---------- PIN LOCK ---------- */
-$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'b',0,'ok'].map(k=>k==='b'?'<button class="bk" aria-label="Delete" onclick="key(\'b\')">⌫</button>':k==='ok'?'<button class="ok" aria-label="Open" onclick="pinDone()"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>':`<button onclick="key('${k}')">${k}</button>`).join('');
+$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'b',0,'ok'].map(k=>k==='b'?'<button class="bk" data-k="b" aria-label="Delete">⌫</button>':k==='ok'?'<button class="ok" data-k="ok" aria-label="Open"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>':`<button data-k="${k}">${k}</button>`).join('');
+(function(){const pad=$('pad');let holdT=null,holdI=null;
+  const stop=()=>{clearTimeout(holdT);clearInterval(holdI);holdT=holdI=null};
+  const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}};
+  pad.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();b.classList.add('pr');const k=b.dataset.k;
+    if(k==='ok'){return}
+    buzz();key(k);
+    if(k==='b'){stop();holdT=setTimeout(()=>{holdI=setInterval(()=>{if(!pinBuf){stop();return}key('b')},70)},380)}});
+  const rel=e=>{const b=e.target.closest&&e.target.closest('button');if(b)b.classList.remove('pr');pad.querySelectorAll('.pr').forEach(x=>x.classList.remove('pr'));stop();if(e.type==='pointerup'&&b&&b.dataset.k==='ok'){buzz();pinDone()}};
+  pad.addEventListener('pointerup',rel);pad.addEventListener('pointercancel',rel);pad.addEventListener('pointerleave',rel);
+  pad.addEventListener('contextmenu',e=>e.preventDefault())})();
 const PINMAX=32,PINMIN=4;
-function dots(){const d=$('dots'),n=pinBuf.length;d.classList.toggle('sm',n>12);d.innerHTML=n?Array.from({length:n},()=>'<i class="on"></i>').join(''):'<i></i><i></i><i></i><i></i>';}
+function dots(){const d=$('dots'),n=pinBuf.length;
+  if(!d.querySelector('.gh'))d.insertAdjacentHTML('afterbegin','<span class="gh"><i></i><i></i><i></i><i></i></span>');
+  d.classList.toggle('sm',n>12);d.querySelector('.gh').classList.toggle('hid',n>0);
+  let live=d.querySelectorAll('i.on:not(.out)');
+  while(live.length<n){const i=document.createElement('i');i.className='on';d.appendChild(i);live=d.querySelectorAll('i.on:not(.out)')}
+  while(live.length>n){const i=live[live.length-1];i.classList.add('out');i.addEventListener('animationend',()=>i.remove(),{once:true});setTimeout(()=>i.remove(),400);live=d.querySelectorAll('i.on:not(.out)')}}
 function lockTitle(t){const e=$('lockT');t=(t&&t!=='PIN daalein')?t:'';e.textContent=t;e.style.display=t?'block':'none'}
 function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';lockTitle(title);$('lockX').style.display=cancel?'block':'none';$('lock').style.display='flex';dots()}
 function closeLock(){$('lock').style.display='none';pinBuf=''}
