@@ -742,6 +742,10 @@ nav .rdb:active{transform:scale(.92)}
 #lock .pad button.ok.pr{background:linear-gradient(135deg,#6f5ef0,#c050e8);box-shadow:0 4px 12px rgba(124,92,240,.5),0 0 0 4px rgba(139,124,246,.25)}
 #lock .lkc .dots{-webkit-backdrop-filter:none;backdrop-filter:none}
 @media(prefers-reduced-motion:reduce){#lock .dots i.on,#lock .dots i.on.out{animation-duration:.01s}}
+
+#lock .lkx{position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;color:#5b43c9;background:linear-gradient(160deg,rgba(255,255,255,.7),rgba(255,255,255,.25));border:1.5px solid rgba(255,255,255,.85);box-shadow:0 6px 16px rgba(80,60,170,.18),inset 0 1px 0 #fff;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
+#lock .lkx:active{transform:scale(.88)}
+#lock .lkx svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 </style>
 </head>
 <body>
@@ -782,11 +786,11 @@ nav .rdb:active{transform:scale(.92)}
 
 <div id="lock">
   <div class="lkc">
+    <button id="lockX" class="lkx" onclick="closeLock()" aria-label="Close" style="display:none"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="lkic"><svg viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="3.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></div>
     <div id="lockT" class="lkt" style="display:none"></div>
     <div class="dots" id="dots"></div>
     <div class="pad" id="pad"></div>
-    <button id="lockX" class="link" onclick="closeLock()" style="display:none">Cancel</button>
   </div>
 </div>
 
@@ -943,11 +947,11 @@ auth.onAuthStateChanged(u=>{mark('auth');
   loadDiary(u).then(v=>{mark('data');TM.kb=Math.round(JSON.stringify(v).length/1024);entries=v.entries||{};Object.keys(entries).forEach(k=>entries[k].id=k);pinHash=v.pin||null;if(Array.isArray(v.moodList)&&v.moodList.length)MOODS.splice(0,MOODS.length,...v.moodList.filter(Boolean));tasks=(v.targets&&v.targets.tasks)||{};fcLog=(v.targets&&v.targets.focus)||{};Object.keys(tasks).forEach(k=>tasks[k].id=k);
     $('auth').style.display='none';$('app').style.display='block';$('nav').style.display='flex';
     
-    go('home');mark('render');if(location.hash==='#debug')setTimeout(()=>alert('auth '+TM.auth+'ms, data '+TM.data+'ms, render '+TM.render+'ms, data size '+TM.kb+' KB, via '+TM.via),1500);if(pinHash)openLock('unlock',null,'PIN daalein',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'PIN daalein',false)}});
+    go('home');mark('render');if(location.hash==='#debug')setTimeout(()=>alert('auth '+TM.auth+'ms, data '+TM.data+'ms, render '+TM.render+'ms, data size '+TM.kb+' KB, via '+TM.via),1500);if(pinHash)openLock('unlock',null,'',false);hideLoader()}).catch(e=>{hideLoader();alert('Access nahi mila: '+e.message+'. Sahi Gmail se Google login karein.');auth.signOut().then(()=>location.reload())})});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(pinHash&&uid&&hiddenAt&&Date.now()-hiddenAt>60000&&$('lock').style.display!=='flex'){closeEd(true);openLock('unlock',null,'',false)}});
 
 /* ---------- PIN LOCK ---------- */
-$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'b',0,'ok'].map(k=>k==='b'?'<button class="bk" data-k="b" aria-label="Delete">⌫</button>':k==='ok'?'<button class="ok" data-k="ok" aria-label="Open"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>':`<button data-k="${k}">${k}</button>`).join('');
+$('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'b',0,'ok'].map(k=>k==='b'?'<button class="bk" data-k="b" aria-label="Delete">⌫</button>':k==='ok'?'<button class="ok" data-k="ok" aria-label="Confirm" onclick="try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}pinDone()"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>':`<button data-k="${k}">${k}</button>`).join('');
 (function(){const pad=$('pad');let holdT=null,holdI=null;
   const stop=()=>{clearTimeout(holdT);clearInterval(holdI);holdT=holdI=null};
   const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}};
@@ -955,7 +959,7 @@ $('pad').innerHTML=[1,2,3,4,5,6,7,8,9,'b',0,'ok'].map(k=>k==='b'?'<button class=
     if(k==='ok'){return}
     buzz();key(k);
     if(k==='b'){stop();holdT=setTimeout(()=>{holdI=setInterval(()=>{if(!pinBuf){stop();return}key('b')},70)},380)}});
-  const rel=e=>{const b=e.target.closest&&e.target.closest('button');if(b)b.classList.remove('pr');pad.querySelectorAll('.pr').forEach(x=>x.classList.remove('pr'));stop();if(e.type==='pointerup'&&b&&b.dataset.k==='ok'){buzz();pinDone()}};
+  const rel=e=>{const b=e.target.closest&&e.target.closest('button');if(b)b.classList.remove('pr');pad.querySelectorAll('.pr').forEach(x=>x.classList.remove('pr'));stop();};
   pad.addEventListener('pointerup',rel);pad.addEventListener('pointercancel',rel);pad.addEventListener('pointerleave',rel);
   pad.addEventListener('contextmenu',e=>e.preventDefault())})();
 const PINMAX=32,PINMIN=4;
@@ -966,22 +970,26 @@ function dots(){const d=$('dots'),n=pinBuf.length;
   while(live.length<n){const i=document.createElement('i');i.className='on';d.appendChild(i);live=d.querySelectorAll('i.on:not(.out)')}
   while(live.length>n){const i=live[live.length-1];i.classList.add('out');i.addEventListener('animationend',()=>i.remove(),{once:true});setTimeout(()=>i.remove(),400);live=d.querySelectorAll('i.on:not(.out)')}}
 function lockTitle(t){const e=$('lockT');t=(t&&t!=='PIN daalein')?t:'';e.textContent=t;e.style.display=t?'block':'none'}
-function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';lockTitle(title);$('lockX').style.display=cancel?'block':'none';$('lock').style.display='flex';dots()}
-function closeLock(){$('lock').style.display='none';pinBuf=''}
+let lkHist=false,lkWait=null,lkClosedAt=0;
+function lockHide(){$('lock').style.display='none';pinBuf='';lkClosedAt=Date.now()}
+function openLock(mode,cb,title,cancel){lockMode=mode;lockCb=cb;pinBuf='';lockTitle(title);$('lockX').style.display=cancel?'flex':'none';$('lock').style.display='flex';dots();
+  if(cancel&&!lkHist){lkHist=true;history.pushState({lk:1},'')}else if(!cancel)lkHist=false}
+function closeLock(after){lockHide();if(lkHist){lkHist=false;lkWait=after||true;history.back()}else if(typeof after==='function')after()}
+document.addEventListener('click',e=>{if(Date.now()-lkClosedAt<500&&!(e.target.closest&&e.target.closest('#lock'))){e.preventDefault();e.stopPropagation()}},true);
 function key(k){if(k==='b')pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<PINMAX)pinBuf+=k;dots()}
 document.addEventListener('keydown',e=>{if($('lock').style.display!=='flex')return;if(/^\d$/.test(e.key)){key(e.key);e.preventDefault()}else if(e.key==='Backspace'){key('b');e.preventDefault()}else if(e.key==='Enter'){pinDone();e.preventDefault()}});
 async function sha(p){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p+uid));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 function shake(){$('dots').classList.add('sh');setTimeout(()=>$('dots').classList.remove('sh'),400)}
 async function pinDone(){const p=pinBuf;if(!p)return;
-  if((lockMode==='set1'||lockMode==='set2')&&p.length<PINMIN&&lockMode==='set1'){toast('Kam se kam '+PINMIN+' digit ka PIN rakhein');shake();return}
+  if((lockMode==='set1'||lockMode==='set2')&&p.length<PINMIN&&lockMode==='set1'){toast('PIN must be at least '+PINMIN+' digits');shake();return}
   pinBuf='';dots();
-  if(lockMode==='set1'){tmpPin=p;lockMode='set2';lockTitle('PIN dobara daalein');return}
-  if(lockMode==='set2'){if(p!==tmpPin){shake();lockMode='set1';lockTitle('Match nahi hua, naya PIN daalein');return}
-    pinHash=await sha(p);db.ref(base()+'/pin').set(pinHash);closeLock();toast('PIN set ho gaya 🔒');if(view==='set')render();return}
-  if(await sha(p)===pinHash){const cb=lockCb;closeLock();if(cb)cb()}else shake()}
-function setPin(){openLock('set1',null,'Naya PIN daalein (kam se kam 4 digit)',true)}
-function changePin(){openLock('verify',()=>setPin(),'Purana PIN daalein',true)}
-function removePin(){openLock('verify',()=>{pinHash=null;db.ref(base()+'/pin').remove();toast('PIN hata diya');render()},'PIN daalein',true)}
+  if(lockMode==='set1'){tmpPin=p;lockMode='set2';lockTitle('Confirm new PIN');return}
+  if(lockMode==='set2'){if(p!==tmpPin){shake();lockMode='set1';lockTitle('PINs don\'t match. Create a new PIN');return}
+    pinHash=await sha(p);db.ref(base()+'/pin').set(pinHash);closeLock();toast('PIN set 🔒');if(view==='set')render();return}
+  if(await sha(p)===pinHash){const cb=lockCb;closeLock(cb)}else shake()}
+function setPin(){openLock('set1',null,'Create a new PIN (min. 4 digits)',true)}
+function changePin(){openLock('verify',()=>setPin(),'Enter current PIN',true)}
+function removePin(){openLock('verify',()=>{pinHash=null;db.ref(base()+'/pin').remove();toast('PIN removed');render()},'Enter current PIN',true)}
 
 /* ---------- VIEWS ---------- */
 function go(v){view=v;document.querySelectorAll('nav button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));render();window.scrollTo(0,0)}
@@ -991,7 +999,7 @@ function streaks(){const ds=new Set(Object.values(entries).map(e=>e.date));let c
   let best=0,run=0,prev=null;[...ds].sort().forEach(x=>{run=prev&&new Date(x)-new Date(prev)===864e5?run+1:1;best=Math.max(best,run);prev=x});return{cur:c,best}}
 const FEATHER='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9"/></svg>';
 let tagsOpen=false;
-function lockNow(){if(!pinHash)return toast('Settings mein PIN lagayein, phir yahan se turant lock kar sakte hain 🔒');openLock('unlock',null,'PIN daalein',false)}
+function lockNow(){if(!pinHash)return toast('Set a PIN in Settings to lock the diary 🔒');openLock('unlock',null,'',false)}
 function toggleTags(){if(!Object.values(entries).some(e=>(e.tags||[]).length))return toast('Abhi koi tag nahi hai');tagsOpen=!tagsOpen;renderHome()}
 function card(e){const m=MOODS.find(x=>x[0]===e.mood),d=new Date(e.date+'T00:00'),c=m?m[2]:'#e7def8';
   return `<div class="en2${e.pinned?' pinned':''}" data-id="${e.id}" style="background:linear-gradient(100deg,${c}55,#ffffffd9 70%)" onclick="openNote('${e.id}')">${e.pinned?'<span class="pnb">📌</span>':''}${e.saved?'<span class="svb">🔖</span>':''}<div class="dt2"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'})}</small></div><div class="ic" style="background:${c}">${e.mood||FEATHER}</div><div class="bd"><div class="tt">${esc(e.title||'बिना शीर्षक')}</div><div class="sn">${esc(e.text)}</div>${(e.tags||[]).length?`<div class="tg">${e.tags.map(t=>'<span>#'+esc(t)+'</span>').join('')}</div>`:''}</div>${e.photos&&e.photos.length?`<img src="${e.photos[0]}">`:''}<span class="chv">›</span></div>`}
@@ -1029,7 +1037,7 @@ function renderStats(){const a=Object.values(entries),s=streaks(),words=a.reduce
   $('main').innerHTML=`<div class="sg"><div class="glass sc"><b>${a.length}</b><small>कुल पन्ने</small></div><div class="glass sc"><b>${words}</b><small>कुल शब्द</small></div><div class="glass sc"><b>🔥 ${s.cur}</b><small>अभी की streak</small></div><div class="glass sc"><b>${s.best}</b><small>सबसे लंबी streak</small></div></div>
   <div class="glass set"><h3 class="hand" style="font-size:26px">Mood ka safar</h3>${Object.keys(mc).length?[...MOODS,...Object.keys(mc).filter(k=>!MOODS.some(m=>m[0]===k)).map(k=>[k,'','#e7def8'])].filter(m=>mc[m[0]]).map(m=>`<div class="bar"><span style="width:62px">${m[0]} ${m[1]}</span><i style="width:${mc[m[0]]/mx*55}%;background:${m[2]}"></i>${mc[m[0]]}</div>`).join(''):'<div class="empty">Entry mein mood chunein, yahan dikhega.</div>'}</div>
   <div class="glass set"><h3 class="hand" style="font-size:26px">Aapke tags</h3>${top.length?`<div class="tg">${top.map(t=>`<span>#${esc(t[0])} · ${t[1]}</span>`).join('')}</div>`:'<div class="empty">Abhi koi tag nahi.</div>'}</div>`}
-function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN laga hua hai. Diary 1 minute baad band hone par dobara lock hogi.':'Abhi PIN nahi hai. PIN lagakar diary ko private rakhein.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">PIN badlein</button><button class="btn red" onclick="removePin()">PIN hatayein</button>':'<button class="btn" onclick="setPin()">PIN set karein</button>'}</div>
+function renderSet(){$('main').innerHTML=`<div class="glass set"><h3>🔒 PIN lock</h3><div style="font-size:14px;color:var(--soft)">${pinHash?'PIN lock is on. The diary locks again after 1 minute in the background.':'Protect your diary with a PIN.'}</div>${pinHash?'<button class="btn alt" onclick="changePin()">Change PIN</button><button class="btn red" onclick="removePin()">Remove PIN</button>':'<button class="btn" onclick="setPin()">Set PIN</button>'}</div>
   <div class="glass set"><h3>💾 Backup & PDF</h3><button class="btn" onclick="printAll()">📄 Poori diary PDF banayein</button><button class="btn alt" onclick="exportJson()">📤 Backup download</button><button class="btn alt" onclick="document.getElementById('imp').click()">📥 Backup restore</button><input id="imp" type="file" accept=".json" style="display:none" onchange="importJson(event)"></div>
   <div class="glass set"><h3>👤 ${esc(auth.currentUser.email||'Account')}</h3><button class="btn red" onclick="if(confirm('Logout karein?'))auth.signOut().then(()=>location.reload())">🚪 Logout</button></div>`}
 
@@ -1209,7 +1217,7 @@ function persist(){clearTimeout(saveT);if(!dirty&&cur)return false;
   entries[id]=e;cur=e;dirty=false;selDay=e.date;$('delB').style.display='block';$('svT').textContent='Saved ✓';
   db.ref(base()+'/entries/'+id).set(e).catch(x=>toast('Sync nahi hua: '+x.message));return true}
 function closeEd(quiet){if($('ed').style.display!=='flex')return;imgDesel();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();nvAfterEd(quiet)}
-window.onpopstate=()=>{if(nvPop){const f=nvPop;nvPop=null;f();return}if($('nvSt').classList.contains('on')){$('nvSt').classList.remove('on');return}if(nvPend){const i=nvPend;nvPend=null;if(entries[i])nvShow(i);else history.back();return}if($('nv').classList.contains('on')){nvHide();return}if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(nvRet){const i=nvRet;nvRet=null;if(entries[i])nvShow(i);else history.back()}}};
+window.onpopstate=()=>{if(lkWait){const f=lkWait;lkWait=null;if(typeof f==='function')f();return}if($('lock').style.display==='flex'){if(lkHist){lkHist=false;lockHide()}else history.pushState(history.state,'');return}if(nvPop){const f=nvPop;nvPop=null;f();return}if($('nvSt').classList.contains('on')){$('nvSt').classList.remove('on');return}if(nvPend){const i=nvPend;nvPend=null;if(entries[i])nvShow(i);else history.back();return}if($('nv').classList.contains('on')){nvHide();return}if($('rd').classList.contains('on')){rdHide();return}if($('tsk').style.display==='flex'){$('tsk').style.display='none';return}if($('ed').style.display==='flex'){if(rec)rec.stop();const sv=persist();closeSheet();$('ed').style.display='none';document.body.classList.remove('editing');document.documentElement.classList.remove('ed-lock');if(sv)toast('Page save ho gaya 🌸');render();if(nvRet){const i=nvRet;nvRet=null;if(entries[i])nvShow(i);else history.back()}}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&$('ed').style.display==='flex')persist()});
 addEventListener('pagehide',()=>{if($('ed').style.display==='flex')persist()});
 document.addEventListener('click',e=>{if(!e.target.closest('#mdPop,#mdBtn'))$('mdPop').style.display='none'});
